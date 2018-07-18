@@ -55,7 +55,7 @@ public class DataImpl_JSON: DataImpl
         return nil
     }
     
-    public func addCheckin(_ checkin: Model.CheckIn) throws
+    public func addCheckin(_ checkin: Model.CheckIn) throws -> Model.CheckIn
     {
         try verifyExists()
         
@@ -69,7 +69,7 @@ public class DataImpl_JSON: DataImpl
         throw DataImplGenericError.readOnly
     }
     
-    public func updateCheckin(_ checkin: Model.CheckIn) throws
+    public func updateCheckin(_ checkin: Model.CheckIn) throws -> Model.CheckIn
     {
         try verifyExists()
         
@@ -170,15 +170,15 @@ private extension DataImpl_JSON
     
     private static var dateFormat: String = "E, d MMM yyyy HH:mm:ss Z"
     
-    private static func volume(forUnit unit: String, value: Double) throws -> Model.Volume
+    private static func volume(forUnit unit: String, value: Double) throws -> Measurement<UnitVolume>
     {
         if unit == "floz"
         {
-            return Model.Volume.fluidOunces(v: value)
+            return Measurement.init(value: value, unit: UnitVolume.fluidOunces)
         }
         else if unit == "ml"
         {
-            return Model.Volume.mililiters(v: value)
+            return Measurement.init(value: value, unit: UnitVolume.milliliters)
         }
         else
         {

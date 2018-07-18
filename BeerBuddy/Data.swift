@@ -22,28 +22,66 @@ public class Data <T: DataImpl>
     public func checkins(from: Date, to: Date) throws -> [Model.CheckIn]
     {
         let checkins = try self.impl.checkins(from: from, to: to)
+        
+        updateCache(checkins)
+        
         return checkins
     }
     
     public func checkin(withId id: Model.ID) throws -> Model.CheckIn?
     {
-        let checkin = try self.impl.checkin(withId: id)
-        return checkin
+        return try tryCache(id)
     }
     
     public func addCheckin(_ checkin: Model.CheckIn) throws
     {
-        try self.impl.addCheckin(checkin)
+        let newCheckin = try self.impl.addCheckin(checkin)
+        
+        self.cache[checkin.id] = nil
+        self.cache[newCheckin.id] = newCheckin
     }
     
     public func deleteCheckin(withId id: Model.ID) throws
     {
         try self.impl.deleteCheckin(withId: id)
+        
+        self.cache[id] = nil
     }
     
     public func updateCheckin(_ checkin: Model.CheckIn) throws
     {
-        try self.impl.updateCheckin(checkin)
+        let newCheckin = try self.impl.updateCheckin(checkin)
+        
+        self.cache[checkin.id] = nil
+        self.cache[newCheckin.id] = newCheckin
+    }
+    
+    private func tryCache(_ id: Model.ID) throws -> Model.CheckIn?
+    {
+        if let checkin = self.cache[id]
+        {
+            return checkin
+        }
+        else
+        {
+            let checkin = try self.impl.checkin(withId: id)
+            
+            self.cache[id] = nil
+            if let checkin = checkin
+            {
+                self.cache[checkin.id] = checkin
+            }
+            
+            return checkin
+        }
+    }
+    
+    private func updateCache(_ checkins: [Model.CheckIn])
+    {
+        for checkin in checkins
+        {
+            self.cache[checkin.id] = checkin
+        }
     }
 }
 
@@ -54,9 +92,9 @@ public protocol DataImpl
     func checkins(from: Date, to: Date) throws -> [Model.CheckIn]
     
     func checkin(withId id: Model.ID) throws -> Model.CheckIn?
-    func addCheckin(_ checkin: Model.CheckIn) throws
+    func addCheckin(_ checkin: Model.CheckIn) throws -> Model.CheckIn
     func deleteCheckin(withId id: Model.ID) throws
-    func updateCheckin(_ checkin: Model.CheckIn) throws
+    func updateCheckin(_ checkin: Model.CheckIn) throws -> Model.CheckIn
 }
 
 public enum DataImplGenericError: Error

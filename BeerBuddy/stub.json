@@ -6,7 +6,6 @@
             "drink_name": "g joy",
             "drink_type": "sake",
             "drink_abv": 0.18,
-            "drink_price": 0,
             "drink_volume": 11,
             "drink_volume_unit": "floz"
         },
@@ -61,7 +60,6 @@
             "drink_name": "La Fin du Monde",
             "drink_type": "beer",
             "drink_abv": 0.09,
-            "drink_price": 0,
             "drink_volume": 300,
             "drink_volume_unit": "ml"
         },
