@@ -8,6 +8,22 @@
 
 import UIKit
 
+extension FirstViewController: UITabBarControllerDelegate
+{
+    public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool
+    {
+        if viewController is StubViewController
+        {
+            print("Tapped!")
+            return false
+        }
+        else
+        {
+            return true
+        }
+    }
+}
+
 class FirstViewController: UIViewController
 {
     //let debugPast: TimeInterval = -60 * 60 * 24 * 7
@@ -21,6 +37,18 @@ class FirstViewController: UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        if let tabBarVC = self.tabBarController
+        {
+            tabBarVC.delegate = self
+            
+            if let view = tabBarVC.tabBar.viewWithTag(1)
+            {
+                dump(view)
+            }
+            
+            dump(tabBarVC.tabBar.items)
+        }
         
         self.tableView.register(CheckInCell.self, forCellReuseIdentifier: "CheckInCell")
         

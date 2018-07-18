@@ -28,3 +28,10 @@ public func equalish<T: Dimension>(first: Measurement<T>, second: Measurement<T>
     
     return diff <= baseDelta
 }
+
+// TODO: log this and do something sensible
+public func error(_ message: String)
+{
+    print("Error: \(message)")
+    assert(false)
+}

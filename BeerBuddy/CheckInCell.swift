@@ -8,6 +8,65 @@
 
 import UIKit
 
+private var _drinkIconCache: [String:UIImage] = [:]
+private func drinkIcon(forImageName imageName: String) -> UIImage
+{
+    if let image = _drinkIconCache[imageName]
+    {
+        return image
+    }
+    else
+    {
+        let size: CGFloat = 100
+        let circleWidth: CGFloat = 0 //was 2 for stroke
+        
+        guard let originalImage = UIImage.init(named: imageName) else
+        {
+            error("image \(imageName) not found")
+            return UIImage()
+        }
+        
+        UIGraphicsBeginImageContextWithOptions(CGSize.init(width: size, height: size), false, 0)
+        defer { UIGraphicsEndImageContext() }
+        
+        guard let ctx = UIGraphicsGetCurrentContext() else
+        {
+            error("image context could not be created")
+            return UIImage()
+        }
+        
+        ctx.saveGState()
+        drawCircle: do
+        {
+            UIColor.black.setStroke()
+            let circle = UIBezierPath.init(ovalIn: CGRect.init(x: circleWidth/2, y: circleWidth/2, width: size-circleWidth, height: size-circleWidth))
+            circle.lineWidth = circleWidth
+            //circle.stroke()
+            circle.fill()
+        }
+        ctx.restoreGState()
+        
+        ctx.saveGState()
+        drawImage: do
+        {
+            originalImage.draw(at: CGPoint.init(x: size/2-originalImage.size.width/2, y: size/2-originalImage.size.height/2), blendMode: CGBlendMode.xor, alpha: 1)
+        }
+        ctx.restoreGState()
+        
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+
+        guard var retImg = img else
+        {
+            error("image could not be rendered")
+            return UIImage()
+        }
+        
+        retImg = retImg.withRenderingMode(.alwaysTemplate)
+        _drinkIconCache[imageName] = retImg
+        return _drinkIconCache[imageName]!
+    }
+}
+
 public class CheckInCell: UITableViewCell
 {
     public let prose: UITextField
@@ -24,6 +83,8 @@ public class CheckInCell: UITableViewCell
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        self.backgroundColor = nil
+        
         layout: do
         {
             prose.translatesAutoresizingMaskIntoConstraints = false
@@ -36,12 +97,17 @@ public class CheckInCell: UITableViewCell
             self.contentView.addSubview(container)
             //self.contentView.addSubview(untappd)
             
-            let views = [ "prose":prose, "name":name, "container":container, "untappd":untappd ]
-            let metrics = [ "sideMargin":8, "gap":4, "imageHeight":20 ]
+            let containerSpacer1 = UILayoutGuide.init()
+            let containerSpacer2 = UILayoutGuide.init()
+            self.contentView.addLayoutGuide(containerSpacer1)
+            self.contentView.addLayoutGuide(containerSpacer2)
             
-            let hConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(sideMargin)-[container(imageHeight)]-(gap)-[prose]-(sideMargin)-|", options: [], metrics: metrics, views: views)
-            let hConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(sideMargin)-[container]-[name]-(sideMargin)-|", options: [], metrics: metrics, views: views)
-            let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(sideMargin)-[container(imageHeight)]", options: [], metrics: metrics, views: views)
+            let views = [ "prose":prose, "name":name, "container":container, "untappd":untappd, "cs1":containerSpacer1, "cs2":containerSpacer2 ]
+            let metrics = [ "sideMargin":10, "gap":4, "imageHeight":30 ]
+            
+            let hConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(sideMargin)-[container(imageHeight)]-(sideMargin)-[prose]-(sideMargin)-|", options: [], metrics: metrics, views: views)
+            let hConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(sideMargin)-[container]-(sideMargin)-[name]-(sideMargin)-|", options: [], metrics: metrics, views: views)
+            let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|[cs1][container(imageHeight)][cs2(cs1)]|", options: [], metrics: metrics, views: views)
             let vConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(sideMargin)-[prose]-(gap)-[name]-(sideMargin)-|", options: [], metrics: metrics, views: views)
             
             NSLayoutConstraint.activate(hConstraints1 + hConstraints2 + vConstraints1 + vConstraints2)
@@ -56,7 +122,7 @@ public class CheckInCell: UITableViewCell
     public func populateWithData(_ data: Model.CheckIn)
     {
         let imageName = Model.assetNameForDrink(data.drink)
-        let image = UIImage.init(named: imageName)
+        let image = drinkIcon(forImageName: imageName)
         
         let volume = String.init(format: (data.drink.volume.value.truncatingRemainder(dividingBy: 1) == 0 ? "%.0f" : "%.1f"), data.drink.volume.value as CVarArg)
         
