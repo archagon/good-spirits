@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4E900B9C20FFF8180095A71A /* StubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E900B9B20FFF8180095A71A /* StubViewController.swift */; };
+		4E93F00721015B7800B51709 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E93F00621015B7800B51709 /* Defaults.swift */; };
+		4E93F00921017A5C00B51709 /* DayHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E93F00821017A5C00B51709 /* DayHeaderCell.swift */; };
 		4EA2F18120FEE7C700CE30E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F18020FEE7C700CE30E1 /* AppDelegate.swift */; };
 		4EA2F18320FEE7C700CE30E1 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */; };
 		4EA2F18520FEE7C700CE30E1 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F18420FEE7C700CE30E1 /* SecondViewController.swift */; };
@@ -21,10 +23,13 @@
 		4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */; };
 		4EA2F19F20FF30F500CE30E1 /* DrinkIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */; };
 		4EA2F1A120FF347D00CE30E1 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F1A020FF347D00CE30E1 /* Util.swift */; };
+		4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4E900B9B20FFF8180095A71A /* StubViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubViewController.swift; sourceTree = "<group>"; };
+		4E93F00621015B7800B51709 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		4E93F00821017A5C00B51709 /* DayHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayHeaderCell.swift; sourceTree = "<group>"; };
 		4EA2F17D20FEE7C700CE30E1 /* BeerBuddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeerBuddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EA2F18020FEE7C700CE30E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -40,6 +45,7 @@
 		4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInCell.swift; sourceTree = "<group>"; };
 		4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DrinkIcons.xcassets; sourceTree = "<group>"; };
 		4EA2F1A020FF347D00CE30E1 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,10 +82,13 @@
 				4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */,
 				4EA2F18420FEE7C700CE30E1 /* SecondViewController.swift */,
 				4E900B9B20FFF8180095A71A /* StubViewController.swift */,
+				4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */,
 				4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */,
+				4E93F00821017A5C00B51709 /* DayHeaderCell.swift */,
 				4EA2F19620FEF8B900CE30E1 /* Data.swift */,
 				4EA2F19820FEFC6E00CE30E1 /* DataImpl_JSON.swift */,
 				4EA2F19A20FF07C100CE30E1 /* Model.swift */,
+				4E93F00621015B7800B51709 /* Defaults.swift */,
 				4EA2F1A020FF347D00CE30E1 /* Util.swift */,
 				4EA2F18920FEE7CB00CE30E1 /* Assets.xcassets */,
 				4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */,
@@ -164,6 +173,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */,
 				4EA2F18520FEE7C700CE30E1 /* SecondViewController.swift in Sources */,
 				4EA2F18120FEE7C700CE30E1 /* AppDelegate.swift in Sources */,
 				4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */,
@@ -171,6 +181,8 @@
 				4EA2F1A120FF347D00CE30E1 /* Util.swift in Sources */,
 				4EA2F19920FEFC6E00CE30E1 /* DataImpl_JSON.swift in Sources */,
 				4EA2F19B20FF07C100CE30E1 /* Model.swift in Sources */,
+				4E93F00721015B7800B51709 /* Defaults.swift in Sources */,
+				4E93F00921017A5C00B51709 /* DayHeaderCell.swift in Sources */,
 				4EA2F18320FEE7C700CE30E1 /* FirstViewController.swift in Sources */,
 				4EA2F19720FEF8B900CE30E1 /* Data.swift in Sources */,
 			);

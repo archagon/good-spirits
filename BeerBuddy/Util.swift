@@ -35,3 +35,38 @@ public func error(_ message: String)
     print("Error: \(message)")
     assert(false)
 }
+
+// https://stackoverflow.com/a/49561764/89812
+public enum Weekday: Int
+{
+    case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday
+    
+    public init?(fromDate date: Date, withCalendar calendar: Calendar)
+    {
+        if let val = Weekday.init(rawValue: calendar.component(.weekday, from: date))
+        {
+            self = val
+        }
+        else
+        {
+            return nil
+        }
+    }
+}
+extension Calendar
+{
+    public func next(_ weekday: Weekday,
+                     from date: Date,
+                     direction: Calendar.SearchDirection = .forward,
+                     considerToday: Bool = false) -> Date
+    {
+        let components = DateComponents(weekday: weekday.rawValue)
+        
+        if considerToday && self.component(.weekday, from: date) == weekday.rawValue
+        {
+            return date
+        }
+        
+        return self.nextDate(after: date, matching: components, matchingPolicy: .nextTime, direction: direction)!
+    }
+}

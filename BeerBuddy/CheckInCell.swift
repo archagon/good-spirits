@@ -9,7 +9,7 @@
 import UIKit
 
 private var _drinkIconCache: [String:UIImage] = [:]
-private func drinkIcon(forImageName imageName: String) -> UIImage
+private func drinkIcon(forImageName imageName: String, sansCircle: Bool = false) -> UIImage
 {
     if let image = _drinkIconCache[imageName]
     {
@@ -38,6 +38,19 @@ private func drinkIcon(forImageName imageName: String) -> UIImage
         ctx.saveGState()
         drawCircle: do
         {
+            // QQQ:
+            if sansCircle
+            {
+                let circleWidth: CGFloat = 2
+                
+                UIColor.black.setStroke()
+                let circle = UIBezierPath.init(ovalIn: CGRect.init(x: circleWidth/2, y: circleWidth/2, width: size-circleWidth, height: size-circleWidth))
+                circle.lineWidth = circleWidth
+                circle.stroke()
+                
+                break drawCircle
+            }
+            
             UIColor.black.setStroke()
             let circle = UIBezierPath.init(ovalIn: CGRect.init(x: circleWidth/2, y: circleWidth/2, width: size-circleWidth, height: size-circleWidth))
             circle.lineWidth = circleWidth
@@ -49,7 +62,9 @@ private func drinkIcon(forImageName imageName: String) -> UIImage
         ctx.saveGState()
         drawImage: do
         {
-            originalImage.draw(at: CGPoint.init(x: size/2-originalImage.size.width/2, y: size/2-originalImage.size.height/2), blendMode: CGBlendMode.xor, alpha: 1)
+            let scale: CGFloat = 1
+            originalImage.draw(in: CGRect.init(x: size/2-originalImage.size.width*scale/2, y: size/2-originalImage.size.height*scale/2, width: originalImage.size.width*scale, height: originalImage.size.height*scale), blendMode: (sansCircle ? CGBlendMode.normal : CGBlendMode.xor), alpha: 1)
+//            originalImage.draw(at: CGPoint.init(x: size/2-originalImage.size.width/2, y: size/2-originalImage.size.height/2), blendMode: (sansCircle ? CGBlendMode.normal : CGBlendMode.xor), alpha: 1)
         }
         ctx.restoreGState()
         
@@ -69,16 +84,23 @@ private func drinkIcon(forImageName imageName: String) -> UIImage
 
 public class CheckInCell: UITableViewCell
 {
-    public let prose: UITextView
-    //public let stats: UITextView
-    public let name: UITextView
-    public let container: UIButton
-    public let untappd: UIButton
+    private let prose: UITextView
+    //private let stats: UITextView
+    private let name: UITextView
+    private let contentStack: UIStackView
+    private let caption: UITextView
+    private let container: UIButton
+    private let untappd: UIButton
+    
+    var dataConstraints: [NSLayoutConstraint]!
+    var stubConstraints: [NSLayoutConstraint]!
     
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?)
     {
         self.prose = UITextView()
         self.name = UITextView()
+        self.contentStack = UIStackView()
+        self.caption = UITextView()
         self.container = UIButton()
         self.untappd = UIButton()
         
@@ -96,32 +118,77 @@ public class CheckInCell: UITableViewCell
         self.name.delegate = self
         self.name.isScrollEnabled = false
         
+        self.caption.isEditable = false
+        self.caption.isSelectable = false
+        self.caption.delegate = self
+        self.caption.isScrollEnabled = false
+        
+        let inset: CGFloat = 2
+        
+        self.name.textContainerInset = UIEdgeInsets.init(top: inset, left: 0, bottom: inset, right: 0)
+        self.prose.textContainerInset = UIEdgeInsets.init(top: inset, left: 0, bottom: inset, right: 0)
+        self.caption.textContainerInset = UIEdgeInsets.init(top: inset, left: 0, bottom: inset, right: 0)
+        
         layout: do
         {
             prose.translatesAutoresizingMaskIntoConstraints = false
             name.translatesAutoresizingMaskIntoConstraints = false
+            caption.translatesAutoresizingMaskIntoConstraints = false
             container.translatesAutoresizingMaskIntoConstraints = false
             untappd.translatesAutoresizingMaskIntoConstraints = false
+            contentStack.translatesAutoresizingMaskIntoConstraints = false
             
-            self.contentView.addSubview(prose)
-            self.contentView.addSubview(name)
+            //self.contentView.addSubview(prose)
+            //self.contentView.addSubview(name)
+            self.contentView.addSubview(caption)
             self.contentView.addSubview(container)
             //self.contentView.addSubview(untappd)
             
+            self.contentStack.axis = .vertical
+            self.contentStack.addArrangedSubview(prose)
+            self.contentStack.addArrangedSubview(name)
+            self.contentView.addSubview(self.contentStack)
+            
             let containerSpacer1 = UILayoutGuide.init()
             let containerSpacer2 = UILayoutGuide.init()
+            let containerSpacer3 = UILayoutGuide.init()
+            let containerSpacer4 = UILayoutGuide.init()
             self.contentView.addLayoutGuide(containerSpacer1)
             self.contentView.addLayoutGuide(containerSpacer2)
+            self.contentView.addLayoutGuide(containerSpacer3)
+            self.contentView.addLayoutGuide(containerSpacer4)
             
-            let views = [ "prose":prose, "name":name, "container":container, "untappd":untappd, "cs1":containerSpacer1, "cs2":containerSpacer2 ]
-            let metrics = [ "sideMargin":10, "gap":4, "imageHeight":30 ]
+            let views = [ "content":contentStack, "caption":caption, "container":container, "untappd":untappd, "cs1":containerSpacer1, "cs2":containerSpacer2, "cs3":containerSpacer3, "cs4":containerSpacer4 ]
+            let metrics = [ "sideMargin":4, "leftMargin":12, "imageLabelGap":6, "gap":4, "imageHeight":30 ]
             
-            let hConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(sideMargin)-[container(imageHeight)]-(sideMargin)-[prose]-(sideMargin)-|", options: [], metrics: metrics, views: views)
-            let hConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(sideMargin)-[container]-(sideMargin)-[name]-(sideMargin)-|", options: [], metrics: metrics, views: views)
-            let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|[cs1][container(imageHeight)][cs2(cs1)]|", options: [], metrics: metrics, views: views)
-            let vConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(sideMargin)-[prose(20)]-(gap)-[name(20)]-(sideMargin)-|", options: [], metrics: metrics, views: views)
+            dataConstraints: do
+            {
+                let hConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(leftMargin)-[container(imageHeight)]-(imageLabelGap)-[content]-(sideMargin)-|", options: .alignAllCenterY, metrics: metrics, views: views)
+//                let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|[cs1][container(imageHeight)][cs2(cs1)]|", options: [], metrics: metrics, views: views)
+                let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=sideMargin)-[container(imageHeight)]-(>=sideMargin)-|", options: [], metrics: metrics, views: views)
+                let vConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=sideMargin)-[content]-(>=sideMargin)-|", options: [], metrics: metrics, views: views)
+                
+                var dataConstraints: [NSLayoutConstraint] = []
+                dataConstraints += hConstraints1
+                dataConstraints += vConstraints1
+                dataConstraints += vConstraints2
+                
+                self.dataConstraints = dataConstraints
+            }
             
-            NSLayoutConstraint.activate(hConstraints1 + hConstraints2 + vConstraints1 + vConstraints2)
+            stubConstraints: do
+            {
+                let hConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(leftMargin)-[container(imageHeight)]-(imageLabelGap)-[caption]-(sideMargin)-|", options: .alignAllCenterY, metrics: metrics, views: views)
+                let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=sideMargin)-[container(imageHeight)]-(>=sideMargin)-|", options: [], metrics: metrics, views: views)
+                let vConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=sideMargin)-[caption]-(>=sideMargin)-|", options: [], metrics: metrics, views: views)
+                
+                var stubConstraints: [NSLayoutConstraint] = []
+                stubConstraints += hConstraints1
+                stubConstraints += vConstraints1
+                stubConstraints += vConstraints2
+                
+                self.stubConstraints = stubConstraints
+            }
         }
     }
     
@@ -130,8 +197,37 @@ public class CheckInCell: UITableViewCell
         fatalError("init(coder:) has not been implemented")
     }
     
+    public func populateWithStub()
+    {
+        NSLayoutConstraint.deactivate(self.dataConstraints)
+        NSLayoutConstraint.activate(self.stubConstraints)
+        
+        let image = drinkIcon(forImageName: "plus", sansCircle: true)
+        
+        self.prose.isHidden = true
+        self.name.isHidden = true
+        self.caption.isHidden = false
+        self.untappd.isHidden = true
+        
+        self.container.setImage(image, for: .normal)
+        
+        let attributedText = NSMutableAttributedString.init(string: "Add Drink")
+        attributedText.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14)], range: NSMakeRange(0, attributedText.length))
+        
+        self.caption.attributedText = attributedText
+        
+        self.container.tintColor = UIButton(type: .system).tintColor
+        self.caption.textColor = UIButton(type: .system).tintColor
+        
+        self.caption.alpha = 0.7
+        self.container.alpha = 0.7
+    }
+    
     public func populateWithData(_ data: Model.CheckIn)
     {
+        NSLayoutConstraint.deactivate(self.stubConstraints)
+        NSLayoutConstraint.activate(self.dataConstraints)
+        
         let imageName = Model.assetNameForDrink(data.drink)
         let image = drinkIcon(forImageName: imageName)
         
@@ -154,6 +250,9 @@ public class CheckInCell: UITableViewCell
         {
             func appendUnderl(_ str: String, tag: String)
             {
+                appendNormal(str)
+                return
+                
                 let underlineAttributes: [NSAttributedStringKey:Any] =
                     [
                         NSAttributedStringKey.underlineStyle:(NSUnderlineStyle.styleSingle.rawValue),
@@ -185,11 +284,24 @@ public class CheckInCell: UITableViewCell
             appendNormal(" times ")
             appendUnderl("\(1)", tag: "times")
         }
-        //proseString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: UIFont.labelFontSize)], range: NSMakeRange(0, proseString.length))
+        proseString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14)], range: NSMakeRange(0, proseString.length))
+        
+        let nameString = NSMutableAttributedString.init(string: data.drink.name ?? "")
+        nameString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14)], range: NSMakeRange(0, nameString.length))
         
         self.prose.attributedText = proseString
-        self.name.text = data.drink.name
+        self.name.attributedText = nameString
+        
+        self.prose.isHidden = false
+        self.name.isHidden = false
+        self.caption.isHidden = true
+        self.untappd.isHidden = false
+        
         self.container.setImage(image, for: .normal)
+        self.container.tintColor = UIButton(type: .system).tintColor
+        
+        self.caption.alpha = 1
+        self.container.alpha = 1
     }
 }
 

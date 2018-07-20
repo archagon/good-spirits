@@ -46,7 +46,7 @@
             "checkin_id": 623586138,
             "untappd_checkin_id": 623586138,
             "checkin_time": "Thu, 12 Jul 2018 07:34:36 +0000",
-            "drink_name": "Relax [it's just a hazy IPA]",
+            "drink_name": "Relax [it's just a hazy IPA; now I'm adding more text here so that we can test spanning multiple lines]",
             "drink_type": "beer",
             "drink_abv": 0.068,
             "drink_price": 7,

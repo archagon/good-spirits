@@ -11,6 +11,8 @@ import Foundation
 // Data interface. Efficient transactions & queries. Actual backing code is abstracted away.
 public class Data <T: DataImpl>
 {
+    public typealias Week = Date
+    
     private var impl: T
     private var cache: [Model.ID:Model.CheckIn] = [:]
     
@@ -85,10 +87,62 @@ public class Data <T: DataImpl>
     }
 }
 
+class Time
+{
+    public static func daysOfWeek() -> [Weekday]
+    {
+        if Defaults.weekStartsOnMonday
+        {
+            return [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
+        }
+        else
+        {
+            return [.sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday]
+        }
+    }
+    
+    public static func calendar() -> Calendar
+    {
+        // TODO: other calendars?
+        let calendar = Calendar.init(identifier: .gregorian)
+        return calendar
+    }
+    
+    public static func currentWeek() -> (Date, Date)
+    {
+        let calendar = Time.calendar()
+        
+        // QQQ:
+        //let date = Date()
+        let components = DateComponents.init(calendar: calendar, timeZone: TimeZone.init(abbreviation: "PST"), era: nil, year: 2018, month: 7, day: 14, hour: nil, minute: nil, second: nil, nanosecond: nil, weekday: nil, weekdayOrdinal: nil, quarter: nil, weekOfMonth: nil, weekOfYear: nil, yearForWeekOfYear: nil)
+        let date = calendar.date(from: components)!
+        
+        let startDay = Defaults.weekStartsOnMonday ? Weekday.monday : Weekday.sunday
+        let startOfWeek = calendar.next(startDay, from: date, direction: .backward, considerToday: true)
+        let endOfWeek = calendar.next(startDay, from: date, direction: .forward, considerToday: false)
+        
+        guard let newStartOfWeek = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: startOfWeek) else
+        {
+            error("could not generate date")
+            return (Date.distantPast, Date.distantFuture)
+        }
+        guard let newEndOfWeek = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: endOfWeek) else
+        {
+            error("could not generate date")
+            return (Date.distantPast, Date.distantFuture)
+        }
+        
+        dump(newStartOfWeek)
+        dump(newEndOfWeek)
+        
+        return (newStartOfWeek, newEndOfWeek)
+    }
+}
+
 // Low-level data storage/retreival interface. Strictly mechanical, not many business logic smarts.
 public protocol DataImpl
 {
-    // Includes from, excludes to. Accepts distantPast and distantFuture as parameters.
+    // Includes from, excludes to. Accepts distantPast and distantFuture as parameters. Sorted chronologically.
     func checkins(from: Date, to: Date) throws -> [Model.CheckIn]
     
     func checkin(withId id: Model.ID) throws -> Model.CheckIn?
