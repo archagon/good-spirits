@@ -134,7 +134,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         {
             guard let day = Weekday.init(fromDate: item.time, withCalendar: self.cache.calendar) else
             {
-                error("invalid day for checkin")
+                appError("invalid day for checkin")
                 return nil
             }
             
@@ -189,7 +189,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         formatter.dateFormat = "EEEE, MMMM d, yyyy"
         guard let day = self.cache.calendar.date(byAdding: .day, value: section, to: self.cache.range.0) else
         {
-            error("could not add day to date")
+            appError("could not add day to date")
             return nil
         }
         
@@ -244,7 +244,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
 //        formatter.dateFormat = "EEEE, MMMM d, yyyy"
 //        guard let day = self.cache.calendar.date(byAdding: .day, value: section, to: self.cache.range.0) else
 //        {
-//            error("could not add day to date")
+//            appError("could not add day to date")
 //            return nil
 //        }
 //

@@ -123,12 +123,12 @@ class Time
         
         guard let newStartOfWeek = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: startOfWeek) else
         {
-            error("could not generate date")
+            appError("could not generate date")
             return (Date.distantPast, Date.distantFuture)
         }
         guard let newEndOfWeek = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: endOfWeek) else
         {
-            error("could not generate date")
+            appError("could not generate date")
             return (Date.distantPast, Date.distantFuture)
         }
         

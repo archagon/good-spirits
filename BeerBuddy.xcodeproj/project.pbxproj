@@ -23,6 +23,7 @@
 		4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */; };
 		4EA2F19F20FF30F500CE30E1 /* DrinkIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */; };
 		4EA2F1A120FF347D00CE30E1 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F1A020FF347D00CE30E1 /* Util.swift */; };
+		4ED7ACF72102E151002BB0F1 /* standard_drinks.json in Resources */ = {isa = PBXBuildFile; fileRef = 4ED7ACF62102E151002BB0F1 /* standard_drinks.json */; };
 		4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +46,7 @@
 		4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInCell.swift; sourceTree = "<group>"; };
 		4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DrinkIcons.xcassets; sourceTree = "<group>"; };
 		4EA2F1A020FF347D00CE30E1 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		4ED7ACF62102E151002BB0F1 /* standard_drinks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = standard_drinks.json; sourceTree = "<group>"; };
 		4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -95,6 +97,7 @@
 				4EA2F18620FEE7C700CE30E1 /* Main.storyboard */,
 				4EA2F18B20FEE7CB00CE30E1 /* LaunchScreen.storyboard */,
 				4EA2F18E20FEE7CB00CE30E1 /* Info.plist */,
+				4ED7ACF62102E151002BB0F1 /* standard_drinks.json */,
 				4EA2F19420FEE80D00CE30E1 /* stub.json */,
 			);
 			path = BeerBuddy;
@@ -159,6 +162,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EA2F18D20FEE7CB00CE30E1 /* LaunchScreen.storyboard in Resources */,
+				4ED7ACF72102E151002BB0F1 /* standard_drinks.json in Resources */,
 				4EA2F18A20FEE7CB00CE30E1 /* Assets.xcassets in Resources */,
 				4EA2F18820FEE7C700CE30E1 /* Main.storyboard in Resources */,
 				4EA2F19F20FF30F500CE30E1 /* DrinkIcons.xcassets in Resources */,

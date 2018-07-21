@@ -1,0 +1,41 @@
+[
+ {
+ "country": "AU",
+ "_country": "australia",
+ "grams": 10,
+ "daily_limit_men": 20
+ },
+ {
+ "country": "AT",
+ "_country": "austria",
+ "grams": 20,
+ "daily_limit_men": 24,
+ "daily_limit_women": 16
+ },
+ {
+ "country": "CA",
+ "_country": "canada",
+ "grams": 13.6,
+ "daily_limit_men": 40.8,
+ "weekly_limit_men": 204,
+ "peak_daily_limit_men": 54.4,
+ "daily_limit_women": 27.2,
+ "weekly_limit_women": 136,
+ "peak_daily_limit_women": 40.8
+ },
+ {
+ "country": "DK",
+ "_country": "denmark",
+ "grams": 12,
+ "weekly_limit_men": 168,
+ "weekly_limit_women": 84
+ },
+ {
+ "country": "US",
+ "_country": "USA",
+ "grams": 14,
+ "weekly_limit_men": 196,
+ "weekly_limit_women": 98
+ }
+ ]
+
