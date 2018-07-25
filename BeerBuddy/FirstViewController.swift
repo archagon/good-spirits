@@ -8,13 +8,82 @@
 
 import UIKit
 
-extension FirstViewController: UITabBarControllerDelegate
+extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewControllerDelegate
 {
     public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool
     {
         if viewController is StubViewController
         {
-            print("Tapped!")
+            if let token = Defaults.untappdToken
+            {
+                Untappd.UserCheckIns(token)
+                { (checkIns, error) in
+                }
+                return false
+            }
+            
+            if qqqPopup == nil
+            {
+                untappd: do
+                {
+                    let untappdVC = UntappdLoginViewController.init
+                    { (token, e) in
+                        if let e = e
+                        {
+                            print("token error: \(e)")
+                        }
+                        else
+                        {
+                            print("found token: \(token)")
+                            Defaults.untappdToken = token
+                            //self.dismiss(animated: true, completion: nil)
+                            self.qqqPopup?.dismiss(animated: true, completion: nil)
+                            self.qqqPopup = nil
+                        }
+                    }
+                    untappdVC.modalPresentationStyle = .popover
+                    self.present(untappdVC, animated: true, completion: nil)
+                    untappdVC.load()
+                    self.qqqPopup = untappdVC
+                }
+                
+                popup: do
+                {
+                    break popup
+                    
+                    let vc = UIViewController()
+                    vc.view.backgroundColor = UIColor.red
+                    let label = UITextView.init()
+                    label.text = "This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah."
+                    label.font = UIFont.systemFont(ofSize: 12)
+                    label.isEditable = false
+                    label.isSelectable = false
+                    label.isScrollEnabled = false
+                    label.textContainerInset = UIEdgeInsets.zero
+                    label.translatesAutoresizingMaskIntoConstraints = false
+                    vc.view.addSubview(label)
+                    let labelHConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(32)-[label]-(32)-|", options: [], metrics: nil, views: ["label":label])
+                    let labelVConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(64)-[label]-(64)-|", options: [], metrics: nil, views: ["label":label])
+                    NSLayoutConstraint.activate(labelHConstraints + labelVConstraints)
+                    
+                    vc.preferredContentSize = CGSize.init(width: 400, height: 0)
+
+                    let popup = ScrollingPopupViewController.init()
+                    popup.viewController = vc
+                    popup.delegate = self
+
+                    //.custom? A custom view presentation style that is managed by a custom presentation controller and one or more custom animator objects.
+                    popup.modalPresentationStyle = .overFullScreen
+
+                    
+                    self.qqqPopup = popup
+                    
+                    self.present(popup, animated: false)
+                    {
+                    }
+                }
+            }
+            
             return false
         }
         else
@@ -22,10 +91,21 @@ extension FirstViewController: UITabBarControllerDelegate
             return true
         }
     }
+    
+    public func scrollingPopupDidTapToDismiss(_ vc: ScrollingPopupViewController)
+    {
+        if qqqPopup != nil && self.presentedViewController == qqqPopup
+        {
+            dismiss(animated: false, completion: nil)
+            qqqPopup = nil
+        }
+    }
 }
 
 class FirstViewController: UIViewController
 {
+    public var qqqPopup: UIViewController?
+    
     //let debugPast: TimeInterval = -60 * 60 * 24 * 7
     let debugPast: TimeInterval = -60 * 60 * 24 * 50 * 10
     
@@ -40,17 +120,18 @@ class FirstViewController: UIViewController
     {
         super.viewDidLoad()
         
-        //if let tabBarVC = self.tabBarController
-        //{
-        //    tabBarVC.delegate = self
-        //
-        //    if let view = tabBarVC.tabBar.viewWithTag(1)
-        //    {
-        //        dump(view)
-        //    }
-        //
-        //    dump(tabBarVC.tabBar.items)
-        //}
+        // QQQ:
+        if let tabBarVC = self.tabBarController
+        {
+            tabBarVC.delegate = self
+        
+            if let view = tabBarVC.tabBar.viewWithTag(1)
+            {
+                dump(view)
+            }
+        
+            dump(tabBarVC.tabBar.items)
+        }
         
         tableSetup: do
         {

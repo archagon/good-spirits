@@ -140,6 +140,8 @@ public struct Limit
     {
         for item in Limit.data
         {
+            if item.daily_limit_men == nil && item.daily_limit_women == nil && item.weekly_limit_men == nil && item.weekly_limit_women == nil { continue }
+            
             let limit = Limit.init(withCountryCode: item.country)
             
             let dm = limit.grams(limit.dailyLimit(forMale: true) ?? Measurement<UnitVolume>.init(value: 0, unit: .fluidOunces))

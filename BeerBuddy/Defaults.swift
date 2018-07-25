@@ -12,6 +12,7 @@ public class Defaults
 {
     private static let limitCountryCodeKey: String = "LimitCountry"
     private static let weekStartsOnMondayKey: String = "WeekStartsOnMonday"
+    private static let untappdTokenKey: String = "UntappdToken"
     
     public static func registerDefaults()
     {
@@ -23,13 +24,40 @@ public class Defaults
     
     public static var weekStartsOnMonday: Bool
     {
-        let val = UserDefaults.standard.bool(forKey: weekStartsOnMondayKey)
-        return val
+        get
+        {
+            let val = UserDefaults.standard.bool(forKey: weekStartsOnMondayKey)
+            return val
+        }
+        set
+        {
+            UserDefaults.standard.set(newValue, forKey: weekStartsOnMondayKey)
+        }
     }
     
     public static var limitCountryCode: String?
     {
-        let val = UserDefaults.standard.string(forKey: limitCountryCodeKey)
-        return val
+        get
+        {
+            let val = UserDefaults.standard.string(forKey: limitCountryCodeKey)
+            return val
+        }
+        set
+        {
+            UserDefaults.standard.setValue(newValue, forKey: limitCountryCodeKey)
+        }
+    }
+    
+    public static var untappdToken: String?
+    {
+        get
+        {
+            let val = UserDefaults.standard.string(forKey: untappdTokenKey)
+            return val
+        }
+        set
+        {
+            UserDefaults.standard.setValue(newValue, forKey: untappdTokenKey)
+        }
     }
 }

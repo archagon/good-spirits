@@ -36,6 +36,13 @@ public func appError(_ message: String)
     assert(false)
 }
 
+public func appDebug(_ message: String)
+{
+    #if DEBUG
+    print("🔵 \(message)")
+    #endif
+}
+
 // https://stackoverflow.com/a/49561764/89812
 public enum Weekday: Int
 {

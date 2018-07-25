@@ -36,6 +36,120 @@
  "grams": 14,
  "weekly_limit_men": 196,
  "weekly_limit_women": 98
+ },
+ {
+ "country": "FI",
+ "_country": "finland",
+ "grams": 12,
+ "weekly_limit_men": 165,
+ "weekly_limit_women": 110
+ },
+ {
+ "country": "FR",
+ "#todo":"",
+ "_country": "france",
+ "grams": 10,
+ "weekly_limit_men": 210,
+ "weekly_limit_women": 140
+ },
+ {
+ "country": "DE",
+ "_country": "germany",
+ "grams": 10,
+ "daily_limit_men": 24,
+ "daily_limit_women": 12
+ },
+ {
+ "country": "HK",
+ "_country": "hong kong",
+ "grams": 10,
+ "daily_limit_men": 20,
+ "daily_limit_women": 10
+ },
+ {
+ "country": "HU",
+ "_country": "hungary",
+ "grams": 17
+ },
+ {
+ "country": "IS",
+ "_country": "iceland",
+ "grams": 8
+ },
+ {
+ "country": "IE",
+ "_country": "ireland",
+ "grams": 10,
+ "weekly_limit_men": 210,
+ "weekly_limit_women": 140
+ },
+ {
+ "country": "IT",
+ "_country": "italy",
+ "grams": 10,
+ "daily_limit_men": 40,
+ "daily_limit_women": 30,
+ "extra_info": "less for the elderly"
+ },
+ {
+ "country": "JP",
+ "_country": "japan",
+ "grams": 19.75
+ },
+ {
+ "country": "NL",
+ "#todo":"",
+ "_country": "netherlands",
+ "grams": 10,
+ "daily_limit_men": 10,
+ "daily_limit_women": 10
+ },
+ {
+ "country": "NZ",
+ "_country": "new zealand",
+ "grams": 10,
+ "daily_limit_men": 30,
+ "weekly_limit_men": 150,
+ "peak_daily_limit_men": 50,
+ "daily_limit_women": 20,
+ "weekly_limit_women": 100,
+ "peak_daily_limit_women": 40,
+ "extra_info": "2 alcohol-free days a week"
+ },
+ {
+ "country": "PL",
+ "#todo":"",
+ "_country": "poland",
+ "grams": 10,
+ "weekly_limit_men": 280,
+ "weekly_limit_women": 140
+ },
+ {
+ "country": "PT",
+ "_country": "portugal",
+ "grams": 14,
+ "daily_limit_men": 37,
+ "daily_limit_women": 18.5
+ },
+ {
+ "country": "ES",
+ "_country": "spain",
+ "grams": 10,
+ "daily_limit_men": 30,
+ "daily_limit_women": 20
+ },
+ {
+ "country": "CH",
+ "_country": "switzerland",
+ "grams": 12,
+ "daily_limit_men": 30,
+ "daily_limit_women": 20
+ },
+ {
+ "country": "UK",
+ "_country": "united kingdom",
+ "grams": 8,
+ "weekly_limit_men": 112
  }
  ]
 
