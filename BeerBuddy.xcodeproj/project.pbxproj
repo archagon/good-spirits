@@ -13,6 +13,8 @@
 		4E900B9C20FFF8180095A71A /* StubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E900B9B20FFF8180095A71A /* StubViewController.swift */; };
 		4E93F00721015B7800B51709 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E93F00621015B7800B51709 /* Defaults.swift */; };
 		4E93F00921017A5C00B51709 /* DayHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E93F00821017A5C00B51709 /* DayHeaderCell.swift */; };
+		4E9C8553210D598C00DA959D /* ABPrettyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9C8552210D598C00DA959D /* ABPrettyButton.swift */; };
+		4E9C8555210D68F900DA959D /* ColorUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9C8554210D68F900DA959D /* ColorUtil.swift */; };
 		4EA2F18120FEE7C700CE30E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F18020FEE7C700CE30E1 /* AppDelegate.swift */; };
 		4EA2F18320FEE7C700CE30E1 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */; };
 		4EA2F18520FEE7C700CE30E1 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F18420FEE7C700CE30E1 /* SecondViewController.swift */; };
@@ -26,10 +28,53 @@
 		4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */; };
 		4EA2F19F20FF30F500CE30E1 /* DrinkIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */; };
 		4EA2F1A120FF347D00CE30E1 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F1A020FF347D00CE30E1 /* Util.swift */; };
+		4EBE6702210FE4CE00878CA0 /* DrawerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; };
+		4EBE6703210FE4CE00878CA0 /* DrawerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4ED7ACF72102E151002BB0F1 /* standard_drinks.json in Resources */ = {isa = PBXBuildFile; fileRef = 4ED7ACF62102E151002BB0F1 /* standard_drinks.json */; };
 		4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE336962107D6F700D72B7D /* Untappd_Schema.swift */; };
+		4EE336992108043300D72B7D /* ABVViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE336982108043300D72B7D /* ABVViewController.swift */; };
+		4EE3369B2108043E00D72B7D /* CheckInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE3369A2108043E00D72B7D /* CheckInViewController.swift */; };
+		4EE3369D2108058500D72B7D /* Controllers.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EE3369C2108058500D72B7D /* Controllers.storyboard */; };
 		4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4EBE66DD210FD1F600878CA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CBBA2D571F8E815B00E0137F;
+			remoteInfo = DrawerKit;
+		};
+		4EBE66F8210FD21E00878CA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = CBBA2D561F8E815B00E0137F;
+			remoteInfo = DrawerKit;
+		};
+		4EBE6704210FE4CE00878CA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = CBBA2D561F8E815B00E0137F;
+			remoteInfo = DrawerKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4EBE6706210FE4CE00878CA0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4EBE6703210FE4CE00878CA0 /* DrawerKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4E6B75762106BEB5009B6C0D /* Untappd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untappd.swift; sourceTree = "<group>"; };
@@ -38,6 +83,8 @@
 		4E900B9B20FFF8180095A71A /* StubViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubViewController.swift; sourceTree = "<group>"; };
 		4E93F00621015B7800B51709 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		4E93F00821017A5C00B51709 /* DayHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayHeaderCell.swift; sourceTree = "<group>"; };
+		4E9C8552210D598C00DA959D /* ABPrettyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABPrettyButton.swift; sourceTree = "<group>"; };
+		4E9C8554210D68F900DA959D /* ColorUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorUtil.swift; sourceTree = "<group>"; };
 		4EA2F17D20FEE7C700CE30E1 /* BeerBuddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeerBuddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EA2F18020FEE7C700CE30E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -53,8 +100,12 @@
 		4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInCell.swift; sourceTree = "<group>"; };
 		4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DrinkIcons.xcassets; sourceTree = "<group>"; };
 		4EA2F1A020FF347D00CE30E1 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawerKit.xcodeproj; path = "External/DrawerKit-0.6.0/DrawerKit/DrawerKit.xcodeproj"; sourceTree = "<group>"; };
 		4ED7ACF62102E151002BB0F1 /* standard_drinks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = standard_drinks.json; sourceTree = "<group>"; };
 		4EE336962107D6F700D72B7D /* Untappd_Schema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untappd_Schema.swift; sourceTree = "<group>"; };
+		4EE336982108043300D72B7D /* ABVViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABVViewController.swift; sourceTree = "<group>"; };
+		4EE3369A2108043E00D72B7D /* CheckInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInViewController.swift; sourceTree = "<group>"; };
+		4EE3369C2108058500D72B7D /* Controllers.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Controllers.storyboard; sourceTree = "<group>"; };
 		4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -63,6 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EBE6702210FE4CE00878CA0 /* DrawerKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,7 +125,9 @@
 			isa = PBXGroup;
 			children = (
 				4EA2F17F20FEE7C700CE30E1 /* BeerBuddy */,
+				4EBE66D3210FD12800878CA0 /* External */,
 				4EA2F17E20FEE7C700CE30E1 /* Products */,
+				4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -93,9 +147,12 @@
 				4EA2F18420FEE7C700CE30E1 /* SecondViewController.swift */,
 				4E900B9B20FFF8180095A71A /* StubViewController.swift */,
 				4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */,
+				4EE336982108043300D72B7D /* ABVViewController.swift */,
+				4EE3369A2108043E00D72B7D /* CheckInViewController.swift */,
 				4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */,
 				4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */,
 				4E93F00821017A5C00B51709 /* DayHeaderCell.swift */,
+				4E9C8552210D598C00DA959D /* ABPrettyButton.swift */,
 				4EA2F19A20FF07C100CE30E1 /* Model.swift */,
 				4EA2F19620FEF8B900CE30E1 /* Data.swift */,
 				4EA2F19820FEFC6E00CE30E1 /* DataImpl_JSON.swift */,
@@ -104,15 +161,32 @@
 				4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */,
 				4E93F00621015B7800B51709 /* Defaults.swift */,
 				4EA2F1A020FF347D00CE30E1 /* Util.swift */,
+				4E9C8554210D68F900DA959D /* ColorUtil.swift */,
 				4EA2F18920FEE7CB00CE30E1 /* Assets.xcassets */,
 				4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */,
 				4EA2F18620FEE7C700CE30E1 /* Main.storyboard */,
+				4EE3369C2108058500D72B7D /* Controllers.storyboard */,
 				4EA2F18B20FEE7CB00CE30E1 /* LaunchScreen.storyboard */,
 				4EA2F18E20FEE7CB00CE30E1 /* Info.plist */,
 				4ED7ACF62102E151002BB0F1 /* standard_drinks.json */,
 				4EA2F19420FEE80D00CE30E1 /* stub.json */,
 			);
 			path = BeerBuddy;
+			sourceTree = "<group>";
+		};
+		4EBE66D3210FD12800878CA0 /* External */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = External;
+			sourceTree = "<group>";
+		};
+		4EBE66DA210FD1F600878CA0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,10 +199,13 @@
 				4EA2F17920FEE7C700CE30E1 /* Sources */,
 				4EA2F17A20FEE7C700CE30E1 /* Frameworks */,
 				4EA2F17B20FEE7C700CE30E1 /* Resources */,
+				4EBE6706210FE4CE00878CA0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4EBE66F9210FD21E00878CA0 /* PBXTargetDependency */,
+				4EBE6705210FE4CE00878CA0 /* PBXTargetDependency */,
 			);
 			name = BeerBuddy;
 			productName = BeerBuddy;
@@ -161,12 +238,28 @@
 			mainGroup = 4EA2F17420FEE7C700CE30E1;
 			productRefGroup = 4EA2F17E20FEE7C700CE30E1 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4EBE66DA210FD1F600878CA0 /* Products */;
+					ProjectRef = 4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				4EA2F17C20FEE7C700CE30E1 /* BeerBuddy */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DrawerKit.framework;
+			remoteRef = 4EBE66DD210FD1F600878CA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4EA2F17B20FEE7C700CE30E1 /* Resources */ = {
@@ -179,6 +272,7 @@
 				4EA2F18820FEE7C700CE30E1 /* Main.storyboard in Resources */,
 				4EA2F19F20FF30F500CE30E1 /* DrinkIcons.xcassets in Resources */,
 				4EA2F19520FEE80D00CE30E1 /* stub.json in Resources */,
+				4EE3369D2108058500D72B7D /* Controllers.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,8 +285,11 @@
 			files = (
 				4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */,
 				4EA2F18520FEE7C700CE30E1 /* SecondViewController.swift in Sources */,
+				4E9C8553210D598C00DA959D /* ABPrettyButton.swift in Sources */,
+				4E9C8555210D68F900DA959D /* ColorUtil.swift in Sources */,
 				4E6B75792106BF1A009B6C0D /* UntappdLoginViewController.swift in Sources */,
 				4EA2F18120FEE7C700CE30E1 /* AppDelegate.swift in Sources */,
+				4EE3369B2108043E00D72B7D /* CheckInViewController.swift in Sources */,
 				4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */,
 				4E900B9C20FFF8180095A71A /* StubViewController.swift in Sources */,
 				4EA2F1A120FF347D00CE30E1 /* Util.swift in Sources */,
@@ -203,12 +300,26 @@
 				4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */,
 				4E93F00921017A5C00B51709 /* DayHeaderCell.swift in Sources */,
 				4EA2F18320FEE7C700CE30E1 /* FirstViewController.swift in Sources */,
+				4EE336992108043300D72B7D /* ABVViewController.swift in Sources */,
 				4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */,
 				4EA2F19720FEF8B900CE30E1 /* Data.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4EBE66F9210FD21E00878CA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DrawerKit;
+			targetProxy = 4EBE66F8210FD21E00878CA0 /* PBXContainerItemProxy */;
+		};
+		4EBE6705210FE4CE00878CA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DrawerKit;
+			targetProxy = 4EBE6704210FE4CE00878CA0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		4EA2F18620FEE7C700CE30E1 /* Main.storyboard */ = {
@@ -347,6 +458,7 @@
 		4EA2F19220FEE7CB00CE30E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
@@ -365,6 +477,7 @@
 		4EA2F19320FEE7CB00CE30E1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;

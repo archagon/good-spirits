@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import DrawerKit
 
 extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewControllerDelegate
 {
@@ -14,6 +15,47 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
     {
         if viewController is StubViewController
         {
+            pulleyTest: do
+            {
+                let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
+                let controller = storyboard.instantiateViewController(withIdentifier: "CheckIn") as! CheckInViewController
+                let vc = UIViewController()
+                
+//                let pulley = PulleyViewController.init(contentViewController: vc, drawerViewController: controller)
+                
+//                let pulley = ISHPullUpViewController.init()
+//                pulley.contentViewController = vc
+//                pulley.bottomViewController = controller
+
+                var configuration = DrawerConfiguration.init()
+                configuration.fullExpansionBehaviour = .leavesCustomGap(gap: 100)
+                configuration.timingCurveProvider = UISpringTimingParameters(dampingRatio: 0.8)
+                configuration.cornerAnimationOption = .alwaysShowBelowStatusBar
+                
+                var handleViewConfiguration = HandleViewConfiguration()
+                handleViewConfiguration.autoAnimatesDimming = false
+                configuration.handleViewConfiguration = handleViewConfiguration
+                
+                let drawerShadowConfiguration = DrawerShadowConfiguration(shadowOpacity: 0.25,
+                                                                          shadowRadius: 4,
+                                                                          shadowOffset: .zero,
+                                                                          shadowColor: .black)
+                configuration.drawerShadowConfiguration = drawerShadowConfiguration
+                
+                let pulley = DrawerDisplayController.init(presentingViewController: self, presentedViewController: controller, configuration: configuration, inDebugMode: true)
+                self.drawerDisplayController = pulley
+                
+                self.present(controller, animated: true, completion: nil)
+                
+                return false
+            }
+            
+            let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "ABV") as! ABVViewController
+            let nav = UINavigationController.init(rootViewController: controller)
+            self.present(nav, animated: true, completion: nil)
+            return false
+            
             if let token = Defaults.untappdToken
             {
                 Untappd.UserCheckIns(token)
@@ -102,8 +144,12 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
     }
 }
 
-class FirstViewController: UIViewController
+class FirstViewController: UIViewController, DrawerCoordinating
 {
+    public var drawerDisplayController: DrawerDisplayController?
+    
+    
+    
     public var qqqPopup: UIViewController?
     
     //let debugPast: TimeInterval = -60 * 60 * 24 * 7
