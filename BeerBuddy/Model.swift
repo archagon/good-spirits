@@ -17,16 +17,22 @@ public struct Model
         public let id: ID
         public let untappdId: ID?
         public let time: Date
+        public let added: Date
         public let drink: Drink
     }
     
     public struct Drink
     {
-        public enum Style: String
+        public enum Style: String, RawRepresentable
         {
             case beer
             case wine
             case sake
+            
+            public static var defaultStyle: Style
+            {
+                return .beer
+            }
             
             // TODO: move to data file?
             public var defaultABV: Double
@@ -35,9 +41,22 @@ public struct Model
                 {
                     switch self
                     {
-                    case .beer: return 0.065
-                    case .wine: return 0.14
+                    case .beer: return 0.05
+                    case .wine: return 0.15
                     case .sake: return 0.17
+                    }
+                }
+            }
+            
+            public var defaultVolume: Measurement<UnitVolume>
+            {
+                get
+                {
+                    switch self
+                    {
+                    case .beer: return Measurement<UnitVolume>.init(value: 12, unit: .fluidOunces)
+                    case .wine: return Measurement<UnitVolume>.init(value: 4, unit: .fluidOunces)
+                    case .sake: return Measurement<UnitVolume>.init(value: 3.5, unit: .fluidOunces)
                     }
                 }
             }

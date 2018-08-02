@@ -37,6 +37,17 @@ public class DataImpl_JSON: DataImpl
         return checkins
     }
     
+    // PERF:O(AllCheckIns), inefficient
+    public func lastAddedCheckin() throws -> Model.CheckIn?
+    {
+        try verifyExists()
+        
+        var checkins = try allCheckIns()
+        checkins.sort { return $0.added < $1.added }
+        
+        return checkins.last
+    }
+    
     // PERF: O(AllCheckIns), inefficient
     public func checkin(withId id: Model.ID) throws -> Model.CheckIn?
     {
@@ -100,7 +111,9 @@ public class DataImpl_JSON: DataImpl
             
             let volume = try DataImpl_JSON.volume(forUnit: item.drink_volume_unit, value: item.drink_volume)
             let drink = Model.Drink.init(name: item.drink_name, style: style, abv: item.drink_abv, price: item.drink_price, volume: volume)
-            let checkin = Model.CheckIn.init(id: item.checkin_id, untappdId: item.untappd_checkin_id, time: time, drink: drink)
+            let checkin = Model.CheckIn.init(id: item.checkin_id, untappdId: item.untappd_checkin_id, time: time, added: time, drink: drink)
+            
+            // QQQ: added != time
             
             out.append(checkin)
         }

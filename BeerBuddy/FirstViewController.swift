@@ -9,6 +9,37 @@
 import UIKit
 import DrawerKit
 
+extension FirstViewController: CheckInViewControllerDelegate
+{
+    public func defaultCheckIn(for: CheckInViewController) -> Model.Drink
+    {
+        let defaultPrice: Double = 5
+        let defaultDrink = Model.Drink.init(name: nil, style: Model.Drink.Style.defaultStyle, abv: Model.Drink.Style.defaultStyle.defaultABV, price: defaultPrice, volume: Model.Drink.Style.defaultStyle.defaultVolume)
+        
+        do
+        {
+            throw DataImplGenericError.readOnly
+            if let checkin = try self.data.lastAddedCheckin()
+            {
+                return checkin.drink
+            }
+            else
+            {
+                return defaultDrink
+            }
+        }
+        catch
+        {
+            return defaultDrink
+        }
+    }
+    
+    public func calendar(for: CheckInViewController) -> Calendar
+    {
+        return self.cache.calendar
+    }
+}
+
 extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewControllerDelegate
 {
     public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool
@@ -17,8 +48,10 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
         {
             pulleyTest: do
             {
+                //break pulleyTest
                 let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
                 let controller = storyboard.instantiateViewController(withIdentifier: "CheckIn") as! CheckInViewController
+                controller.delegate = self
                 let vc = UIViewController()
                 
 //                let pulley = PulleyViewController.init(contentViewController: vc, drawerViewController: controller)
@@ -42,7 +75,7 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
                                                                           shadowColor: .black)
                 configuration.drawerShadowConfiguration = drawerShadowConfiguration
                 
-                let pulley = DrawerDisplayController.init(presentingViewController: self, presentedViewController: controller, configuration: configuration, inDebugMode: true)
+                let pulley = DrawerDisplayController.init(presentingViewController: self, presentedViewController: controller, configuration: configuration, inDebugMode: false)
                 self.drawerDisplayController = pulley
                 
                 self.present(controller, animated: true, completion: nil)
@@ -50,11 +83,15 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
                 return false
             }
             
-            let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
-            let controller = storyboard.instantiateViewController(withIdentifier: "ABV") as! ABVViewController
-            let nav = UINavigationController.init(rootViewController: controller)
-            self.present(nav, animated: true, completion: nil)
-            return false
+            testABV: do
+            {
+                let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
+                let controller = storyboard.instantiateViewController(withIdentifier: "ABV") as! ABVViewController
+                let nav = UINavigationController.init(rootViewController: controller)
+                self.present(nav, animated: true, completion: nil)
+                
+                return false
+            }
             
             if let token = Defaults.untappdToken
             {

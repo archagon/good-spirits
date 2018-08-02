@@ -20,10 +20,6 @@ public class ABVViewController: UIViewController
     @IBOutlet var drinksPerWeekField: UITextField!
     @IBOutlet var peakDrinksField: UITextField!
     @IBOutlet var drinkFreeDaysPerWeekField: UITextField!
-    @IBOutlet var done: UIButton!
-    @IBOutlet var doneContainer: UIView!
-    @IBOutlet var doneShadow: ABShadowView!
-    @IBOutlet var doneBackground: UIView!
     
     override public func viewDidLoad()
     {
@@ -46,12 +42,6 @@ public class ABVViewController: UIViewController
 //            let newColor = UIColor.init(red: m * r + (1 - m) * s, green: m * g + (1 - m) * s, blue: m * b + (1 - m) * s, alpha: 1)
 //            doneBackground.backgroundColor = newColor
 //        }
-        
-        self.doneShadow.shadowCornerRadius = 8
-        self.doneShadow.shadowColor = UIColor.black
-        self.doneShadow.shadowOpacity = 0.35
-        self.doneShadow.shadowRadius = 2
-        self.doneShadow.shadowOffset = .init(width: 0, height: 3)
     }
     
     override public func viewDidLayoutSubviews()

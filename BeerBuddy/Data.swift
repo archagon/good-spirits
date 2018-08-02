@@ -30,6 +30,13 @@ public class Data <T: DataImpl>
         return checkins
     }
     
+    public func lastAddedCheckin() throws -> Model.CheckIn?
+    {
+        let checkin = try self.impl.lastAddedCheckin()
+        
+        return checkin
+    }
+    
     public func checkin(withId id: Model.ID) throws -> Model.CheckIn?
     {
         return try tryCache(id)
@@ -144,6 +151,7 @@ public protocol DataImpl
 {
     // Includes from, excludes to. Accepts distantPast and distantFuture as parameters. Sorted chronologically.
     func checkins(from: Date, to: Date) throws -> [Model.CheckIn]
+    func lastAddedCheckin() throws -> Model.CheckIn?
     
     func checkin(withId id: Model.ID) throws -> Model.CheckIn?
     func addCheckin(_ checkin: Model.CheckIn) throws -> Model.CheckIn

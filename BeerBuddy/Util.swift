@@ -77,3 +77,24 @@ extension Calendar
         return self.nextDate(after: date, matching: components, matchingPolicy: .nextTime, direction: direction)!
     }
 }
+
+// https://stackoverflow.com/a/25395011/89812
+extension String
+{
+    public func nobr() -> String
+    {
+        return self
+            .replacingOccurrences(of: " ", with: "\u{a0}")
+            .replacingOccurrences(of: "-", with: "\u{2011}")
+    }
+}
+
+public func ml(_ v: Double) -> Measurement<UnitVolume>
+{
+    return Measurement<UnitVolume>.init(value: v, unit: .milliliters)
+}
+
+public func floz(_ v: Double) -> Measurement<UnitVolume>
+{
+    return Measurement<UnitVolume>.init(value: v, unit: .fluidOunces)
+}

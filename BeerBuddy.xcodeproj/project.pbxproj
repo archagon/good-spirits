@@ -9,7 +9,13 @@
 /* Begin PBXBuildFile section */
 		4E6B75772106BEB5009B6C0D /* Untappd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6B75762106BEB5009B6C0D /* Untappd.swift */; };
 		4E6B75792106BF1A009B6C0D /* UntappdLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */; };
+		4E70D5C72113C0AF0089BBB1 /* PricePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E70D5C62113C0AF0089BBB1 /* PricePickerViewController.swift */; };
 		4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */; };
+		4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F048E21114DBB00038F09 /* Formatting.swift */; };
+		4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */; };
+		4E8F049421124FDD00038F09 /* VolumePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */; };
+		4E8F04962112577E00038F09 /* ABVPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F04952112577E00038F09 /* ABVPickerViewController.swift */; };
+		4E8F04982112C44E00038F09 /* StylePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F04972112C44E00038F09 /* StylePickerViewController.swift */; };
 		4E900B9C20FFF8180095A71A /* StubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E900B9B20FFF8180095A71A /* StubViewController.swift */; };
 		4E93F00721015B7800B51709 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E93F00621015B7800B51709 /* Defaults.swift */; };
 		4E93F00921017A5C00B51709 /* DayHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E93F00821017A5C00B51709 /* DayHeaderCell.swift */; };
@@ -79,7 +85,13 @@
 /* Begin PBXFileReference section */
 		4E6B75762106BEB5009B6C0D /* Untappd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untappd.swift; sourceTree = "<group>"; };
 		4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UntappdLoginViewController.swift; sourceTree = "<group>"; };
+		4E70D5C62113C0AF0089BBB1 /* PricePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricePickerViewController.swift; sourceTree = "<group>"; };
 		4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingPopupViewController.swift; sourceTree = "<group>"; };
+		4E8F048E21114DBB00038F09 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
+		4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInDrawerViewController.swift; sourceTree = "<group>"; };
+		4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumePickerViewController.swift; sourceTree = "<group>"; };
+		4E8F04952112577E00038F09 /* ABVPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABVPickerViewController.swift; sourceTree = "<group>"; };
+		4E8F04972112C44E00038F09 /* StylePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylePickerViewController.swift; sourceTree = "<group>"; };
 		4E900B9B20FFF8180095A71A /* StubViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubViewController.swift; sourceTree = "<group>"; };
 		4E93F00621015B7800B51709 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		4E93F00821017A5C00B51709 /* DayHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayHeaderCell.swift; sourceTree = "<group>"; };
@@ -121,6 +133,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E8F049021124CCA00038F09 /* Check-In View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */,
+				4EE3369A2108043E00D72B7D /* CheckInViewController.swift */,
+				4E8F04952112577E00038F09 /* ABVPickerViewController.swift */,
+				4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */,
+				4E8F04972112C44E00038F09 /* StylePickerViewController.swift */,
+				4E70D5C62113C0AF0089BBB1 /* PricePickerViewController.swift */,
+			);
+			path = "Check-In View Controllers";
+			sourceTree = "<group>";
+		};
 		4EA2F17420FEE7C700CE30E1 = {
 			isa = PBXGroup;
 			children = (
@@ -142,18 +167,19 @@
 		4EA2F17F20FEE7C700CE30E1 /* BeerBuddy */ = {
 			isa = PBXGroup;
 			children = (
+				4E8F049021124CCA00038F09 /* Check-In View Controllers */,
 				4EA2F18020FEE7C700CE30E1 /* AppDelegate.swift */,
 				4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */,
 				4EA2F18420FEE7C700CE30E1 /* SecondViewController.swift */,
 				4E900B9B20FFF8180095A71A /* StubViewController.swift */,
 				4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */,
 				4EE336982108043300D72B7D /* ABVViewController.swift */,
-				4EE3369A2108043E00D72B7D /* CheckInViewController.swift */,
 				4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */,
 				4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */,
 				4E93F00821017A5C00B51709 /* DayHeaderCell.swift */,
 				4E9C8552210D598C00DA959D /* ABPrettyButton.swift */,
 				4EA2F19A20FF07C100CE30E1 /* Model.swift */,
+				4E8F048E21114DBB00038F09 /* Formatting.swift */,
 				4EA2F19620FEF8B900CE30E1 /* Data.swift */,
 				4EA2F19820FEFC6E00CE30E1 /* DataImpl_JSON.swift */,
 				4E6B75762106BEB5009B6C0D /* Untappd.swift */,
@@ -283,19 +309,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E70D5C72113C0AF0089BBB1 /* PricePickerViewController.swift in Sources */,
 				4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */,
 				4EA2F18520FEE7C700CE30E1 /* SecondViewController.swift in Sources */,
 				4E9C8553210D598C00DA959D /* ABPrettyButton.swift in Sources */,
 				4E9C8555210D68F900DA959D /* ColorUtil.swift in Sources */,
 				4E6B75792106BF1A009B6C0D /* UntappdLoginViewController.swift in Sources */,
 				4EA2F18120FEE7C700CE30E1 /* AppDelegate.swift in Sources */,
+				4E8F04962112577E00038F09 /* ABVPickerViewController.swift in Sources */,
+				4E8F04982112C44E00038F09 /* StylePickerViewController.swift in Sources */,
 				4EE3369B2108043E00D72B7D /* CheckInViewController.swift in Sources */,
 				4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */,
 				4E900B9C20FFF8180095A71A /* StubViewController.swift in Sources */,
 				4EA2F1A120FF347D00CE30E1 /* Util.swift in Sources */,
 				4E6B75772106BEB5009B6C0D /* Untappd.swift in Sources */,
 				4EA2F19920FEFC6E00CE30E1 /* DataImpl_JSON.swift in Sources */,
+				4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */,
 				4EA2F19B20FF07C100CE30E1 /* Model.swift in Sources */,
+				4E8F049421124FDD00038F09 /* VolumePickerViewController.swift in Sources */,
 				4E93F00721015B7800B51709 /* Defaults.swift in Sources */,
 				4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */,
 				4E93F00921017A5C00B51709 /* DayHeaderCell.swift in Sources */,
@@ -303,6 +334,7 @@
 				4EE336992108043300D72B7D /* ABVViewController.swift in Sources */,
 				4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */,
 				4EA2F19720FEF8B900CE30E1 /* Data.swift in Sources */,
+				4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
