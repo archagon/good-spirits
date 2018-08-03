@@ -133,7 +133,67 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4E8F049021124CCA00038F09 /* Check-In View Controllers */ = {
+		4E70D5C82113D4480089BBB1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4EA2F19A20FF07C100CE30E1 /* Model.swift */,
+				4EA2F19620FEF8B900CE30E1 /* Data.swift */,
+				4EA2F19820FEFC6E00CE30E1 /* DataImpl_JSON.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		4E70D5C92113D4610089BBB1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4E9C8552210D598C00DA959D /* ABPrettyButton.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4E70D5CA2113D46A0089BBB1 /* Untappd */ = {
+			isa = PBXGroup;
+			children = (
+				4E6B75762106BEB5009B6C0D /* Untappd.swift */,
+				4EE336962107D6F700D72B7D /* Untappd_Schema.swift */,
+			);
+			path = Untappd;
+			sourceTree = "<group>";
+		};
+		4E70D5CB2113D4810089BBB1 /* Check-Ins List */ = {
+			isa = PBXGroup;
+			children = (
+				4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */,
+				4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */,
+				4E93F00821017A5C00B51709 /* DayHeaderCell.swift */,
+			);
+			path = "Check-Ins List";
+			sourceTree = "<group>";
+		};
+		4E70D5CC2113D4B80089BBB1 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				4E70D5CB2113D4810089BBB1 /* Check-Ins List */,
+				4E8F049021124CCA00038F09 /* Check-In */,
+				4E70D5CD2113D4EE0089BBB1 /* Popups */,
+				4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */,
+				4EA2F18420FEE7C700CE30E1 /* SecondViewController.swift */,
+				4E900B9B20FFF8180095A71A /* StubViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		4E70D5CD2113D4EE0089BBB1 /* Popups */ = {
+			isa = PBXGroup;
+			children = (
+				4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */,
+				4EE336982108043300D72B7D /* ABVViewController.swift */,
+				4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */,
+			);
+			path = Popups;
+			sourceTree = "<group>";
+		};
+		4E8F049021124CCA00038F09 /* Check-In */ = {
 			isa = PBXGroup;
 			children = (
 				4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */,
@@ -143,7 +203,7 @@
 				4E8F04972112C44E00038F09 /* StylePickerViewController.swift */,
 				4E70D5C62113C0AF0089BBB1 /* PricePickerViewController.swift */,
 			);
-			path = "Check-In View Controllers";
+			path = "Check-In";
 			sourceTree = "<group>";
 		};
 		4EA2F17420FEE7C700CE30E1 = {
@@ -167,24 +227,12 @@
 		4EA2F17F20FEE7C700CE30E1 /* BeerBuddy */ = {
 			isa = PBXGroup;
 			children = (
-				4E8F049021124CCA00038F09 /* Check-In View Controllers */,
 				4EA2F18020FEE7C700CE30E1 /* AppDelegate.swift */,
-				4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */,
-				4EA2F18420FEE7C700CE30E1 /* SecondViewController.swift */,
-				4E900B9B20FFF8180095A71A /* StubViewController.swift */,
-				4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */,
-				4EE336982108043300D72B7D /* ABVViewController.swift */,
-				4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */,
-				4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */,
-				4E93F00821017A5C00B51709 /* DayHeaderCell.swift */,
-				4E9C8552210D598C00DA959D /* ABPrettyButton.swift */,
-				4EA2F19A20FF07C100CE30E1 /* Model.swift */,
+				4E70D5C92113D4610089BBB1 /* Views */,
+				4E70D5CC2113D4B80089BBB1 /* View Controllers */,
+				4E70D5C82113D4480089BBB1 /* Model */,
+				4E70D5CA2113D46A0089BBB1 /* Untappd */,
 				4E8F048E21114DBB00038F09 /* Formatting.swift */,
-				4EA2F19620FEF8B900CE30E1 /* Data.swift */,
-				4EA2F19820FEFC6E00CE30E1 /* DataImpl_JSON.swift */,
-				4E6B75762106BEB5009B6C0D /* Untappd.swift */,
-				4EE336962107D6F700D72B7D /* Untappd_Schema.swift */,
-				4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */,
 				4E93F00621015B7800B51709 /* Defaults.swift */,
 				4EA2F1A020FF347D00CE30E1 /* Util.swift */,
 				4E9C8554210D68F900DA959D /* ColorUtil.swift */,
