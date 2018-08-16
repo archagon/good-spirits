@@ -20,14 +20,14 @@ extension FirstViewController: CheckInViewControllerDelegate
         do
         {
             throw DataImplGenericError.readOnly
-            if let checkin = try self.data.lastAddedCheckin()
-            {
-                return checkin.drink
-            }
-            else
-            {
+//            if let checkin = try self.data.lastAddedCheckin()
+//            {
+//                return checkin.drink
+//            }
+//            else
+//            {
                 return defaultDrink
-            }
+//            }
         }
         catch
         {
@@ -195,10 +195,10 @@ class FirstViewController: UIViewController, DrawerCoordinating
     
     @IBOutlet var tableView: UITableView!
     
-    var data: Data<DataImpl_JSON>!
+    var data: DataLayer!
     
     // guaranteed to always be valid
-    var cache: (calendar: Calendar, daysOfWeek: [Weekday], range: (Date, Date), data: [Model.CheckIn])!
+    var cache: (calendar: Calendar, daysOfWeek: [Weekday], range: (Date, Date), data: [Model])!
     
     override func viewDidLoad()
     {
@@ -233,19 +233,12 @@ class FirstViewController: UIViewController, DrawerCoordinating
             self.tableView.estimatedRowHeight = 20 //TODO: actual estimate
         }
         
-        guard let jsonPath = Bundle.main.url(forResource: "stub", withExtension: "json") else
+        guard let dataImpl = Data_GRDB.init() else
         {
-            assert(false, "JSON file not found")
+            fatalError("database could not be created")
         }
         
-        guard let dataImpl = DataImpl_JSON.init(withURL: jsonPath) else
-        {
-            assert(false, "JSON file not found")
-        }
-        
-        let data = Data.init(impl: dataImpl)
-        
-        self.data = data
+        self.data = DataLayer.init(withStore: dataImpl)
         
         //do
         //{
@@ -264,22 +257,23 @@ class FirstViewController: UIViewController, DrawerCoordinating
     {
         //let oldCache = self.cache
         
-        do
+        let calendar = Time.calendar()
+        let daysOfWeek = Time.daysOfWeek()
+        let range = Time.currentWeek()
+        
+        self.data.getModels(fromIncludingDate: range.0, toExcludingDate: range.1)
         {
-            let calendar = Time.calendar()
-            let daysOfWeek = Time.daysOfWeek()
-            let range = Time.currentWeek()
-            let data = try self.data.checkins(from: range.0, to: range.1)
-            
-            // TODO: fancy animations, if needed
-            self.cache = (calendar, daysOfWeek, range, data)
-            
-            self.tableView.reloadData()
-        }
-        catch
-        {
-            assert(false, "Error: \(error)")
-            self.cache = (Time.calendar(), Time.daysOfWeek(), Time.currentWeek(), [])
+            switch $0
+            {
+            case .error(let e):
+                fatalError("\(e)")
+                self.cache = (Time.calendar(), Time.daysOfWeek(), Time.currentWeek(), [])
+                self.tableView.reloadData()
+            case .value(let v):
+                // TODO: fancy animations, if needed
+                self.cache = (calendar, daysOfWeek, range, v)
+                self.tableView.reloadData()
+            }
         }
     }
 
@@ -297,7 +291,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         var j = indexPath.row
         for (i, item) in self.cache.data.enumerated()
         {
-            guard let day = Weekday.init(fromDate: item.time, withCalendar: self.cache.calendar) else
+            guard let day = Weekday.init(fromDate: item.checkIn.time, withCalendar: self.cache.calendar) else
             {
                 appError("invalid day for checkin")
                 return nil
@@ -329,7 +323,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         // PERF: slow
         let count = self.cache.data.reduce(0)
         { (total, item) -> Int in
-            let day = Weekday.init(fromDate: item.time, withCalendar: self.cache.calendar)!
+            let day = Weekday.init(fromDate: item.checkIn.time, withCalendar: self.cache.calendar)!
             if day == self.cache.daysOfWeek[section]
             {
                 return total + 1

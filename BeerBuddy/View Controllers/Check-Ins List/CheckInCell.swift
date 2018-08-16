@@ -260,27 +260,27 @@ public class CheckInCell: UITableViewCell
         self.container.alpha = 0.7
     }
     
-    public func populateWithData(_ data: Model.CheckIn)
+    public func populateWithData(_ data: Model)
     {
         NSLayoutConstraint.deactivate(self.stubConstraints)
         NSLayoutConstraint.activate(self.dataConstraints)
         
-        let imageName = Model.assetNameForDrink(data.drink)
+        let imageName = Model.assetNameForDrink(data.checkIn.drink)
         let image = drinkIcon(forImageName: imageName)
         
-        let volume = String.init(format: (data.drink.volume.value.truncatingRemainder(dividingBy: 1) == 0 ? "%.0f" : "%.1f"), data.drink.volume.value as CVarArg)
+        let volume = String.init(format: (data.checkIn.drink.volume.value.truncatingRemainder(dividingBy: 1) == 0 ? "%.0f" : "%.1f"), data.checkIn.drink.volume.value as CVarArg)
         
         let measurementFormatter = MeasurementFormatter.init()
         measurementFormatter.unitStyle = .short
-        let unit = measurementFormatter.string(from: data.drink.volume.unit)
+        let unit = measurementFormatter.string(from: data.checkIn.drink.volume.unit)
         
-        let abv = String.init(format: "%.1f", data.drink.abv * 100)
+        let abv = String.init(format: "%.1f", data.checkIn.drink.abv * 100)
         
-        let price: String? = (data.drink.price != nil) ? String.init(format: (data.drink.price!.truncatingRemainder(dividingBy: 1) == 0 ? "$%.0f" : "$%.2f"), data.drink.price! as CVarArg) : nil
+        let price: String? = (data.checkIn.drink.price != nil) ? String.init(format: (data.checkIn.drink.price!.truncatingRemainder(dividingBy: 1) == 0 ? "$%.0f" : "$%.2f"), data.checkIn.drink.price! as CVarArg) : nil
         
         let amount = "1"
         
-        let proseText = "\(volume) \(unit) of \(abv)% ABV \(data.drink.style) ×\(1)"
+        let proseText = "\(volume) \(unit) of \(abv)% ABV \(data.checkIn.drink.style) ×\(1)"
         
         let proseString = NSMutableAttributedString()
         createString: do
@@ -311,7 +311,7 @@ public class CheckInCell: UITableViewCell
             appendNormal(" of ")
             appendUnderl("\(abv)%", tag: "abv")
             appendNormal(" ABV ")
-            appendUnderl("\(data.drink.style)", tag: "style")
+            appendUnderl("\(data.checkIn.drink.style)", tag: "style")
             if let price = price
             {
                 appendNormal(" for ")
@@ -323,19 +323,19 @@ public class CheckInCell: UITableViewCell
         }
         proseString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14)], range: NSMakeRange(0, proseString.length))
         
-        let nameString = NSMutableAttributedString.init(string: data.drink.name ?? "")
+        let nameString = NSMutableAttributedString.init(string: data.checkIn.drink.name ?? "")
         nameString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14, weight:.bold)], range: NSMakeRange(0, nameString.length))
         
         let statsString = NSMutableAttributedString()
         createStatsString: do
         {
             let limits = Limit.init(withCountryCode: "US")
-            let alcoholVolume = data.drink.volume * data.drink.abv
+            let alcoholVolume = data.checkIn.drink.volume * data.checkIn.drink.abv
             let units = limits.standardUnits(forAlcohol: alcoholVolume)
             let unitsString = String.init(format: "%.1f", units as CVarArg)
             
             // TODO: drink amounts
-            let price = (data.drink.price != nil ? data.drink.price! * 1 : nil)
+            let price = (data.checkIn.drink.price != nil ? data.checkIn.drink.price! * 1 : nil)
             let priceString: String? = (price != nil) ? String.init(format: (price!.truncatingRemainder(dividingBy: 1) == 0 ? "$%.0f" : "$%.2f"), price! as CVarArg) : nil
             
             statsString.append(NSAttributedString.init(string: "Drank \(unitsString) standard units\(price == nil ? "" : " for a total of \(priceString ?? "")")"))

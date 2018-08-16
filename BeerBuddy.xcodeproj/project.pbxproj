@@ -31,7 +31,6 @@
 		4EA2F18D20FEE7CB00CE30E1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F18B20FEE7CB00CE30E1 /* LaunchScreen.storyboard */; };
 		4EA2F19520FEE80D00CE30E1 /* stub.json in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F19420FEE80D00CE30E1 /* stub.json */; };
 		4EA2F19720FEF8B900CE30E1 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19620FEF8B900CE30E1 /* Data.swift */; };
-		4EA2F19920FEFC6E00CE30E1 /* DataImpl_JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19820FEFC6E00CE30E1 /* DataImpl_JSON.swift */; };
 		4EA2F19B20FF07C100CE30E1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19A20FF07C100CE30E1 /* Model.swift */; };
 		4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */; };
 		4EA2F19F20FF30F500CE30E1 /* DrinkIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */; };
@@ -139,7 +138,6 @@
 		4EA2F18E20FEE7CB00CE30E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4EA2F19420FEE80D00CE30E1 /* stub.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = stub.json; sourceTree = "<group>"; };
 		4EA2F19620FEF8B900CE30E1 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
-		4EA2F19820FEFC6E00CE30E1 /* DataImpl_JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataImpl_JSON.swift; sourceTree = "<group>"; };
 		4EA2F19A20FF07C100CE30E1 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInCell.swift; sourceTree = "<group>"; };
 		4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DrinkIcons.xcassets; sourceTree = "<group>"; };
@@ -171,7 +169,6 @@
 			children = (
 				4EA2F19A20FF07C100CE30E1 /* Model.swift */,
 				4EA2F19620FEF8B900CE30E1 /* Data.swift */,
-				4EA2F19820FEFC6E00CE30E1 /* DataImpl_JSON.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -441,7 +438,6 @@
 				4E900B9C20FFF8180095A71A /* StubViewController.swift in Sources */,
 				4EA2F1A120FF347D00CE30E1 /* Util.swift in Sources */,
 				4E6B75772106BEB5009B6C0D /* Untappd.swift in Sources */,
-				4EA2F19920FEFC6E00CE30E1 /* DataImpl_JSON.swift in Sources */,
 				4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */,
 				4EA2F19B20FF07C100CE30E1 /* Model.swift in Sources */,
 				4E8F049421124FDD00038F09 /* VolumePickerViewController.swift in Sources */,
