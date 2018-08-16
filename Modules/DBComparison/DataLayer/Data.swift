@@ -15,7 +15,7 @@ import UIKit
 public class DataLayer
 {
     public typealias OperationLog = [DataLayer.SiteID : (startingIndex: DataLayer.Index, operations: [GlobalID])]
-    public typealias DataType = DataAccessProtocol & DataDebugProtocol
+    public typealias DataType = DataAccessProtocol & DataDebugProtocol & DataObservationProtocol
     
     public typealias SiteID = UUID
     public typealias Index = UInt32
@@ -27,12 +27,12 @@ public class DataLayer
     private var stores: [DataType]
     private var mainStoreIndex: Int
     
-    public var primaryStore: DataAccessProtocol & DataDebugProtocol
+    public var primaryStore: DataType
     {
         return self.stores[self.mainStoreIndex]
     }
     
-    public func store(atIndex i: Int) -> DataAccessProtocol & DataDebugProtocol
+    public func store(atIndex i: Int) -> DataType
     {
         return self.stores[i]
     }
@@ -44,6 +44,12 @@ public class DataLayer
         self.stores = []
         
         self.addStore(store)
+        
+        NotificationCenter.default.addObserver(forName: type(of: store).DataDidChangeNotification, object: nil, queue: OperationQueue.main)
+        { notification in
+            print("database changed: \(notification.object != nil ? "\(notification.object!)" : "<null>")")
+            NotificationCenter.default.post(name: type(of: self).DataDidChangeNotification, object: self)
+        }
     }
     
     public func addStore(_ store: DataType)
@@ -72,6 +78,11 @@ extension DataLayer
     }
 }
 
+extension DataLayer: DataObservationProtocol
+{
+    public static var DataDidChangeNotification: Notification.Name = Notification.Name.init(rawValue: "DataDidChangeNotification")
+}
+
 public enum DataError: StringLiteralType, Error
 {
     case couldNotOpenStore
@@ -86,6 +97,9 @@ public enum DataError: StringLiteralType, Error
 // Intended to be called from the main thread.
 extension DataLayer
 {
+    public typealias Token = VectorClock
+    public static var NullToken = VectorClock.init(map: [:])
+    
     public func save(model: Model, withCallbackBlock block: @escaping (MaybeError<GlobalID>)->Void)
     {
         func ret(id: GlobalID)
@@ -163,9 +177,9 @@ extension DataLayer
         }
     }
     
-    public func getModels(fromIncludingDate from: Date, toExcludingDate to: Date, withCallbackBlock block: @escaping (MaybeError<[Model]>)->Void)
+    public func getModels(fromIncludingDate from: Date, toExcludingDate to: Date, withToken token: Token? = nil, withCallbackBlock block: @escaping (MaybeError<([Model], Token)>)->Void)
     {
-        func ret(_ v: MaybeError<[Model]>)
+        func ret(_ v: MaybeError<([Model], Token)>)
         {
             onMain
             {
@@ -175,15 +189,15 @@ extension DataLayer
         
         self.primaryStore.readTransaction
         { db in
-            db.data(fromIncludingDate: from, toExcludingDate: to)
+            db.data(fromIncludingDate: from, toExcludingDate: to, afterTimestamp: token)
             {
                 switch $0
                 {
                 case .error(let e):
                     ret(.error(e: e))
                 case .value(let v):
-                    let models = v.map { $0.toModel() }
-                    ret(.value(v: models))
+                    let models = v.0.map { $0.toModel() }
+                    ret(.value(v: (models, v.1)))
                 }
             }
         }

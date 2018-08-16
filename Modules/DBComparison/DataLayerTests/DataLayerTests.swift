@@ -139,7 +139,7 @@ class DataLayerTests: XCTestCase
                     XCTAssertNil(e)
                 case .value(let set):
                     var retrievedModels: [GlobalID:Model] = [:]
-                    set.forEach { retrievedModels[$0.metadata.id] = $0 }
+                    set.0.forEach { retrievedModels[$0.metadata.id] = $0 }
                     
                     XCTAssertEqual(retrievedModels.count, createdModels.count)
                     

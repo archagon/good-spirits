@@ -45,6 +45,31 @@ public class Data_GRDB
     }
 }
 
+extension Data_GRDB: DataObservationProtocol, TransactionObserver
+{
+    public static var DataDidChangeNotification: Notification.Name = Notification.Name.init(rawValue: "GRDBDataDidChangeNotification")
+ 
+    public func observes(eventsOfKind eventKind: DatabaseEventKind) -> Bool
+    {
+        return true
+    }
+    
+    public func databaseDidChange(with event: DatabaseEvent)
+    {
+        //NotificationCenter.default.post(name: Data_GRDB.DataDidChangeNotification, object: self)
+        //self.stopObservingDatabaseChangesUntilNextTransaction()
+    }
+    
+    public func databaseDidCommit(_ db: Database)
+    {
+        NotificationCenter.default.post(name: Data_GRDB.DataDidChangeNotification, object: self)
+    }
+    
+    public func databaseDidRollback(_ db: Database)
+    {
+    }
+}
+
 extension Data_GRDB: DataAccessProtocol
 {
     public func initialize(_ block: @escaping (Error?)->Void)
@@ -70,6 +95,8 @@ extension Data_GRDB: DataAccessProtocol
                     DataModelLogEntry.createTable(withTableDefinition: td)
                 }
                 try db.create(index: "logIndex", on: DataModelLogEntry.databaseTableName, columns: [DataModelLogEntry.Columns.action_uuid.rawValue, DataModelLogEntry.Columns.action_index.rawValue])
+                
+                db.add(transactionObserver: self)
                 
                 block(nil)
             }

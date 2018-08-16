@@ -48,7 +48,7 @@ extension DataLayer
             
             // QQQ: HACK! at least until we get db notifications working
             // NEXT: why does this work but dispatch etc. does not?
-            sleep(1)
+            //sleep(1)
         }
     }
 }

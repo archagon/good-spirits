@@ -284,7 +284,7 @@ extension DataProtocol where Self: DataProtocolImmediate
         }
     }
     
-    public func data(afterTimestamp timestamp: VectorClock, withCompletionBlock block: @escaping (MaybeError<Set<DataModel>>)->())
+    public func data(afterTimestamp timestamp: VectorClock, withCompletionBlock block: @escaping (MaybeError<(Set<DataModel>,VectorClock)>)->())
     {
         do
         {
@@ -297,11 +297,11 @@ extension DataProtocol where Self: DataProtocolImmediate
         }
     }
     
-    public func data(fromIncludingDate from: Date, toExcludingDate to: Date, withCompletionBlock block: @escaping (MaybeError<[DataModel]>)->())
+    public func data(fromIncludingDate from: Date, toExcludingDate to: Date, afterTimestamp timestamp: VectorClock?, withCompletionBlock block: @escaping (MaybeError<([DataModel],VectorClock)>)->())
     {
         do
         {
-            let value = try self.data(fromIncludingDate: from, toExcludingDate: to)
+            let value = try self.data(fromIncludingDate: from, toExcludingDate: to, afterTimestamp: timestamp)
             block(.value(v: value))
         }
         catch

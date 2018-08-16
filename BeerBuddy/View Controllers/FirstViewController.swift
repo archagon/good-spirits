@@ -198,7 +198,7 @@ class FirstViewController: UIViewController, DrawerCoordinating
     var data: DataLayer!
     
     // guaranteed to always be valid
-    var cache: (calendar: Calendar, daysOfWeek: [Weekday], range: (Date, Date), data: [Model])!
+    var cache: (calendar: Calendar, daysOfWeek: [Weekday], range: (Date, Date), data: [Model], token: DataLayer.Token)!
     
     override func viewDidLoad()
     {
@@ -241,6 +241,11 @@ class FirstViewController: UIViewController, DrawerCoordinating
         self.data = DataLayer.init(withStore: dataImpl)
         self.data.populateWithSampleData()
         
+        DispatchQueue.main.asyncAfter(deadline:.now() + 3)
+        {
+            self.data.populateWithSampleData()
+        }
+        
         //do
         //{
         //    let checkins = try data.checkins(from: Date.init(timeInterval: debugPast, since: Date()), to: Date.distantFuture)
@@ -251,29 +256,71 @@ class FirstViewController: UIViewController, DrawerCoordinating
         //    assert(false, "Error: \(error)")
         //}
         
-        reloadData()
+        //reloadData()
+        
+        NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
+        { _ in
+            let calendar = Time.calendar()
+            let daysOfWeek = Time.daysOfWeek()
+            let range = Time.currentWeek()
+            
+            print("Requesting change with token \(self.cache?.token ?? DataLayer.NullToken)...")
+            
+            self.data.getModels(fromIncludingDate: range.0, toExcludingDate: range.1, withToken: self.cache?.token ?? DataLayer.NullToken)
+            {
+                switch $0
+                {
+                case .error(let e):
+                    fatalError("\(e)")
+                case .value(let v):
+                    // NEXT: deletions
+                    print("Changes received with new token \(v.1)!")
+                    var newOps: [GlobalID:Model] = [:]
+                    for op in v.0
+                    {
+                        newOps[op.metadata.id] = op
+                    }
+                    var updatedOps = self.cache?.data ?? []
+                    for i in 0..<updatedOps.count
+                    {
+                        let op = updatedOps[i]
+                        if let newOp = newOps[op.metadata.id]
+                        {
+                            updatedOps[i] = newOp
+                            newOps[op.metadata.id] = nil
+                        }
+                    }
+                    updatedOps += Array(newOps.values)
+                    updatedOps.sort { $0.checkIn.time < $1.checkIn.time }
+                    self.cache = (calendar, daysOfWeek, range, updatedOps, v.1)
+                    self.tableView.reloadData()
+                }
+            }
+        }
     }
     
     func reloadData()
     {
         //let oldCache = self.cache
         
-        let calendar = Time.calendar()
-        let daysOfWeek = Time.daysOfWeek()
-        let range = Time.currentWeek()
+//        let calendar = Time.calendar()
+//        let daysOfWeek = Time.daysOfWeek()
+//        let range = Time.currentWeek()
+//
+//        self.data.getModels(fromIncludingDate: range.0, toExcludingDate: range.1)
+//        {
+//            switch $0
+//            {
+//            case .error(let e):
+//                fatalError("\(e)")
+//            case .value(let v):
+//                // TODO: fancy animations, if needed
+//                self.cache = (calendar, daysOfWeek, range, v.0, v.1)
+//                self.tableView.reloadData()
+//            }
+//        }
         
-        self.data.getModels(fromIncludingDate: range.0, toExcludingDate: range.1)
-        {
-            switch $0
-            {
-            case .error(let e):
-                fatalError("\(e)")
-            case .value(let v):
-                // TODO: fancy animations, if needed
-                self.cache = (calendar, daysOfWeek, range, v)
-                self.tableView.reloadData()
-            }
-        }
+        self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning()
