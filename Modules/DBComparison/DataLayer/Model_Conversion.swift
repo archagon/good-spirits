@@ -10,7 +10,7 @@ import Foundation
 
 extension Model
 {
-    func toData(withLamport t: DataLayer.Time, existingData: DataModel? = nil) -> DataModel
+    public func toData(withLamport t: DataLayer.Time, existingData: DataModel? = nil) -> DataModel
     {
         if let existingData = existingData
         {
@@ -49,7 +49,7 @@ extension Model
 
 extension DataModel
 {
-    func toModel() -> Model
+    public func toModel() -> Model
     {
         let metadata = Model.Metadata.init(id: self.metadata.id, creationTime: Date.init(timeIntervalSince1970: self.metadata.creationTime))
         let drink = Model.Drink.init(name: self.checkIn.drink.name.v, style: self.checkIn.drink.style.v, abv: self.checkIn.drink.abv.v, price: self.checkIn.drink.price.v, volume: self.checkIn.drink.volume.v)

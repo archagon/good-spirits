@@ -20,14 +20,28 @@ extension FirstViewController: CheckInViewControllerDelegate
         do
         {
             throw DataImplGenericError.readOnly
-//            if let checkin = try self.data.lastAddedCheckin()
-//            {
-//                return checkin.drink
-//            }
-//            else
-//            {
+            do
+            {
+                let checkin = try self.data.primaryStore.readTransaction
+                { db -> Model? in
+                    let dataModel = try db.lastAddedData()
+                    return dataModel?.toModel()
+                }
+                
+                if checkin != nil
+                {
+                    return checkin!.checkIn.drink
+                }
+                else
+                {
+                    return defaultDrink
+                }
+            }
+            catch
+            {
+                appError("\(error)")
                 return defaultDrink
-//            }
+            }
         }
         catch
         {
@@ -239,12 +253,6 @@ class FirstViewController: UIViewController, DrawerCoordinating
         }
         
         self.data = DataLayer.init(withStore: dataImpl)
-        self.data.populateWithSampleData()
-        
-        DispatchQueue.main.asyncAfter(deadline:.now() + 3)
-        {
-            self.data.populateWithSampleData()
-        }
         
         //do
         //{
@@ -296,6 +304,12 @@ class FirstViewController: UIViewController, DrawerCoordinating
                     self.tableView.reloadData()
                 }
             }
+        }
+        
+        self.data.populateWithSampleData()
+        DispatchQueue.main.asyncAfter(deadline:.now() + 3)
+        {
+            self.data.populateWithSampleData()
         }
     }
     

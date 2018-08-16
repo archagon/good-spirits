@@ -70,52 +70,34 @@ extension Data_GRDB: DataObservationProtocol, TransactionObserver
     }
 }
 
-extension Data_GRDB: DataAccessProtocol
+extension Data_GRDB: DataAccessProtocol, DataAccessProtocolImmediate
 {
-    public func initialize(_ block: @escaping (Error?)->Void)
+    public func initialize() throws
     {
-        self.database.write
+        try self.database.write
         { db in
-            do
-            {
-                try db.create(table: DataModel.databaseTableName, temporary: false, ifNotExists: true, withoutRowID: true)
-                { td in
-                    DataModel.createTable(withTableDefinition: td)
-                }
-                try db.create(index: "dateIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.checkin_time_value.rawValue])
-                let allLamportColumns = DataModel.Columns.allCases.filter { $0.isLamport }
-                for (_, column) in allLamportColumns.enumerated()
-                {
-                    // TODO: is this correct?
-                    try db.create(index: "max\(column.rawValue.underscoreToCamelCase.capitalizedFirstLetter)Index", on: DataModel.databaseTableName, columns: ["MAX(\(column.rawValue))"])
-                }
-                
-                try db.create(table: DataModelLogEntry.databaseTableName, temporary: false, ifNotExists: true, withoutRowID: false)
-                { td in
-                    DataModelLogEntry.createTable(withTableDefinition: td)
-                }
-                try db.create(index: "logIndex", on: DataModelLogEntry.databaseTableName, columns: [DataModelLogEntry.Columns.action_uuid.rawValue, DataModelLogEntry.Columns.action_index.rawValue])
-                
-                db.add(transactionObserver: self)
-                
-                block(nil)
+            try db.create(table: DataModel.databaseTableName, temporary: false, ifNotExists: true, withoutRowID: true)
+            { td in
+                DataModel.createTable(withTableDefinition: td)
             }
-            catch
+            try db.create(index: "dateIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.checkin_time_value.rawValue])
+            try db.create(index: "creationTimeIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.metadata_creation_time.rawValue])
+            let allLamportColumns = DataModel.Columns.allCases.filter { $0.isLamport }
+            for (_, column) in allLamportColumns.enumerated()
             {
-                block(error)
+                // TODO: is this correct?
+                try db.create(index: "max\(column.rawValue.underscoreToCamelCase.capitalizedFirstLetter)Index", on: DataModel.databaseTableName, columns: ["MAX(\(column.rawValue))"])
             }
+            
+            try db.create(table: DataModelLogEntry.databaseTableName, temporary: false, ifNotExists: true, withoutRowID: false)
+            { td in
+                DataModelLogEntry.createTable(withTableDefinition: td)
+            }
+            try db.create(index: "logIndex", on: DataModelLogEntry.databaseTableName, columns: [DataModelLogEntry.Columns.action_uuid.rawValue, DataModelLogEntry.Columns.action_index.rawValue])
+            
+            db.add(transactionObserver: self)
         }
     }
-    
-    
-    //DispatchQueue.global().async {
-    //dbQueue.write { db in
-    //// Perform database work
-    //}
-    //DispatchQueue.main.async {
-    //// update your user interface
-    //}
-    //}
     
     public func readTransaction(_ block: @escaping (_ data: DataProtocol)->())
     {
@@ -134,6 +116,14 @@ extension Data_GRDB: DataAccessProtocol
         }
     }
     
+    public func readTransaction<T>(_ block: @escaping (_ data: DataProtocolImmediate) throws -> T) rethrows -> T
+    {
+        return try self.database.read
+        { db in
+            return try block(db)
+        }
+    }
+    
     public func readWriteTransaction(_ block: @escaping (_ data: DataWriteProtocol)->())
     {
         self.queue.async
@@ -148,6 +138,14 @@ extension Data_GRDB: DataAccessProtocol
             catch
             {
             }
+        }
+    }
+    
+    public func readWriteTransaction<T>(_ block: @escaping (_ data: DataWriteProtocolImmediate) throws -> T) rethrows -> T
+    {
+        return try self.database.write
+        { db in
+            return try block(db)
         }
     }
 }

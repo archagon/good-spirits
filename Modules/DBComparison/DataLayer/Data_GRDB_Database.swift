@@ -196,6 +196,11 @@ extension Database: DataProtocolImmediate
         return try DataModel.fetchOne(self, key: [DataModel.Columns.metadata_id_uuid.rawValue : id.siteID.uuidString, DataModel.Columns.metadata_id_index.rawValue : id.operationIndex])
     }
     
+    public func lastAddedData() throws -> DataModel?
+    {
+        return try DataModel.filter(max(DataModel.Columns.metadata_creation_time)).fetchOne(self)
+    }
+    
     public func data(afterTimestamp timestamp: VectorClock) throws -> (Set<DataModel>,VectorClock)
     {
         let log = try self.operationLog(afterTimestamp: timestamp, includingMissing: true, onlyGreaterThan: true)

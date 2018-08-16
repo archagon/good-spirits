@@ -27,9 +27,9 @@ public class DataLayer
     private var stores: [DataType]
     private var mainStoreIndex: Int
     
-    public var primaryStore: DataType
+    public var primaryStore: DataType & DataAccessProtocolImmediate
     {
-        return self.stores[self.mainStoreIndex]
+        return self.stores[self.mainStoreIndex] as! (DataType & DataAccessProtocolImmediate)
     }
     
     public func store(atIndex i: Int) -> DataType
@@ -37,7 +37,7 @@ public class DataLayer
         return self.stores[i]
     }
     
-    public init(withStore store: DataType, owner: SiteID = UIDevice.current.identifierForVendor!)
+    public init(withStore store: DataType & DataAccessProtocolImmediate, owner: SiteID = UIDevice.current.identifierForVendor!)
     {
         self.owner = owner
         self.mainStoreIndex = 0
@@ -47,7 +47,7 @@ public class DataLayer
         
         NotificationCenter.default.addObserver(forName: type(of: store).DataDidChangeNotification, object: nil, queue: OperationQueue.main)
         { notification in
-            print("database changed: \(notification.object != nil ? "\(notification.object!)" : "<null>")")
+            print("Database changed: \(notification.object != nil ? "\(notification.object!)" : "<null>")")
             NotificationCenter.default.post(name: type(of: self).DataDidChangeNotification, object: self)
         }
     }
@@ -198,6 +198,30 @@ extension DataLayer
                 case .value(let v):
                     let models = v.0.map { $0.toModel() }
                     ret(.value(v: (models, v.1)))
+                }
+            }
+        }
+    }
+    
+    public func getLastAddedModel(withCallbackBlock block: @escaping (MaybeError<Model?>)->Void)
+    {
+        self.primaryStore.readTransaction
+        { db in
+            db.lastAddedData
+            {
+                switch $0
+                {
+                case .error(let e):
+                    onMain
+                    {
+                        block(.error(e: e))
+                    }
+                case .value(let v):
+                    let model = v?.toModel()
+                    onMain
+                    {
+                        block(.value(v: model))
+                    }
                 }
             }
         }

@@ -53,9 +53,6 @@ class Time
             return (Date.distantPast, Date.distantFuture)
         }
         
-        dump(newStartOfWeek)
-        dump(newEndOfWeek)
-        
         return (newStartOfWeek, newEndOfWeek)
     }
 }

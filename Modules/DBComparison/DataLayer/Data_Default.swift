@@ -204,6 +204,22 @@ extension DataWriteProtocolImmediate where Self: DataAccessEasySyncProtocolImmed
     }
 }
 
+extension DataAccessProtocol where Self: DataAccessProtocolImmediate
+{
+    public func initialize(_ block: @escaping (Error?)->Void)
+    {
+        do
+        {
+            try self.initialize()
+            block(nil)
+        }
+        catch
+        {
+            block(error)
+        }
+    }
+}
+
 extension DataProtocol where Self: DataProtocolImmediate
 {
     public func lamportTimestamp(withCompletionBlock block: @escaping (MaybeError<DataLayer.Time>)->())
@@ -276,6 +292,19 @@ extension DataProtocol where Self: DataProtocolImmediate
         do
         {
             let value = try self.data(forID: id)
+            block(.value(v: value))
+        }
+        catch
+        {
+            block(.error(e: error))
+        }
+    }
+    
+    public func lastAddedData(withCompletionBlock block: @escaping (MaybeError<DataModel?>)->())
+    {
+        do
+        {
+            let value = try self.lastAddedData()
             block(.value(v: value))
         }
         catch

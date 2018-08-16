@@ -19,6 +19,14 @@ public protocol DataAccessProtocol
     func readTransaction(_ block: @escaping (_ data: DataProtocol)->())
     func readWriteTransaction(_ block: @escaping (_ data: DataWriteProtocol)->())
 }
+public protocol DataAccessProtocolImmediate
+{
+    func initialize() throws
+    
+    // Inside these blocks, the view of the store must be consistent!
+    func readTransaction<T>(_ block: @escaping (_ data: DataProtocolImmediate) throws -> T) rethrows -> T
+    func readWriteTransaction<T>(_ block: @escaping (_ data: DataWriteProtocolImmediate) throws -> T) rethrows -> T
+}
 
 // A generic interface for persistent stores, e.g. databases or cloud storage providers.
 public protocol DataProtocol
@@ -33,21 +41,13 @@ public protocol DataProtocol
     
     // data
     func data(forID id: GlobalID, withCompletionBlock block: @escaping (MaybeError<DataModel?>)->())
+    func lastAddedData(withCompletionBlock block: @escaping (MaybeError<DataModel?>)->())
     
     // batch; contains everything > timestamp and includes missing sites
     // AB: this could return more operations than we need, but conflict-free merge should eliminate errors
     func data(afterTimestamp timestamp: VectorClock, withCompletionBlock block: @escaping (MaybeError<(Set<DataModel>,VectorClock)>)->())
     func data(fromIncludingDate from: Date, toExcludingDate to: Date, afterTimestamp: VectorClock?, withCompletionBlock block: @escaping (MaybeError<([DataModel],VectorClock)>)->())
 }
-
-public protocol DataWriteProtocol: DataProtocol
-{
-    func commit(data: DataModel, withSite: DataLayer.SiteID, completionBlock block: @escaping (MaybeError<GlobalID>)->())
-    func commit(data: [DataModel], withSite: DataLayer.SiteID, completionBlock block: @escaping (MaybeError<[GlobalID]>)->())
-    
-    func sync(data: Set<DataModel>, withOperationLog: DataLayer.OperationLog, completionBlock block: @escaping (Error?)->())
-}
-
 public protocol DataProtocolImmediate
 {
     func lamportTimestamp() throws -> DataLayer.Time
@@ -60,12 +60,20 @@ public protocol DataProtocolImmediate
     
     // data
     func data(forID id: GlobalID) throws -> DataModel?
+    func lastAddedData() throws -> DataModel?
     
     // batch; contains everything >= timestamp and includes missing sites
     func data(afterTimestamp timestamp: VectorClock) throws -> (Set<DataModel>,VectorClock)
     func data(fromIncludingDate from: Date, toExcludingDate to: Date, afterTimestamp: VectorClock?) throws -> ([DataModel],VectorClock)
 }
 
+public protocol DataWriteProtocol: DataProtocol
+{
+    func commit(data: DataModel, withSite: DataLayer.SiteID, completionBlock block: @escaping (MaybeError<GlobalID>)->())
+    func commit(data: [DataModel], withSite: DataLayer.SiteID, completionBlock block: @escaping (MaybeError<[GlobalID]>)->())
+    
+    func sync(data: Set<DataModel>, withOperationLog: DataLayer.OperationLog, completionBlock block: @escaping (Error?)->())
+}
 public protocol DataWriteProtocolImmediate: DataProtocolImmediate
 {
     func commit(data: DataModel, withSite: DataLayer.SiteID) throws -> GlobalID
