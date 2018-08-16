@@ -14,9 +14,9 @@ public class Data_GRDB
     let database: DatabaseQueue
     let queue: DispatchQueue
     
-    public init?()
+    public init?(withDatabasePath path: String? = nil)
     {
-        let path: String? = (NSTemporaryDirectory() as NSString).appendingPathComponent("\(UUID()).db")
+        let path: String? = path
         
         do
         {
@@ -92,7 +92,6 @@ extension Data_GRDB: DataAccessProtocol
     
     public func readTransaction(_ block: @escaping (_ data: DataProtocol)->())
     {
-        // NEXT: make custom thrown errors work
         self.queue.async
         {
             do

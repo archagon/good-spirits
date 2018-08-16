@@ -12,7 +12,6 @@ import DataLayer
 
 // NEXT: figure out threading woes -- how to link up multiple database calls, when each one might be serialized to its own thread, or even the main thread
 // NEXT: database container w/throws and threading
-// NEXT: actual model layer + framework
 
 class ViewController: UIViewController
 {

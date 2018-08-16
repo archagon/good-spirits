@@ -1,133 +1,131 @@
-{
-    "checkins": [
-        {
-            "checkin_id": 1251204908,
-            "checkin_time": "Mon, 16 Jul 2018 20:30:00 +0000",
-            "drink_name": "g joy",
-            "drink_type": "sake",
-            "drink_abv": 0.18,
-            "drink_volume": 11,
-            "drink_volume_unit": "floz"
-        },
-        {
-            "checkin_id": 625282041,
-            "untappd_checkin_id": 625282041,
-            "checkin_time": "Sun, 15 Jul 2018 05:30:52 +0000",
-            "drink_name": "Dr. Lupulin 3x",
-            "drink_type": "beer",
-            "drink_abv": 0.113,
-            "drink_price": 10,
-            "drink_volume": 13,
-            "drink_volume_unit": "floz"
-        },
-        {
-            "checkin_id": 623901319,
-            "untappd_checkin_id": 623901319,
-            "checkin_time": "Fri, 13 Jul 2018 02:01:35 +0000",
-            "drink_name": "Big Bad Baptist Reserve",
-            "drink_type": "beer",
-            "drink_abv": 0.117,
-            "drink_price": 0.83,
-            "drink_volume": 1.5,
-            "drink_volume_unit": "floz"
-        },
-        {
-            "checkin_id": 623901107,
-            "untappd_checkin_id": 623901107,
-            "checkin_time": "Fri, 13 Jul 2018 02:01:06 +0000",
-            "drink_name": "Triple Barrel Big Bad Baptist",
-            "drink_type": "beer",
-            "drink_abv": 0.127,
-            "drink_price": 0.83,
-            "drink_volume": 1.5,
-            "drink_volume_unit": "floz"
-        },
-        {
-            "checkin_id": 623586138,
-            "untappd_checkin_id": 623586138,
-            "checkin_time": "Thu, 12 Jul 2018 07:34:36 +0000",
-            "drink_name": "Relax [it's just a hazy IPA; now I'm adding more text here so that we can test spanning multiple lines]",
-            "drink_type": "beer",
-            "drink_abv": 0.068,
-            "drink_price": 7,
-            "drink_volume": 16,
-            "drink_volume_unit": "floz"
-        },
-        {
-            "checkin_id": 623161302,
-            "untappd_checkin_id": 623161302,
-            "checkin_time": "Wed, 11 Jul 2018 00:09:31 +0000",
-            "drink_name": "La Fin du Monde",
-            "drink_type": "beer",
-            "drink_abv": 0.09,
-            "drink_volume": 300,
-            "drink_volume_unit": "ml"
-        },
-        {
-            "checkin_id": 622517437,
-            "untappd_checkin_id": 622517437,
-            "checkin_time": "Sun, 08 Jul 2018 21:23:12 +0000",
-            "drink_name": "Foeder #3",
-            "drink_type": "beer",
-            "drink_abv": 0.087,
-            "drink_price": 10,
-            "drink_volume": 250,
-            "drink_volume_unit": "ml"
-        },
-        {
-            "checkin_id": 622516447,
-            "untappd_checkin_id": 622516447,
-            "checkin_time": "Sun, 08 Jul 2018 21:21:38 +0000",
-            "drink_name": "Oude Tart (2011)",
-            "drink_type": "beer",
-            "drink_abv": 0.075,
-            "drink_price": 10,
-            "drink_volume": 250,
-            "drink_volume_unit": "ml"
-        },
-        {
-            "checkin_id": 622118014,
-            "untappd_checkin_id": 622118014,
-            "checkin_time": "Sun, 08 Jul 2018 00:56:08 +0000",
-            "drink_name": "Boubon Barrel-Aged Ensorcelled (2018)",
-            "drink_type": "beer",
-            "drink_abv": 0.08,
-            "drink_price": 7,
-            "drink_volume": 7,
-            "drink_volume_unit": "floz"
-        },
-        {
-            "checkin_id": 601552051,
-            "untappd_checkin_id": 601552051,
-            "checkin_time": "Tue, 22 May 2018 05:55:18 +0000",
-            "drink_name": "Pear Saison",
-            "drink_type": "beer",
-            "drink_abv": 0.05,
-            "drink_price": 7.5,
-            "drink_volume": 375,
-            "drink_volume_unit": "ml"
-        },
-        {
-            "checkin_id": 601279102,
-            "untappd_checkin_id": 601279102,
-            "checkin_time": "Mon, 21 May 2018 07:14:15 +0000",
-            "drink_name": "Caviar Dreams",
-            "drink_type": "beer",
-            "drink_abv": 0.065,
-            "drink_price": 7,
-            "drink_volume": 16,
-            "drink_volume_unit": "floz"
-        },
-        {
-            "checkin_id": 542196414,
-            "untappd_checkin_id": 542196414,
-            "checkin_time": "Sun, 24 Dec 2017 09:29:05 +0000",
-            "drink_name": "Ron Mexico",
-            "drink_type": "beer",
-            "drink_abv": 0.045,
-            "drink_price": 7,
-            "drink_volume": 500,
-            "drink_volume_unit": "ml"
-        }
-    ]
-}
+[
+    {
+        "checkin_id": 1251204908,
+        "checkin_time": "Mon, 16 Jul 2018 20:30:00 +0000",
+        "drink_name": "g joy",
+        "drink_type": "sake",
+        "drink_abv": 0.18,
+        "drink_volume": 11,
+        "drink_volume_unit": "fl oz"
+    },
+    {
+        "checkin_id": 625282041,
+        "untappd_checkin_id": 625282041,
+        "checkin_time": "Sun, 15 Jul 2018 05:30:52 +0000",
+        "drink_name": "Dr. Lupulin 3x",
+        "drink_type": "beer",
+        "drink_abv": 0.113,
+        "drink_price": 10,
+        "drink_volume": 13,
+        "drink_volume_unit": "fl oz"
+    },
+    {
+        "checkin_id": 623901319,
+        "untappd_checkin_id": 623901319,
+        "checkin_time": "Fri, 13 Jul 2018 02:01:35 +0000",
+        "drink_name": "Big Bad Baptist Reserve",
+        "drink_type": "beer",
+        "drink_abv": 0.117,
+        "drink_price": 0.83,
+        "drink_volume": 1.5,
+        "drink_volume_unit": "fl oz"
+    },
+    {
+        "checkin_id": 623901107,
+        "untappd_checkin_id": 623901107,
+        "checkin_time": "Fri, 13 Jul 2018 02:01:06 +0000",
+        "drink_name": "Triple Barrel Big Bad Baptist",
+        "drink_type": "beer",
+        "drink_abv": 0.127,
+        "drink_price": 0.83,
+        "drink_volume": 1.5,
+        "drink_volume_unit": "fl oz"
+    },
+    {
+        "checkin_id": 623586138,
+        "untappd_checkin_id": 623586138,
+        "checkin_time": "Thu, 12 Jul 2018 07:34:36 +0000",
+        "drink_name": "Relax [it's just a hazy IPA; now I'm adding more text here so that we can test spanning multiple lines]",
+        "drink_type": "beer",
+        "drink_abv": 0.068,
+        "drink_price": 7,
+        "drink_volume": 16,
+        "drink_volume_unit": "fl oz"
+    },
+    {
+        "checkin_id": 623161302,
+        "untappd_checkin_id": 623161302,
+        "checkin_time": "Wed, 11 Jul 2018 00:09:31 +0000",
+        "drink_name": "La Fin du Monde",
+        "drink_type": "beer",
+        "drink_abv": 0.09,
+        "drink_volume": 300,
+        "drink_volume_unit": "mL"
+    },
+    {
+        "checkin_id": 622517437,
+        "untappd_checkin_id": 622517437,
+        "checkin_time": "Sun, 08 Jul 2018 21:23:12 +0000",
+        "drink_name": "Foeder #3",
+        "drink_type": "beer",
+        "drink_abv": 0.087,
+        "drink_price": 10,
+        "drink_volume": 250,
+        "drink_volume_unit": "mL"
+    },
+    {
+        "checkin_id": 622516447,
+        "untappd_checkin_id": 622516447,
+        "checkin_time": "Sun, 08 Jul 2018 21:21:38 +0000",
+        "drink_name": "Oude Tart (2011)",
+        "drink_type": "beer",
+        "drink_abv": 0.075,
+        "drink_price": 10,
+        "drink_volume": 250,
+        "drink_volume_unit": "mL"
+    },
+    {
+        "checkin_id": 622118014,
+        "untappd_checkin_id": 622118014,
+        "checkin_time": "Sun, 08 Jul 2018 00:56:08 +0000",
+        "drink_name": "Boubon Barrel-Aged Ensorcelled (2018)",
+        "drink_type": "beer",
+        "drink_abv": 0.08,
+        "drink_price": 7,
+        "drink_volume": 7,
+        "drink_volume_unit": "fl oz"
+    },
+    {
+        "checkin_id": 601552051,
+        "untappd_checkin_id": 601552051,
+        "checkin_time": "Tue, 22 May 2018 05:55:18 +0000",
+        "drink_name": "Pear Saison",
+        "drink_type": "beer",
+        "drink_abv": 0.05,
+        "drink_price": 7.5,
+        "drink_volume": 375,
+        "drink_volume_unit": "mL"
+    },
+    {
+        "checkin_id": 601279102,
+        "untappd_checkin_id": 601279102,
+        "checkin_time": "Mon, 21 May 2018 07:14:15 +0000",
+        "drink_name": "Caviar Dreams",
+        "drink_type": "beer",
+        "drink_abv": 0.065,
+        "drink_price": 7,
+        "drink_volume": 16,
+        "drink_volume_unit": "fl oz"
+    },
+    {
+        "checkin_id": 542196414,
+        "untappd_checkin_id": 542196414,
+        "checkin_time": "Sun, 24 Dec 2017 09:29:05 +0000",
+        "drink_name": "Ron Mexico",
+        "drink_type": "beer",
+        "drink_abv": 0.045,
+        "drink_price": 7,
+        "drink_volume": 500,
+        "drink_volume_unit": "mL"
+    }
+]

@@ -239,6 +239,7 @@ class FirstViewController: UIViewController, DrawerCoordinating
         }
         
         self.data = DataLayer.init(withStore: dataImpl)
+        self.data.populateWithSampleData()
         
         //do
         //{
@@ -267,8 +268,6 @@ class FirstViewController: UIViewController, DrawerCoordinating
             {
             case .error(let e):
                 fatalError("\(e)")
-                self.cache = (Time.calendar(), Time.daysOfWeek(), Time.currentWeek(), [])
-                self.tableView.reloadData()
             case .value(let v):
                 // TODO: fancy animations, if needed
                 self.cache = (calendar, daysOfWeek, range, v)
@@ -288,6 +287,8 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     // PERF: slow
     private func dataIndex(forIndexPath indexPath: IndexPath) -> Int?
     {
+        if self.cache == nil { return nil }
+        
         var j = indexPath.row
         for (i, item) in self.cache.data.enumerated()
         {
@@ -320,6 +321,8 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
+        if self.cache == nil { return 0 }
+        
         // PERF: slow
         let count = self.cache.data.reduce(0)
         { (total, item) -> Int in
@@ -339,6 +342,8 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
+        if self.cache == nil { return nil }
+        
         guard let cell = tableView.dequeueReusableHeaderFooterView(withIdentifier: "DayHeaderCell") as? DayHeaderCell else
         {
             return DayHeaderCell()
@@ -370,6 +375,8 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView?
     {
+        if self.cache == nil { return nil }
+        
         if section == self.cache.daysOfWeek.count - 1
         {
             guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "FooterCell") else
@@ -387,6 +394,8 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat
     {
+        if self.cache == nil { return 0 }
+        
         if section == self.cache.daysOfWeek.count - 1
         {
             return 20

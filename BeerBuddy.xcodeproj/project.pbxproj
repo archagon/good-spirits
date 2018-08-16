@@ -12,6 +12,7 @@
 		4E70D5C72113C0AF0089BBB1 /* PricePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E70D5C62113C0AF0089BBB1 /* PricePickerViewController.swift */; };
 		4E721EAA21251AF30001BBB9 /* DataLayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E721EA021251ADC0001BBB9 /* DataLayer.framework */; };
 		4E721EAB21251AF30001BBB9 /* DataLayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E721EA021251ADC0001BBB9 /* DataLayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4E721EB5212522770001BBB9 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E721EB4212522770001BBB9 /* SampleData.swift */; };
 		4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */; };
 		4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F048E21114DBB00038F09 /* Formatting.swift */; };
 		4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */; };
@@ -117,6 +118,7 @@
 		4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UntappdLoginViewController.swift; sourceTree = "<group>"; };
 		4E70D5C62113C0AF0089BBB1 /* PricePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricePickerViewController.swift; sourceTree = "<group>"; };
 		4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DBComparison.xcodeproj; path = Modules/DBComparison/DBComparison.xcodeproj; sourceTree = "<group>"; };
+		4E721EB4212522770001BBB9 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingPopupViewController.swift; sourceTree = "<group>"; };
 		4E8F048E21114DBB00038F09 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
 		4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInDrawerViewController.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 			children = (
 				4EA2F19A20FF07C100CE30E1 /* Model.swift */,
 				4EA2F19620FEF8B900CE30E1 /* Data.swift */,
+				4E721EB4212522770001BBB9 /* SampleData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -431,6 +434,7 @@
 				4E9C8555210D68F900DA959D /* ColorUtil.swift in Sources */,
 				4E6B75792106BF1A009B6C0D /* UntappdLoginViewController.swift in Sources */,
 				4EA2F18120FEE7C700CE30E1 /* AppDelegate.swift in Sources */,
+				4E721EB5212522770001BBB9 /* SampleData.swift in Sources */,
 				4E8F04962112577E00038F09 /* ABVPickerViewController.swift in Sources */,
 				4E8F04982112C44E00038F09 /* StylePickerViewController.swift in Sources */,
 				4EE3369B2108043E00D72B7D /* CheckInViewController.swift in Sources */,
