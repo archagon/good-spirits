@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import DataLayer
 
 private var _drinkIconCache: [String:UIImage] = [:]
 private func drinkIcon(forImageName imageName: String, sansCircle: Bool = false) -> UIImage

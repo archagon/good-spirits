@@ -8,13 +8,14 @@
 
 import UIKit
 import DrawerKit
+import DataLayer
 
 extension FirstViewController: CheckInViewControllerDelegate
 {
     public func defaultCheckIn(for: CheckInViewController) -> Model.Drink
     {
         let defaultPrice: Double = 5
-        let defaultDrink = Model.Drink.init(name: nil, style: Model.Drink.Style.defaultStyle, abv: Model.Drink.Style.defaultStyle.defaultABV, price: defaultPrice, volume: Model.Drink.Style.defaultStyle.defaultVolume)
+        let defaultDrink = Model.Drink.init(name: nil, style: DrinkStyle.defaultStyle, abv: DrinkStyle.defaultStyle.defaultABV, price: defaultPrice, volume: DrinkStyle.defaultStyle.defaultVolume)
         
         do
         {

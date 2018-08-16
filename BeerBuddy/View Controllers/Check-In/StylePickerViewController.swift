@@ -8,13 +8,14 @@
 
 import UIKit
 import DrawerKit
+import DataLayer
 
 public protocol StylePickerViewControllerDelegate: class
 {
     func drawerHeight(for: StylePickerViewController) -> CGFloat
-    func startingStyle(for: StylePickerViewController) -> Model.Drink.Style
+    func startingStyle(for: StylePickerViewController) -> DrinkStyle
     func startingName(for: StylePickerViewController) -> String?
-    func didSetStyle(_ vc: StylePickerViewController, to: Model.Drink.Style, withName: String?)
+    func didSetStyle(_ vc: StylePickerViewController, to: DrinkStyle, withName: String?)
 }
 
 public class StylePickerViewController: CheckInDrawerViewController
@@ -25,9 +26,9 @@ public class StylePickerViewController: CheckInDrawerViewController
     @IBOutlet private var name: UITextField!
     
     private static let validStyles = [
-        Model.Drink.Style.beer,
-        Model.Drink.Style.wine,
-        Model.Drink.Style.sake,
+        DrinkStyle.beer,
+        DrinkStyle.wine,
+        DrinkStyle.sake,
     ]
     
     public override func viewDidLoad()
@@ -40,7 +41,7 @@ public class StylePickerViewController: CheckInDrawerViewController
         self.name.text = self.delegate.startingName(for: self)
     }
     
-    public var selectedStyle: Model.Drink.Style
+    public var selectedStyle: DrinkStyle
     {
         return StylePickerViewController.validStyles[self.stylePicker.selectedRow(inComponent: 0)]
     }

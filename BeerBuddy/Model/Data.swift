@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DataLayer
 
 // Data interface. Efficient transactions & queries. Actual backing code is abstracted away.
 public class Data <T: DataImpl>
@@ -14,14 +15,14 @@ public class Data <T: DataImpl>
     public typealias Week = Date
     
     private var impl: T
-    private var cache: [Model.ID:Model.CheckIn] = [:]
+    private var cache: [GlobalID:Model] = [:]
     
     public init(impl: T)
     {
         self.impl = impl
     }
     
-    public func checkins(from: Date, to: Date) throws -> [Model.CheckIn]
+    public func checkins(from: Date, to: Date) throws -> [Model]
     {
         let checkins = try self.impl.checkins(from: from, to: to)
         
@@ -30,42 +31,42 @@ public class Data <T: DataImpl>
         return checkins
     }
     
-    public func lastAddedCheckin() throws -> Model.CheckIn?
+    public func lastAddedCheckin() throws -> Model?
     {
         let checkin = try self.impl.lastAddedCheckin()
         
         return checkin
     }
     
-    public func checkin(withId id: Model.ID) throws -> Model.CheckIn?
+    public func checkin(withId id: GlobalID) throws -> Model?
     {
         return try tryCache(id)
     }
     
-    public func addCheckin(_ checkin: Model.CheckIn) throws
+    public func addCheckin(_ checkin: Model) throws
     {
         let newCheckin = try self.impl.addCheckin(checkin)
         
-        self.cache[checkin.id] = nil
-        self.cache[newCheckin.id] = newCheckin
+        self.cache[checkin.id!] = nil
+        self.cache[newCheckin.id!] = newCheckin
     }
     
-    public func deleteCheckin(withId id: Model.ID) throws
+    public func deleteCheckin(withId id: GlobalID) throws
     {
         try self.impl.deleteCheckin(withId: id)
         
         self.cache[id] = nil
     }
     
-    public func updateCheckin(_ checkin: Model.CheckIn) throws
+    public func updateCheckin(_ checkin: Model) throws
     {
         let newCheckin = try self.impl.updateCheckin(checkin)
         
-        self.cache[checkin.id] = nil
-        self.cache[newCheckin.id] = newCheckin
+        self.cache[checkin.id!] = nil
+        self.cache[newCheckin.id!] = newCheckin
     }
     
-    private func tryCache(_ id: Model.ID) throws -> Model.CheckIn?
+    private func tryCache(_ id: GlobalID) throws -> Model?
     {
         if let checkin = self.cache[id]
         {
@@ -78,18 +79,18 @@ public class Data <T: DataImpl>
             self.cache[id] = nil
             if let checkin = checkin
             {
-                self.cache[checkin.id] = checkin
+                self.cache[checkin.id!] = checkin
             }
             
             return checkin
         }
     }
     
-    private func updateCache(_ checkins: [Model.CheckIn])
+    private func updateCache(_ checkins: [Model])
     {
         for checkin in checkins
         {
-            self.cache[checkin.id] = checkin
+            self.cache[checkin.id!] = checkin
         }
     }
 }
@@ -150,13 +151,13 @@ class Time
 public protocol DataImpl
 {
     // Includes from, excludes to. Accepts distantPast and distantFuture as parameters. Sorted chronologically.
-    func checkins(from: Date, to: Date) throws -> [Model.CheckIn]
-    func lastAddedCheckin() throws -> Model.CheckIn?
+    func checkins(from: Date, to: Date) throws -> [Model]
+    func lastAddedCheckin() throws -> Model?
     
-    func checkin(withId id: Model.ID) throws -> Model.CheckIn?
-    func addCheckin(_ checkin: Model.CheckIn) throws -> Model.CheckIn
-    func deleteCheckin(withId id: Model.ID) throws
-    func updateCheckin(_ checkin: Model.CheckIn) throws -> Model.CheckIn
+    func checkin(withId id: GlobalID) throws -> Model?
+    func addCheckin(_ checkin: Model) throws -> Model
+    func deleteCheckin(withId id: GlobalID) throws
+    func updateCheckin(_ checkin: Model) throws -> Model
 }
 
 public enum DataImplGenericError: Error

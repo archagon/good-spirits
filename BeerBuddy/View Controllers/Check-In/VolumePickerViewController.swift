@@ -8,6 +8,7 @@
 
 import UIKit
 import DrawerKit
+import DataLayer
 
 // 2. incorrect pint/floz conversion towards end of ticker
 // 3. correct rounding (not just floor) + avoid overshoot
@@ -18,7 +19,7 @@ public protocol VolumePickerViewControllerDelegate: class
 {
     func drawerHeight(for: VolumePickerViewController) -> CGFloat
     func startingVolume(for: VolumePickerViewController) -> Measurement<UnitVolume>
-    func drinkStyle(for: VolumePickerViewController) -> Model.Drink.Style
+    func drinkStyle(for: VolumePickerViewController) -> DrinkStyle
     func didSetVolume(_ vc: VolumePickerViewController, to: Measurement<UnitVolume>)
 }
 
@@ -26,7 +27,7 @@ public class VolumePickerViewController: CheckInDrawerViewController
 {
     public weak var delegate: VolumePickerViewControllerDelegate!
     
-    private var style: Model.Drink.Style!
+    private var style: DrinkStyle!
     private var currentMeasurement: Measurement<UnitVolume>! = nil
     
     @IBOutlet private var glasses: UICollectionView!
@@ -46,12 +47,12 @@ public class VolumePickerViewController: CheckInDrawerViewController
         //UnitVolume.imperialPints
     ]
     
-    private static func drinkTuple(_ type: Model.Drink.Style, _ flozVal: Double) -> (Measurement<UnitVolume>, String)
+    private static func drinkTuple(_ type: DrinkStyle, _ flozVal: Double) -> (Measurement<UnitVolume>, String)
     {
         let measure = floz(flozVal)
         return (measure, Model.assetNameForDrink(Model.Drink.init(name: nil, style: .beer, abv: 0, price: nil, volume: measure)))
     }
-    private static let drinkTypes: [Model.Drink.Style:[(volume: Measurement<UnitVolume>, image: String)]] = [
+    private static let drinkTypes: [DrinkStyle:[(volume: Measurement<UnitVolume>, image: String)]] = [
         .beer : [ drinkTuple(.beer, 1.5), drinkTuple(.beer, 6), drinkTuple(.beer, 12), drinkTuple(.beer, 16), drinkTuple(.beer, 32) ],
         .wine : [ drinkTuple(.wine, 5), drinkTuple(.wine, 6) ],
         .sake : [ drinkTuple(.sake, 1.5), drinkTuple(.sake, 5) ]

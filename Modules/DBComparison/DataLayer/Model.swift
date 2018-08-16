@@ -13,38 +13,6 @@ public enum DrinkStyle: String, RawRepresentable
     case beer
     case wine
     case sake
-    
-    public static var defaultStyle: DrinkStyle
-    {
-        return .beer
-    }
-    
-    // TODO: move to data file?
-    public var defaultABV: Double
-    {
-        get
-        {
-            switch self
-            {
-            case .beer: return 0.05
-            case .wine: return 0.15
-            case .sake: return 0.17
-            }
-        }
-    }
-    
-    public var defaultVolume: Measurement<UnitVolume>
-    {
-        get
-        {
-            switch self
-            {
-            case .beer: return Measurement<UnitVolume>.init(value: 12, unit: .fluidOunces)
-            case .wine: return Measurement<UnitVolume>.init(value: 4, unit: .fluidOunces)
-            case .sake: return Measurement<UnitVolume>.init(value: 3.5, unit: .fluidOunces)
-            }
-        }
-    }
 }
 
 public struct Model: Hashable, Equatable
@@ -94,6 +62,18 @@ public struct Model: Hashable, Equatable
             self.abv = abv
             self.price = price
             self.volume = volume
+        }
+    }
+    
+    public var id: GlobalID?
+    {
+        if metadata.id.operationIndex == DataLayer.wildcardIndex
+        {
+            return nil
+        }
+        else
+        {
+            return metadata.id
         }
     }
     

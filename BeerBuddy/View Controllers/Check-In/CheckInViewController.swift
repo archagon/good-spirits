@@ -8,6 +8,7 @@
 
 import UIKit
 import DrawerKit
+import DataLayer
 
 public protocol CheckInViewControllerDelegate: class
 {
@@ -23,10 +24,10 @@ public class CheckInViewController: CheckInDrawerViewController
     public var name: String? { didSet { setupText() } }
     public var abv: Double? { didSet { setupText() } }
     public var volume: Measurement<UnitVolume>? { didSet { setupText() } }
-    public var style: Model.Drink.Style? { didSet { setupText() } }
+    public var style: DrinkStyle? { didSet { setupText() } }
     public var cost: Double? { didSet { setupText() } }
     
-    private var display: (name: String?, date: Date?, abv: Double, volume: Measurement<UnitVolume>, style: Model.Drink.Style, cost: Double)
+    private var display: (name: String?, date: Date?, abv: Double, volume: Measurement<UnitVolume>, style: DrinkStyle, cost: Double)
     {
         let defaultCheckIn = self.delegate.defaultCheckIn(for: self)
         
@@ -252,7 +253,7 @@ extension CheckInViewController: VolumePickerViewControllerDelegate
         return self.display.volume
     }
     
-    public func drinkStyle(for: VolumePickerViewController) -> Model.Drink.Style
+    public func drinkStyle(for: VolumePickerViewController) -> DrinkStyle
     {
         return self.display.style
     }
@@ -270,7 +271,7 @@ extension CheckInViewController: StylePickerViewControllerDelegate
         return self.heightOfPartiallyExpandedDrawer
     }
     
-    public func startingStyle(for: StylePickerViewController) -> Model.Drink.Style
+    public func startingStyle(for: StylePickerViewController) -> DrinkStyle
     {
         return self.display.style
     }
@@ -280,7 +281,7 @@ extension CheckInViewController: StylePickerViewControllerDelegate
         return self.display.name
     }
     
-    public func didSetStyle(_ vc: StylePickerViewController, to: Model.Drink.Style, withName: String?)
+    public func didSetStyle(_ vc: StylePickerViewController, to: DrinkStyle, withName: String?)
     {
         self.style = to
         self.name = withName

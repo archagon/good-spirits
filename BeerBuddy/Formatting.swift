@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DataLayer
 
 public struct Format
 {
@@ -43,7 +44,7 @@ public struct Format
         return String.init(format: (price.truncatingRemainder(dividingBy: 1) == 0 ? "$%.0f" : "$%.2f"), price)
     }
     
-    public static func format(style: Model.Drink.Style) -> String
+    public static func format(style: DrinkStyle) -> String
     {
         return style.rawValue
     }

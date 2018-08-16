@@ -7,66 +7,40 @@
 //
 
 import Foundation
+import DataLayer
 
-public struct Model
+public extension DrinkStyle
 {
-    public typealias ID = UInt64
-    
-    public struct CheckIn
+    public static var defaultStyle: DrinkStyle
     {
-        public let id: ID
-        public let untappdId: ID?
-        public let time: Date
-        public let added: Date
-        public let drink: Drink
+        return .beer
     }
     
-    public struct Drink
+    // TODO: move to data file?
+    public var defaultABV: Double
     {
-        public enum Style: String, RawRepresentable
+        get
         {
-            case beer
-            case wine
-            case sake
-            
-            public static var defaultStyle: Style
+            switch self
             {
-                return .beer
-            }
-            
-            // TODO: move to data file?
-            public var defaultABV: Double
-            {
-                get
-                {
-                    switch self
-                    {
-                    case .beer: return 0.05
-                    case .wine: return 0.15
-                    case .sake: return 0.17
-                    }
-                }
-            }
-            
-            public var defaultVolume: Measurement<UnitVolume>
-            {
-                get
-                {
-                    switch self
-                    {
-                    case .beer: return Measurement<UnitVolume>.init(value: 12, unit: .fluidOunces)
-                    case .wine: return Measurement<UnitVolume>.init(value: 4, unit: .fluidOunces)
-                    case .sake: return Measurement<UnitVolume>.init(value: 3.5, unit: .fluidOunces)
-                    }
-                }
+            case .beer: return 0.05
+            case .wine: return 0.15
+            case .sake: return 0.17
             }
         }
-        
-        public let name: String?
-        public let style: Style
-        public let abv: Double
-        public let price: Double?
-        public let volume: Measurement<UnitVolume>
+    }
+    
+    public var defaultVolume: Measurement<UnitVolume>
+    {
+        get
+        {
+            switch self
+            {
+            case .beer: return Measurement<UnitVolume>.init(value: 12, unit: .fluidOunces)
+            case .wine: return Measurement<UnitVolume>.init(value: 4, unit: .fluidOunces)
+            case .sake: return Measurement<UnitVolume>.init(value: 3.5, unit: .fluidOunces)
+            }
+        }
     }
 }
 

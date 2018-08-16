@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DataLayer
 
 // This class is assumed to be the sole owner of the JSON file. No outside entities may edit it.
 public class DataImpl_JSON: DataImpl
@@ -25,31 +26,31 @@ public class DataImpl_JSON: DataImpl
     }
     
     // PERF: O(AllCheckIns), inefficient
-    public func checkins(from: Date, to: Date) throws -> [Model.CheckIn]
+    public func checkins(from: Date, to: Date) throws -> [Model]
     {
         assert(from <= to)
         
         try verifyExists()
         
         var checkins = try allCheckIns()
-        checkins = checkins.filter { return from <= $0.time && $0.time < to }
+        checkins = checkins.filter { return from <= $0.checkIn.time && $0.checkIn.time < to }
         
         return checkins
     }
     
     // PERF:O(AllCheckIns), inefficient
-    public func lastAddedCheckin() throws -> Model.CheckIn?
+    public func lastAddedCheckin() throws -> Model?
     {
         try verifyExists()
         
         var checkins = try allCheckIns()
-        checkins.sort { return $0.added < $1.added }
+        checkins.sort { return $0.metadata.creationTime < $1.metadata.creationTime }
         
         return checkins.last
     }
     
     // PERF: O(AllCheckIns), inefficient
-    public func checkin(withId id: Model.ID) throws -> Model.CheckIn?
+    public func checkin(withId id: GlobalID) throws -> Model?
     {
         try verifyExists()
         
@@ -66,21 +67,21 @@ public class DataImpl_JSON: DataImpl
         return nil
     }
     
-    public func addCheckin(_ checkin: Model.CheckIn) throws -> Model.CheckIn
+    public func addCheckin(_ checkin: Model) throws -> Model
     {
         try verifyExists()
         
         throw DataImplGenericError.readOnly
     }
     
-    public func deleteCheckin(withId id: Model.ID) throws
+    public func deleteCheckin(withId id: GlobalID) throws
     {
         try verifyExists()
         
         throw DataImplGenericError.readOnly
     }
     
-    public func updateCheckin(_ checkin: Model.CheckIn) throws -> Model.CheckIn
+    public func updateCheckin(_ checkin: Model) throws -> Model
     {
         try verifyExists()
         
@@ -88,11 +89,11 @@ public class DataImpl_JSON: DataImpl
     }
     
     // TODO: remove once more performant fetch functions are implemented
-    private func allCheckIns() throws -> [Model.CheckIn]
+    private func allCheckIns() throws -> [Model]
     {
         let data = try fetchData()
         
-        var out: [Model.CheckIn] = []
+        var out: [Model] = []
         
         for item in data.checkins
         {
@@ -112,6 +113,8 @@ public class DataImpl_JSON: DataImpl
             let volume = try DataImpl_JSON.volume(forUnit: item.drink_volume_unit, value: item.drink_volume)
             let drink = Model.Drink.init(name: item.drink_name, style: style, abv: item.drink_abv, price: item.drink_price, volume: volume)
             let checkin = Model.CheckIn.init(id: item.checkin_id, untappdId: item.untappd_checkin_id, time: time, added: time, drink: drink)
+            let metadata = Model.Metadata.init(id: <#T##GlobalID#>, creationTime: <#T##Date#>)
+            let model = Model.init(metadata: metadata, checkIn: <#T##Model.CheckIn#>)
             
             // QQQ: added != time
             
@@ -174,7 +177,7 @@ private extension DataImpl_JSON
         public let drink_volume_unit: String
     }
     
-    private static var drinkTypeMap: [String:Model.Drink.Style] =
+    private static var drinkTypeMap: [String:DrinkStyle] =
     [
         "beer":.beer,
         "sake":.sake,
