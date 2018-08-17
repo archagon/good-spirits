@@ -20,6 +20,7 @@ public protocol DataAccessEasySyncProtocolImmediate
 
 extension DataWriteProtocol where Self: DataAccessEasySyncProtocol
 {
+    // TODO: if it's assumed that the lamport timestamps are correct, then why not assume the wildcard is taken care of, too?
     public func commit(data: DataModel, withSite site: DataLayer.SiteID, completionBlock block: @escaping (MaybeError<GlobalID>)->())
     {
         // new operation
@@ -33,7 +34,7 @@ extension DataWriteProtocol where Self: DataAccessEasySyncProtocol
                     block(.error(e: e))
                 case .value(let idx):
                     let id = GlobalID.init(siteID: data.metadata.id.siteID, operationIndex: idx)
-                    let metadata = DataModel.Metadata.init(id: id, creationTime: data.metadata.creationTime)
+                    let metadata = DataModel.Metadata.init(id: id, creationTime: data.metadata.creationTime, deleted: data.metadata.deleted)
                     let newData = DataModel.init(metadata: metadata, checkIn: data.checkIn)
                     
                     let opLog = [site : (idx, [newData.metadata.id])]
@@ -138,6 +139,7 @@ extension DataWriteProtocol where Self: DataAccessEasySyncProtocol
 
 extension DataWriteProtocolImmediate where Self: DataAccessEasySyncProtocolImmediate
 {
+    // TODO: if it's assumed that the lamport timestamps are correct, then why not assume the wildcard is taken care of, too?
     public func commit(data: DataModel, withSite site: DataLayer.SiteID) throws -> GlobalID
     {
         // new operation
@@ -146,7 +148,7 @@ extension DataWriteProtocolImmediate where Self: DataAccessEasySyncProtocolImmed
             let idx = try self.nextOperationIndex(forSite: site)
             
             let id = GlobalID.init(siteID: data.metadata.id.siteID, operationIndex: idx)
-            let metadata = DataModel.Metadata.init(id: id, creationTime: data.metadata.creationTime)
+            let metadata = DataModel.Metadata.init(id: id, creationTime: data.metadata.creationTime, deleted: data.metadata.deleted)
             let newData = DataModel.init(metadata: metadata, checkIn: data.checkIn)
             
             let opLog = [site : (idx, [newData.metadata.id])]

@@ -22,15 +22,9 @@ extension FirstViewController: CheckInViewControllerDelegate
             throw DataImplGenericError.readOnly
             do
             {
-                let checkin = try self.data.primaryStore.readTransaction
-                { db -> Model? in
-                    let dataModel = try db.lastAddedData()
-                    return dataModel?.toModel()
-                }
-                
-                if checkin != nil
+                if let model = try self.data.getLastAddedModel()
                 {
-                    return checkin!.checkIn.drink
+                    return model.checkIn.drink
                 }
                 else
                 {
@@ -247,7 +241,8 @@ class FirstViewController: UIViewController, DrawerCoordinating
             self.tableView.estimatedRowHeight = 20 //TODO: actual estimate
         }
         
-        guard let dataImpl = Data_GRDB.init() else
+        let path: String? = (NSTemporaryDirectory() as NSString).appendingPathComponent("\(UUID()).db")
+        guard let dataImpl = Data_GRDB.init(withDatabasePath: path) else
         {
             fatalError("database could not be created")
         }
@@ -299,7 +294,9 @@ class FirstViewController: UIViewController, DrawerCoordinating
                         }
                     }
                     updatedOps += Array(newOps.values)
+                    updatedOps = updatedOps.filter { !$0.metadata.deleted }
                     updatedOps.sort { $0.checkIn.time < $1.checkIn.time }
+                    
                     self.cache = (calendar, daysOfWeek, range, updatedOps, v.1)
                     self.tableView.reloadData()
                 }
@@ -307,10 +304,10 @@ class FirstViewController: UIViewController, DrawerCoordinating
         }
         
         self.data.populateWithSampleData()
-        DispatchQueue.main.asyncAfter(deadline:.now() + 3)
-        {
-            self.data.populateWithSampleData()
-        }
+        //DispatchQueue.main.asyncAfter(deadline:.now() + 3)
+        //{
+        //    self.data.populateWithSampleData()
+        //}
     }
     
     func reloadData()
@@ -509,17 +506,28 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
     {
-        let incrementAction = UIContextualAction.init(style: .normal, title: "+1")
-        { (action, view, handler) in
-            print("Incrementing...")
-            handler(true)
-        }
-        let deleteAction = UIContextualAction.init(style: .destructive, title: "Delete")
-        { (action, view, handler) in
-            handler(true)
+        guard let index = dataIndex(forIndexPath: indexPath) else
+        {
+            return nil
         }
         
-        let actions = [incrementAction, deleteAction]
+        var model = self.cache.data[index]
+        
+        //let incrementAction = UIContextualAction.init(style: .normal, title: "+1")
+        //{ (action, view, handler) in
+        //    print("Incrementing...")
+        //    handler(true)
+        //}
+        let deleteAction = UIContextualAction.init(style: .destructive, title: "Delete")
+        { (action, view, handler) in
+            print("Attempting delete!")
+            model.delete()
+            self.data.save(model: model) { _ in }
+            handler(false)
+        }
+        
+        //let actions = [incrementAction, deleteAction]
+        let actions = [deleteAction]
         let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
         
         return actionsConfig

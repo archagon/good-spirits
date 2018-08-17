@@ -238,8 +238,8 @@ extension Database: DataProtocolImmediate
             let dataIdColumn = DataModel.Columns.metadata_id_uuid.rawValue
             let dataIndexColumn = DataModel.Columns.metadata_id_index.rawValue
             let logTable = DataModelLogEntry.databaseTableName
-            let logIdColumn = DataModelLogEntry.Columns.action_uuid
-            let logIndexColumn = DataModelLogEntry.Columns.action_index
+            let logIdColumn = DataModelLogEntry.Columns.operation_uuid
+            let logIndexColumn = DataModelLogEntry.Columns.operation_index
             let dateColumn = DataModel.Columns.checkin_time_value.rawValue
             
              //SELECT metadata_id_uuid, metadata_id_index FROM (SELECT metadata_id_uuid, metadata_id_index, checkin_time_value FROM log JOIN data ON (log.action_uuid, log.action_index) = (data.metadata_id_uuid, data.metadata_id_index) WHERE (action_uuid = "5E011DC9-638A-4AD7-88A6-4E84DE19DD85" AND action_index > 20 AND action_index < 100)) WHERE (checkin_time_value > 1533990071.58237);
@@ -263,6 +263,7 @@ extension Database: DataProtocolImmediate
 
 extension Database: DataWriteProtocolImmediate
 {
+    // TODO: if it's assumed that the lamport timestamps are correct, then why not assume the wildcard is taken care of, too?
     public func commit(data: [DataModel], withSite site: DataLayer.SiteID) throws -> [GlobalID]
     {
         if data.count == 0
@@ -297,7 +298,7 @@ extension Database: DataWriteProtocolImmediate
                 let idx = try prepareNextOperationIndex(forSite: site)
                 
                 let id = GlobalID.init(siteID: site, operationIndex: idx)
-                let metadata = DataModel.Metadata.init(id: id, creationTime: datum.metadata.creationTime)
+                let metadata = DataModel.Metadata.init(id: id, creationTime: datum.metadata.creationTime, deleted: datum.metadata.deleted)
                 let newData = DataModel.init(metadata: metadata, checkIn: datum.checkIn)
                 
                 newDatas.append(newData)

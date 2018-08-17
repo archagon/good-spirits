@@ -50,7 +50,7 @@ class DataLayerTests: XCTestCase
         let randomTime = date ?? Date.init(timeInterval: TimeInterval.random(in: -(ds * 7)...(ds * 7)), since: Date())
         
         let id = GlobalID.init(siteID: randomId, operationIndex: DataLayer.wildcardIndex)
-        let metadata = Model.Metadata.init(id: id, creationTime: Date())
+        let metadata = Model.Metadata.init(id: id, creationTime: Date(), deleted: false)
         let drink = Model.Drink.init(name: randomName, style: randomStyle, abv: randomABV, price: randomPrice, volume: randomVolume)
         let checkIn = Model.CheckIn.init(untappdId: nil, time: randomTime, drink: drink)
         let model = Model.init(metadata: metadata, checkIn: checkIn)
@@ -294,7 +294,7 @@ class DataLayerTests: XCTestCase
     
     func testBatchCommit()
     {
-        let count = 500
+        let count = 1000
         
         //measureSingle: do
         //{

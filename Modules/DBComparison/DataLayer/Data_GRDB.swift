@@ -28,7 +28,7 @@ public class Data_GRDB
             self.database = try DatabaseQueue.init(path: path ?? "", configuration: configuration)
             self.queue = DispatchQueue.init(label: "GRDBQueue", qos: .default, attributes: [], autoreleaseFrequency: .inherit, target: nil)
             
-            print("database path: \(path ?? "<null>")")
+            print("Database path: \(path ?? "<null>")")
         }
         catch
         {
@@ -83,10 +83,10 @@ extension Data_GRDB: DataAccessProtocol, DataAccessProtocolImmediate
             try db.create(index: "dateIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.checkin_time_value.rawValue])
             try db.create(index: "creationTimeIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.metadata_creation_time.rawValue])
             let allLamportColumns = DataModel.Columns.allCases.filter { $0.isLamport }
+            // TODO: maybe make this a compound index? also, how does max work on compound index?
             for (_, column) in allLamportColumns.enumerated()
             {
-                // TODO: is this correct?
-                try db.create(index: "max\(column.rawValue.underscoreToCamelCase.capitalizedFirstLetter)Index", on: DataModel.databaseTableName, columns: ["MAX(\(column.rawValue))"])
+                try db.create(index: "\(column.rawValue.underscoreToCamelCase)Index", on: DataModel.databaseTableName, columns: [column.rawValue])
             }
             
             try db.create(table: DataModelLogEntry.databaseTableName, temporary: false, ifNotExists: true, withoutRowID: false)

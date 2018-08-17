@@ -24,7 +24,7 @@ extension DataModel
 {
     enum Columns: String, ColumnExpression
     {
-        case metadata_id_uuid, metadata_id_index, metadata_creation_time, checkin_untappd_id_value, checkin_untappd_id_lamport, checkin_time_value, checkin_time_lamport, checkin_drink_name_value, checkin_drink_name_lamport, checkin_drink_style_value, checkin_drink_style_lamport, checkin_drink_abv_value, checkin_drink_abv_lamport, checkin_drink_price_value, checkin_drink_price_lamport, checkin_drink_volume_value_value, checkin_drink_volume_value_unit, checkin_drink_volume_lamport
+        case metadata_id_uuid, metadata_id_index, metadata_deleted_value, metadata_deleted_lamport, metadata_creation_time, checkin_untappd_id_value, checkin_untappd_id_lamport, checkin_time_value, checkin_time_lamport, checkin_drink_name_value, checkin_drink_name_lamport, checkin_drink_style_value, checkin_drink_style_lamport, checkin_drink_abv_value, checkin_drink_abv_lamport, checkin_drink_price_value, checkin_drink_price_lamport, checkin_drink_volume_value_value, checkin_drink_volume_value_unit, checkin_drink_volume_lamport
         
         // https://medium.com/@derrickho_28266/iterate-over-swift-enums-1c251cd28a1c
         static var allCases: [Columns]
@@ -35,6 +35,8 @@ extension DataModel
             {
             case .metadata_id_uuid: out.append(.metadata_id_uuid); fallthrough
             case .metadata_id_index: out.append(.metadata_id_index); fallthrough
+            case .metadata_deleted_value: out.append(.metadata_deleted_value); fallthrough
+            case .metadata_deleted_lamport: out.append(.metadata_deleted_lamport); fallthrough
             case .metadata_creation_time: out.append(.metadata_creation_time); fallthrough
             case .checkin_untappd_id_value: out.append(.checkin_untappd_id_value); fallthrough
             case .checkin_untappd_id_lamport: out.append(.checkin_untappd_id_lamport); fallthrough
@@ -62,6 +64,7 @@ extension DataModel
             {
             case .metadata_id_uuid: fallthrough
             case .metadata_id_index: fallthrough
+            case .metadata_deleted_value: fallthrough
             case .metadata_creation_time: fallthrough
             case .checkin_untappd_id_value: fallthrough
             case .checkin_time_value: fallthrough
@@ -73,6 +76,7 @@ extension DataModel
             case .checkin_drink_volume_value_unit:
                 return false
 
+            case .metadata_deleted_lamport: fallthrough
             case .checkin_untappd_id_lamport: fallthrough
             case .checkin_time_lamport: fallthrough
             case .checkin_drink_name_lamport: fallthrough
@@ -97,6 +101,10 @@ extension DataModel: TableCreatable
             case .metadata_id_uuid:
                 td.column(item.rawValue, .text).notNull()
             case .metadata_id_index:
+                td.column(item.rawValue, .integer).notNull()
+            case .metadata_deleted_value:
+                td.column(item.rawValue, .boolean).notNull()
+            case .metadata_deleted_lamport:
                 td.column(item.rawValue, .integer).notNull()
             case .metadata_creation_time:
                 td.column(item.rawValue, .double).notNull()
@@ -144,8 +152,11 @@ extension DataModel: FetchableRecord
         let idSiteId: String = row[Columns.metadata_id_uuid]
         let idIndex: DataLayer.Index = row[Columns.metadata_id_index]
         let id = GlobalID.init(siteID: DataLayer.SiteID.init(uuidString: idSiteId)!, operationIndex: idIndex)
+        let deletedValue: Bool = row[Columns.metadata_deleted_value]
+        let deletedLamport: DataLayer.Time = row[Columns.metadata_deleted_lamport]
+        let deleted = LamportValue.init(v: deletedValue, t: deletedLamport)
         let creationTime: Double = row[Columns.metadata_creation_time]
-        let metadata = Metadata.init(id: id, creationTime: creationTime)
+        let metadata = Metadata.init(id: id, creationTime: creationTime, deleted: deleted)
         
         let nameValue: String? = row[Columns.checkin_drink_name_value]
         let nameLamport: DataLayer.Time = row[Columns.checkin_drink_name_lamport]
@@ -191,6 +202,10 @@ extension DataModel: PersistableRecord
                 container[item] = self.metadata.id.siteID.uuidString
             case .metadata_id_index:
                 container[item] = self.metadata.id.operationIndex
+            case .metadata_deleted_value:
+                container[item] = self.metadata.deleted.v
+            case .metadata_deleted_lamport:
+                container[item] = self.metadata.deleted.t
             case .metadata_creation_time:
                 container[item] = self.metadata.creationTime
             case .checkin_untappd_id_value:

@@ -47,7 +47,6 @@ public class DataLayer
         
         NotificationCenter.default.addObserver(forName: type(of: store).DataDidChangeNotification, object: nil, queue: OperationQueue.main)
         { notification in
-            print("Database changed: \(notification.object != nil ? "\(notification.object!)" : "<null>")")
             NotificationCenter.default.post(name: type(of: self).DataDidChangeNotification, object: self)
         }
     }
@@ -203,27 +202,12 @@ extension DataLayer
         }
     }
     
-    public func getLastAddedModel(withCallbackBlock block: @escaping (MaybeError<Model?>)->Void)
+    public func getLastAddedModel() throws -> Model?
     {
-        self.primaryStore.readTransaction
-        { db in
-            db.lastAddedData
-            {
-                switch $0
-                {
-                case .error(let e):
-                    onMain
-                    {
-                        block(.error(e: e))
-                    }
-                case .value(let v):
-                    let model = v?.toModel()
-                    onMain
-                    {
-                        block(.value(v: model))
-                    }
-                }
-            }
+        return try self.primaryStore.readTransaction
+        { db -> Model? in
+            let data = try db.lastAddedData()
+            return data?.toModel()
         }
     }
 }

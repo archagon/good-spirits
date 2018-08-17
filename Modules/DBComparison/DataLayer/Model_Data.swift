@@ -12,15 +12,31 @@ public struct DataModel: Hashable, Equatable, LamportQueriable, Mergeable
 {
     public typealias ID = UInt64
     
-    public struct Metadata: Hashable, Equatable
+    public struct Metadata: Hashable, Equatable, LamportQueriable, Mergeable
     {
+        // AB: these already contain an implicit lamport value, and can only be created when the other lamport values
+        // are initialized, so it's unnecessary to add a LamportValue wrapper here.
         public let id: GlobalID
         public let creationTime: Double
         
-        public init(id: GlobalID, creationTime: Double)
+        public var deleted: LamportValue<Bool>
+        
+        public init(id: GlobalID, creationTime: Double, deleted: LamportValue<Bool>)
         {
             self.id = id
             self.creationTime = creationTime
+            self.deleted = deleted
+        }
+        
+        public var lamport: DataLayer.Time
+        {
+            return deleted.lamport
+        }
+        
+        mutating public func merge(with: DataModel.Metadata)
+        {
+            // AB: deletes are exempt from regular LWW rules, since a delete cannot be overriden.
+            self.deleted = LamportValue.init(v: self.deleted.v || with.deleted.v, t: max(self.deleted.t, with.deleted.t))
         }
     }
     
@@ -93,11 +109,12 @@ public struct DataModel: Hashable, Equatable, LamportQueriable, Mergeable
     
     public var lamport: DataLayer.Time
     {
-        return checkIn.lamport
+        return max(metadata.lamport, checkIn.lamport)
     }
     
     mutating public func merge(with: DataModel)
     {
+        self.metadata.merge(with: with.metadata)
         self.checkIn.merge(with: with.checkIn)
     }
 }

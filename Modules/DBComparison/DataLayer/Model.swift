@@ -23,13 +23,16 @@ public struct Model: Hashable, Equatable
     {
         public let id: GlobalID
         public let creationTime: Date
+        public let deleted: Bool
         
-        public init(id: GlobalID, creationTime: Date)
+        public init(id: GlobalID, creationTime: Date, deleted: Bool = false)
         {
             self.id = id
             
             // BUGFIX: if we don't do this, two dates with the same value can end up unequal, somehow
             self.creationTime = Date.init(timeIntervalSince1970: creationTime.timeIntervalSince1970)
+            
+            self.deleted = deleted
         }
     }
     
@@ -77,13 +80,24 @@ public struct Model: Hashable, Equatable
         }
     }
     
-    public let metadata: Metadata
+    // This is mostly here for easier merging, etc. If you find yourself with a deleted model object, get rid of it!
+    public var deleted: Bool
+    {
+        return self.metadata.deleted
+    }
+    
+    public var metadata: Metadata
     public var checkIn: CheckIn
     
     public init(metadata: Metadata, checkIn: CheckIn)
     {
         self.metadata = metadata
         self.checkIn = checkIn
+    }
+    
+    public mutating func delete()
+    {
+        self.metadata = Metadata.init(id: self.metadata.id, creationTime: self.metadata.creationTime, deleted: true)
     }
 }
 
