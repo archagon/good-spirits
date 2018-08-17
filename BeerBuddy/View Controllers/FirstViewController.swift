@@ -19,26 +19,18 @@ extension FirstViewController: CheckInViewControllerDelegate
         
         do
         {
-            throw DataImplGenericError.readOnly
-            do
+            if let model = try self.data.getLastAddedModel()
             {
-                if let model = try self.data.getLastAddedModel()
-                {
-                    return model.checkIn.drink
-                }
-                else
-                {
-                    return defaultDrink
-                }
+                return model.checkIn.drink
             }
-            catch
+            else
             {
-                appError("\(error)")
                 return defaultDrink
             }
         }
         catch
         {
+            appError("\(error)")
             return defaultDrink
         }
     }
@@ -46,6 +38,27 @@ extension FirstViewController: CheckInViewControllerDelegate
     public func calendar(for: CheckInViewController) -> Calendar
     {
         return self.cache.calendar
+    }
+    
+    public func committed(drink: Model.Drink, for: CheckInViewController)
+    {
+        let range = Time.currentWeek()
+        
+        let randomTime = range.0.timeIntervalSince1970 + TimeInterval.random(in: 0..<(range.1.timeIntervalSince1970 - range.0.timeIntervalSince1970))
+        let randomDate = Date.init(timeIntervalSince1970: randomTime)
+        
+        let model = Model.init(metadata: Model.Metadata.init(id: GlobalID.init(siteID: self.data!.owner, operationIndex: DataLayer.wildcardIndex), creationTime: Date()), checkIn: Model.CheckIn.init(untappdId: nil, time: randomDate, drink: drink))
+        
+        self.data.save(model: model)
+        {
+            switch $0
+            {
+            case .error(let e):
+                appError("\(e)")
+            case .value(let v):
+                break
+            }
+        }
     }
 }
 
@@ -522,8 +535,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         { (action, view, handler) in
             print("Attempting delete!")
             model.delete()
-            self.data.save(model: model) { _ in }
-            handler(false)
+            self.data.save(model: model) { _ in handler(false) }
         }
         
         //let actions = [incrementAction, deleteAction]

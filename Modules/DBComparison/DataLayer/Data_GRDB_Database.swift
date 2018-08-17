@@ -198,7 +198,7 @@ extension Database: DataProtocolImmediate
     
     public func lastAddedData() throws -> DataModel?
     {
-        return try DataModel.filter(max(DataModel.Columns.metadata_creation_time)).fetchOne(self)
+        return try DataModel.select(sql: "*, MAX(\(DataModel.Columns.metadata_creation_time.rawValue))").fetchOne(self)
     }
     
     public func data(afterTimestamp timestamp: VectorClock) throws -> (Set<DataModel>,VectorClock)

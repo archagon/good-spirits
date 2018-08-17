@@ -59,8 +59,8 @@
         "drink_name": "La Fin du Monde",
         "drink_type": "beer",
         "drink_abv": 0.09,
-        "drink_volume": 300,
-        "drink_volume_unit": "mL"
+        "drink_volume": 30,
+        "drink_volume_unit": "cL"
     },
     {
         "checkin_id": 622517437,
@@ -70,8 +70,8 @@
         "drink_type": "beer",
         "drink_abv": 0.087,
         "drink_price": 10,
-        "drink_volume": 250,
-        "drink_volume_unit": "mL"
+        "drink_volume": 25,
+        "drink_volume_unit": "cL"
     },
     {
         "checkin_id": 622516447,
@@ -81,8 +81,8 @@
         "drink_type": "beer",
         "drink_abv": 0.075,
         "drink_price": 10,
-        "drink_volume": 250,
-        "drink_volume_unit": "mL"
+        "drink_volume": 25,
+        "drink_volume_unit": "cL"
     },
     {
         "checkin_id": 622118014,
@@ -103,8 +103,8 @@
         "drink_type": "beer",
         "drink_abv": 0.05,
         "drink_price": 7.5,
-        "drink_volume": 375,
-        "drink_volume_unit": "mL"
+        "drink_volume": 37.5,
+        "drink_volume_unit": "cL"
     },
     {
         "checkin_id": 601279102,
@@ -125,7 +125,7 @@
         "drink_type": "beer",
         "drink_abv": 0.045,
         "drink_price": 7,
-        "drink_volume": 500,
-        "drink_volume_unit": "mL"
+        "drink_volume": 50,
+        "drink_volume_unit": "cL"
     }
 ]

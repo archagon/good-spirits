@@ -53,7 +53,7 @@ extension String
 // BUGFIX: kludge for "Cannot convert measurements of differing unit types! self: NSUnitVolume unit: NSUnitAcceleration"
 extension UnitVolume
 {
-    static func unit(withSymbol symbol: String) -> UnitVolume
+    public static func unit(withSymbol symbol: String) -> UnitVolume
     {
         if symbol == UnitVolume.megaliters.symbol
         {

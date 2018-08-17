@@ -14,6 +14,7 @@ public protocol CheckInViewControllerDelegate: class
 {
     func defaultCheckIn(for: CheckInViewController) -> Model.Drink
     func calendar(for: CheckInViewController) -> Calendar
+    func committed(drink: Model.Drink, for: CheckInViewController)
 }
 
 public class CheckInViewController: CheckInDrawerViewController
@@ -31,7 +32,8 @@ public class CheckInViewController: CheckInDrawerViewController
     {
         let defaultCheckIn = self.delegate.defaultCheckIn(for: self)
         
-        let name = self.name ?? defaultCheckIn.name
+        //let name = self.name ?? defaultCheckIn.name
+        let name = self.name
         let date = self.checkInDate
         let abv = self.abv ?? defaultCheckIn.abv
         let volume = self.volume ?? defaultCheckIn.volume
@@ -45,6 +47,8 @@ public class CheckInViewController: CheckInDrawerViewController
     
     public override func viewDidLoad()
     {
+        super.viewDidLoad()
+        
         self.text.textContainerInset = .zero
         self.text.delegate = self
         if #available(iOS 11.0, *)
@@ -156,6 +160,13 @@ public class CheckInViewController: CheckInDrawerViewController
         }
         
         self.text.attributedText = attributedString
+    }
+    
+    public override func confirmCallback()
+    {
+        let display = self.display
+        let model = Model.Drink.init(name: display.name, style: display.style, abv: display.abv, price: display.cost, volume: display.volume)
+        self.delegate.committed(drink: model, for: self)
     }
 }
 
