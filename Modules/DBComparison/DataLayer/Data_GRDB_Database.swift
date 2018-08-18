@@ -11,7 +11,7 @@ import GRDB
 
 extension Database
 {
-    // TODO:
+    // TODO: https://github.com/groue/GRDB.swift/issues/363
     public func explain<T>(request: QueryInterfaceRequest<T>) throws
     {
         //sqlite3_stmt_status

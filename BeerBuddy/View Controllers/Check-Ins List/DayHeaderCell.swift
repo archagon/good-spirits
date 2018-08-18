@@ -19,9 +19,9 @@ public class DayHeaderCell: UITableViewHeaderFooterView
         
         super.init(reuseIdentifier: reuseIdentifier)
         
-        //let blurView = UIVisualEffectView.init(effect: UIBlurEffect.init(style: .regular))
-        let blurView = UIView()
-        blurView.backgroundColor = UIColor.white
+        let blurView = UIVisualEffectView.init(effect: UIBlurEffect.init(style: .extraLight))
+        //let blurView = UIView()
+        //blurView.backgroundColor = UIColor.white
         //blurView.alpha = 0.9
         self.backgroundView = blurView
         

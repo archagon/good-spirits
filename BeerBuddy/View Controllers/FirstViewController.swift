@@ -203,11 +203,29 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
     }
 }
 
+extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalendarDelegateAppearance
+{
+    func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool)
+    {
+        self.calendarHeight.constant = bounds.size.height
+        print("Calendar bounds did change: \(calendar.scope.rawValue)")
+    }
+    
+    func calendarCurrentPageDidChange(_ calendar: FSCalendar)
+    {
+        let components = DataLayer.calendar.dateComponents([.month, .year], from: calendar.currentPage)
+        
+        let monthFormat = DateFormatter()
+        monthFormat.dateFormat = "MM"
+        let month = monthFormat.monthSymbols[components.month! - 1]
+        
+        self.navigationItem.title = "\(month) \(components.year!)"
+    }
+}
+
 class FirstViewController: UIViewController, DrawerCoordinating
 {
     public var drawerDisplayController: DrawerDisplayController?
-    
-    
     
     public var qqqPopup: UIViewController?
     
@@ -215,8 +233,18 @@ class FirstViewController: UIViewController, DrawerCoordinating
     let debugPast: TimeInterval = -60 * 60 * 24 * 50 * 10
     
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var calendar: FSCalendar!
+    @IBOutlet var calendarHeight: NSLayoutConstraint!
     
     var data: DataLayer!
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        
+        self.navigationController!.navigationBar.isTranslucent = true
+        self.navigationController!.navigationBar.setBackgroundImage(UIImage.init(named: "clear"), for: .default)
+    }
     
     // guaranteed to always be valid
     var cache: (calendar: Calendar, daysOfWeek: [Weekday], range: (Date, Date), data: [Model], token: DataLayer.Token)!
@@ -224,6 +252,10 @@ class FirstViewController: UIViewController, DrawerCoordinating
     override func viewDidLoad()
     {
         super.viewDidLoad()
+
+        calendar.isHidden = true
+        calendar.setScope(.week, animated: false)
+        self.navigationItem.title = nil
         
         // QQQ:
         if let tabBarVC = self.tabBarController
@@ -276,44 +308,8 @@ class FirstViewController: UIViewController, DrawerCoordinating
         
         NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
         { _ in
-            let calendar = Time.calendar()
-            let daysOfWeek = Time.daysOfWeek()
-            let range = Time.currentWeek()
-            
             print("Requesting change with token \(self.cache?.token ?? DataLayer.NullToken)...")
-            
-            self.data.getModels(fromIncludingDate: range.0, toExcludingDate: range.1, withToken: self.cache?.token ?? DataLayer.NullToken)
-            {
-                switch $0
-                {
-                case .error(let e):
-                    fatalError("\(e)")
-                case .value(let v):
-                    // NEXT: deletions
-                    print("Changes received with new token \(v.1)!")
-                    var newOps: [GlobalID:Model] = [:]
-                    for op in v.0
-                    {
-                        newOps[op.metadata.id] = op
-                    }
-                    var updatedOps = self.cache?.data ?? []
-                    for i in 0..<updatedOps.count
-                    {
-                        let op = updatedOps[i]
-                        if let newOp = newOps[op.metadata.id]
-                        {
-                            updatedOps[i] = newOp
-                            newOps[op.metadata.id] = nil
-                        }
-                    }
-                    updatedOps += Array(newOps.values)
-                    updatedOps = updatedOps.filter { !$0.metadata.deleted }
-                    updatedOps.sort { $0.checkIn.time < $1.checkIn.time }
-                    
-                    self.cache = (calendar, daysOfWeek, range, updatedOps, v.1)
-                    self.tableView.reloadData()
-                }
-            }
+            self.reloadData()
         }
         
         self.data.populateWithSampleData()
@@ -323,33 +319,74 @@ class FirstViewController: UIViewController, DrawerCoordinating
         //}
     }
     
+    override func viewDidLayoutSubviews()
+    {
+        super.viewDidLayoutSubviews()
+        
+        var previousInset = self.tableView.contentInset
+        previousInset.top = self.calendar.bounds.size.height
+        self.tableView.contentInset = previousInset
+    }
+    
     func reloadData()
     {
-        //let oldCache = self.cache
+        let calendar = Time.calendar()
+        let daysOfWeek = Time.daysOfWeek()
+        let range = Time.currentWeek()
         
-//        let calendar = Time.calendar()
-//        let daysOfWeek = Time.daysOfWeek()
-//        let range = Time.currentWeek()
-//
-//        self.data.getModels(fromIncludingDate: range.0, toExcludingDate: range.1)
-//        {
-//            switch $0
-//            {
-//            case .error(let e):
-//                fatalError("\(e)")
-//            case .value(let v):
-//                // TODO: fancy animations, if needed
-//                self.cache = (calendar, daysOfWeek, range, v.0, v.1)
-//                self.tableView.reloadData()
-//            }
-//        }
-        
-        self.tableView.reloadData()
+        self.data.getModels(fromIncludingDate: range.0, toExcludingDate: range.1, withToken: self.cache?.token ?? DataLayer.NullToken)
+        {
+            switch $0
+            {
+            case .error(let e):
+                fatalError("\(e)")
+            case .value(let v):
+                if self.cache == nil
+                {
+                    self.calendar.isHidden = false
+                }
+                
+                if self.cache?.token != v.1
+                {
+                    print("Changes received with new token \(v.1)!")
+                }
+                
+                var newOps: [GlobalID:Model] = [:]
+                for op in v.0
+                {
+                    newOps[op.metadata.id] = op
+                }
+                var updatedOps = self.cache?.data ?? []
+                for i in 0..<updatedOps.count
+                {
+                    let op = updatedOps[i]
+                    if let newOp = newOps[op.metadata.id]
+                    {
+                        updatedOps[i] = newOp
+                        newOps[op.metadata.id] = nil
+                    }
+                }
+                updatedOps += Array(newOps.values)
+                updatedOps = updatedOps.filter { !$0.metadata.deleted }
+                updatedOps.sort { $0.checkIn.time < $1.checkIn.time }
+                
+                let midpoint = Date.init(timeIntervalSince1970: (range.0.timeIntervalSince1970 + range.0.timeIntervalSince1970) / 2)
+                
+                self.cache = (calendar, daysOfWeek, range, updatedOps, v.1)
+                self.calendar.setCurrentPage(midpoint, animated: false)
+                self.tableView.reloadData()
+            }
+        }
     }
 
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
+    }
+    
+    @IBAction func todayTapped(_ sender: UIBarButtonItem)
+    {
+        self.calendar.setCurrentPage(Date(), animated: true)
     }
 }
 
