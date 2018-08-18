@@ -220,6 +220,21 @@ extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalen
         let month = monthFormat.monthSymbols[components.month! - 1]
         
         self.navigationItem.title = "\(month) \(components.year!)"
+        
+        reloadData(animated: false, fromScratch: true)
+    }
+    
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int
+    {
+        do
+        {
+            let data = try self.data.getModels(fromIncludingDate: date, toExcludingDate: date.addingTimeInterval(24 * 60 * 60)).0
+            return data.count
+        }
+        catch
+        {
+            fatalError("\(error)")
+        }
     }
 }
 
@@ -247,7 +262,7 @@ class FirstViewController: UIViewController, DrawerCoordinating
     }
     
     // guaranteed to always be valid
-    var cache: (calendar: Calendar, daysOfWeek: [Weekday], range: (Date, Date), data: [Model], token: DataLayer.Token)!
+    var cache: (calendar: Calendar, range: (Date, Date), days: Int, data: [Int:[Model]], token: DataLayer.Token)!
     
     override func viewDidLoad()
     {
@@ -255,6 +270,9 @@ class FirstViewController: UIViewController, DrawerCoordinating
 
         calendar.isHidden = true
         calendar.setScope(.week, animated: false)
+        let range = Time.currentWeek()
+        let midpoint = Date.init(timeIntervalSince1970: (range.0.timeIntervalSince1970 + range.0.timeIntervalSince1970) / 2)
+        self.calendar.setCurrentPage(midpoint, animated: false)
         self.navigationItem.title = nil
         
         // QQQ:
@@ -309,7 +327,7 @@ class FirstViewController: UIViewController, DrawerCoordinating
         NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
         { _ in
             print("Requesting change with token \(self.cache?.token ?? DataLayer.NullToken)...")
-            self.reloadData()
+            self.reloadData(animated: true, fromScratch: false)
         }
         
         self.data.populateWithSampleData()
@@ -328,52 +346,89 @@ class FirstViewController: UIViewController, DrawerCoordinating
         self.tableView.contentInset = previousInset
     }
     
-    func reloadData()
+    // Reloads the current data based on the dates provided by the calendar. (The calendar is not reloaded.)
+    func reloadData(animated: Bool, fromScratch: Bool = true)
     {
         let calendar = Time.calendar()
-        let daysOfWeek = Time.daysOfWeek()
-        let range = Time.currentWeek()
+        //let range = Time.currentWeek()
         
-        self.data.getModels(fromIncludingDate: range.0, toExcludingDate: range.1, withToken: self.cache?.token ?? DataLayer.NullToken)
+        let from = self.calendar.currentPage
+        let to = from.addingTimeInterval((self.calendar.scope == .week ? 7 : 31) * 24 * 60 * 60)
+        
+        //self.cache?.token != nil && !fromScratch ? self.cache!.token : DataLayer.NullToken
+        let token = DataLayer.NullToken
+        
+        self.data.getModels(fromIncludingDate: from, toExcludingDate: to, withToken: token)
         {
             switch $0
             {
             case .error(let e):
                 fatalError("\(e)")
             case .value(let v):
+                if self.cache?.token != v.1
+                {
+                    print("Changes received with new token \(v.1)!")
+                }
+                // TODO: move this
                 if self.cache == nil
                 {
                     self.calendar.isHidden = false
                 }
                 
-                if self.cache?.token != v.1
+                // PERF: could be sorted, but need to double-check inequalities
+                let sortedNewOps = SortedArray<Model>.init(unsorted: v.0.filter { !$0.metadata.deleted }) { return $0.checkIn.time < $1.checkIn.time }
+                var outOps: [Int:[Model]] = [:]
+                
+                // TODO:
+                tableAdjustment: do
                 {
-                    print("Changes received with new token \(v.1)!")
                 }
                 
-                var newOps: [GlobalID:Model] = [:]
-                for op in v.0
-                {
-                    newOps[op.metadata.id] = op
-                }
-                var updatedOps = self.cache?.data ?? []
-                for i in 0..<updatedOps.count
-                {
-                    let op = updatedOps[i]
-                    if let newOp = newOps[op.metadata.id]
-                    {
-                        updatedOps[i] = newOp
-                        newOps[op.metadata.id] = nil
-                    }
-                }
-                updatedOps += Array(newOps.values)
-                updatedOps = updatedOps.filter { !$0.metadata.deleted }
-                updatedOps.sort { $0.checkIn.time < $1.checkIn.time }
+                // update
+//                if let cache = self.cache, cache.range.0 <= from && to <= cache.range.1
+//                {
+//                    var updatedOps = self.cache?.data ?? []
+//                    for i in 0..<updatedOps.count
+//                    {
+//                        let op = updatedOps[i]
+//                        if let newOp = newOps[op.metadata.id]
+//                        {
+//                            updatedOps[i] = newOp
+//                            newOps[op.metadata.id] = nil
+//                        }
+//                    }
+//                    updatedOps += Array(newOps.values)
+//                    updatedOps = updatedOps.filter { !$0.metadata.deleted }
+//
+//                    self.cache = (calendar, (from, to), updatedOps, v.1)
+//                }
+//                // fresh reload
+//                else
+//                {
+//                    var updatedOps = Array(newOps.values)
+//                    updatedOps = updatedOps.filter { !$0.metadata.deleted }
+//                    updatedOps.sort { $0.checkIn.time < $1.checkIn.time }
+//
+//                    self.cache = (calendar, (from, to), updatedOps, v.1)
+//                }
                 
-                let midpoint = Date.init(timeIntervalSince1970: (range.0.timeIntervalSince1970 + range.0.timeIntervalSince1970) / 2)
+                var startDay = from
+                var nextDay = calendar.date(byAdding: .day, value: 1, to: startDay)!
+                var i = 0
                 
-                self.cache = (calendar, daysOfWeek, range, updatedOps, v.1)
-                self.calendar.setCurrentPage(midpoint, animated: false)
+                // TODO: check inequalities
+                while nextDay <= to
+                {
+                    let models: [Model] = sortedNewOps.filter { startDay <= $0.checkIn.time && $0.checkIn.time < nextDay }
+                    outOps[i] = models
+                    
+                    startDay = nextDay
+                    nextDay = calendar.date(byAdding: .day, value: 1, to: startDay)!
+                    i += 1
+                }
+                
+                self.cache = (calendar, (from, to), i, outOps, v.1)
+                
                 self.tableView.reloadData()
             }
         }
@@ -392,60 +447,18 @@ class FirstViewController: UIViewController, DrawerCoordinating
 
 extension FirstViewController: UITableViewDataSource, UITableViewDelegate
 {
-    // PERF: slow
-    private func dataIndex(forIndexPath indexPath: IndexPath) -> Int?
-    {
-        if self.cache == nil { return nil }
-        
-        var j = indexPath.row
-        for (i, item) in self.cache.data.enumerated()
-        {
-            guard let day = Weekday.init(fromDate: item.checkIn.time, withCalendar: self.cache.calendar) else
-            {
-                appError("invalid day for checkin")
-                return nil
-            }
-            
-            if day == self.cache.daysOfWeek[indexPath.section]
-            {
-                if j == 0
-                {
-                    return i
-                }
-                else
-                {
-                    j -= 1
-                }
-            }
-        }
-        
-        return nil
-    }
-    
     public func numberOfSections(in tableView: UITableView) -> Int
     {
-        return 7
+        if self.cache == nil { return 0 }
+        
+        return self.cache.days
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         if self.cache == nil { return 0 }
         
-        // PERF: slow
-        let count = self.cache.data.reduce(0)
-        { (total, item) -> Int in
-            let day = Weekday.init(fromDate: item.checkIn.time, withCalendar: self.cache.calendar)!
-            if day == self.cache.daysOfWeek[section]
-            {
-                return total + 1
-            }
-            else
-            {
-                return total
-            }
-        }
-        
-        return count + 1
+        return (self.cache.data[section]?.count ?? 0) + 1
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
@@ -459,11 +472,8 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         
         let formatter = DateFormatter.init()
         formatter.dateFormat = "EEEE, MMMM d, yyyy"
-        guard let day = self.cache.calendar.date(byAdding: .day, value: section, to: self.cache.range.0) else
-        {
-            appError("could not add day to date")
-            return nil
-        }
+        
+        let day = self.cache.calendar.date(byAdding: .day, value: section, to: self.cache.range.0)!
         
         //return formatter.string(from: day)
         cell.textLabel?.text = formatter.string(from: day)
@@ -485,7 +495,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return nil }
         
-        if section == self.cache.daysOfWeek.count - 1
+        if section == self.cache.days - 1
         {
             guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "FooterCell") else
             {
@@ -504,7 +514,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return 0 }
         
-        if section == self.cache.daysOfWeek.count - 1
+        if section == self.cache.days - 1
         {
             return 20
         }
@@ -529,39 +539,41 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        if let index = dataIndex(forIndexPath: indexPath)
+        let sectionData = self.cache.data[indexPath.section] ?? []
+        if indexPath.row < sectionData.count
         {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "CheckInCell") as? CheckInCell else
             {
                 return CheckInCell()
             }
-            
-            let checkin = self.cache.data[index]
+
+            let checkin = sectionData[indexPath.row]
             cell.populateWithData(checkin)
-            
+
             return cell
         }
         else
         {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "CheckInCell") as? CheckInCell else
             {
-                return AddItemCell.init(style: .default, reuseIdentifier: nil)
+                return CheckInCell()
             }
-            
+
             cell.populateWithStub()
-            
+
             return cell
         }
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
     {
-        guard let index = dataIndex(forIndexPath: indexPath) else
+        let sectionData = self.cache.data[indexPath.section] ?? []
+        if indexPath.row >= sectionData.count
         {
             return nil
         }
         
-        var model = self.cache.data[index]
+        var model = sectionData[indexPath.row]
         
         //let incrementAction = UIContextualAction.init(style: .normal, title: "+1")
         //{ (action, view, handler) in

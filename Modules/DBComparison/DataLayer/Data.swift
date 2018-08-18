@@ -45,9 +45,14 @@ public class DataLayer
         
         self.addStore(store)
         
-        NotificationCenter.default.addObserver(forName: type(of: store).DataDidChangeNotification, object: nil, queue: OperationQueue.main)
+        NotificationCenter.default.addObserver(forName: type(of: store).DataDidChangeNotification, object: nil, queue: nil)
         { notification in
-            NotificationCenter.default.post(name: type(of: self).DataDidChangeNotification, object: self)
+            // BUGFIX: We get into a locked state without this async! GRDB posts notification and then locks
+            // while waiting on other db access from main thread.
+            onMain
+            {
+                NotificationCenter.default.post(name: type(of: self).DataDidChangeNotification, object: self)
+            }
         }
     }
     
@@ -199,6 +204,16 @@ extension DataLayer
                     ret(.value(v: (models, v.1)))
                 }
             }
+        }
+    }
+    
+    public func getModels(fromIncludingDate from: Date, toExcludingDate to: Date, withToken token: Token? = nil) throws -> ([Model], Token)
+    {
+        return try self.primaryStore.readTransaction
+        { db -> ([Model], Token) in
+            let v = try db.data(fromIncludingDate: from, toExcludingDate: to, afterTimestamp: token)
+            let models = v.0.map { $0.toModel() }
+            return (models, v.1)
         }
     }
     

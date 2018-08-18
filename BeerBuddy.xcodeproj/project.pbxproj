@@ -17,6 +17,8 @@
 		4E721EAB21251AF30001BBB9 /* DataLayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E721EA021251ADC0001BBB9 /* DataLayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E721EB5212522770001BBB9 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E721EB4212522770001BBB9 /* SampleData.swift */; };
 		4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */; };
+		4E7E45582127F3F800ACDDB8 /* GRDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; };
+		4E7E45592127F3F800ACDDB8 /* GRDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F048E21114DBB00038F09 /* Formatting.swift */; };
 		4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */; };
 		4E8F049421124FDD00038F09 /* VolumePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */; };
@@ -39,6 +41,7 @@
 		4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */; };
 		4EA2F19F20FF30F500CE30E1 /* DrinkIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */; };
 		4EA2F1A120FF347D00CE30E1 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F1A020FF347D00CE30E1 /* Util.swift */; };
+		4EB75B8F2127CFEB00A14FCF /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */; };
 		4EBE6702210FE4CE00878CA0 /* DrawerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; };
 		4EBE6703210FE4CE00878CA0 /* DrawerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4ED7ACF72102E151002BB0F1 /* standard_drinks.json in Resources */ = {isa = PBXBuildFile; fileRef = 4ED7ACF62102E151002BB0F1 /* standard_drinks.json */; };
@@ -134,6 +137,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4E721EAB21251AF30001BBB9 /* DataLayer.framework in Embed Frameworks */,
+				4E7E45592127F3F800ACDDB8 /* GRDB.framework in Embed Frameworks */,
 				4E5D8486212697AC0081B273 /* FSCalendar.framework in Embed Frameworks */,
 				4EBE6703210FE4CE00878CA0 /* DrawerKit.framework in Embed Frameworks */,
 			);
@@ -176,6 +180,7 @@
 		4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DBComparison.xcodeproj; path = Modules/DBComparison/DBComparison.xcodeproj; sourceTree = "<group>"; };
 		4E721EB4212522770001BBB9 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingPopupViewController.swift; sourceTree = "<group>"; };
+		4E7E45572127F3F800ACDDB8 /* GRDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GRDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E8F048E21114DBB00038F09 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
 		4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInDrawerViewController.swift; sourceTree = "<group>"; };
 		4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumePickerViewController.swift; sourceTree = "<group>"; };
@@ -200,6 +205,7 @@
 		4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInCell.swift; sourceTree = "<group>"; };
 		4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DrinkIcons.xcassets; sourceTree = "<group>"; };
 		4EA2F1A020FF347D00CE30E1 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SortedArray.swift; path = "External/SortedArray-0.7.0/Sources/SortedArray.swift"; sourceTree = "<group>"; };
 		4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawerKit.xcodeproj; path = "External/DrawerKit-0.6.0/DrawerKit/DrawerKit.xcodeproj"; sourceTree = "<group>"; };
 		4ED7ACF62102E151002BB0F1 /* standard_drinks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = standard_drinks.json; sourceTree = "<group>"; };
 		4EDCE3CE2126980F00A90C83 /* FSCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSCalendarCell.m; path = "External/FSCalendar-2.7.9/FSCalendar/FSCalendarCell.m"; sourceTree = SOURCE_ROOT; };
@@ -231,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E721EAA21251AF30001BBB9 /* DataLayer.framework in Frameworks */,
+				4E7E45582127F3F800ACDDB8 /* GRDB.framework in Frameworks */,
 				4E5D8485212697AC0081B273 /* FSCalendar.framework in Frameworks */,
 				4EBE6702210FE4CE00878CA0 /* DrawerKit.framework in Frameworks */,
 			);
@@ -366,6 +373,7 @@
 		4EA2F17420FEE7C700CE30E1 = {
 			isa = PBXGroup;
 			children = (
+				4E7E45572127F3F800ACDDB8 /* GRDB.framework */,
 				4E5D8476212697890081B273 /* BeerBuddy-Bridging-Header.h */,
 				4EA2F17F20FEE7C700CE30E1 /* BeerBuddy */,
 				4EBE66D3210FD12800878CA0 /* External */,
@@ -412,6 +420,7 @@
 		4EBE66D3210FD12800878CA0 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */,
 			);
 			name = External;
 			sourceTree = "<group>";
@@ -615,6 +624,7 @@
 				4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */,
 				4EA2F18520FEE7C700CE30E1 /* SecondViewController.swift in Sources */,
 				4E9C8553210D598C00DA959D /* ABPrettyButton.swift in Sources */,
+				4EB75B8F2127CFEB00A14FCF /* SortedArray.swift in Sources */,
 				4E9C8555210D68F900DA959D /* ColorUtil.swift in Sources */,
 				4E6B75792106BF1A009B6C0D /* UntappdLoginViewController.swift in Sources */,
 				4EA2F18120FEE7C700CE30E1 /* AppDelegate.swift in Sources */,
