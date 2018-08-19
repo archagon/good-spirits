@@ -16,6 +16,8 @@
 		4E721EAA21251AF30001BBB9 /* DataLayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E721EA021251ADC0001BBB9 /* DataLayer.framework */; };
 		4E721EAB21251AF30001BBB9 /* DataLayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E721EA021251ADC0001BBB9 /* DataLayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E721EB5212522770001BBB9 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E721EB4212522770001BBB9 /* SampleData.swift */; };
+		4E7235ED2128E55100EEEAFE /* DeepDiff.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7235E02128E54400EEEAFE /* DeepDiff.framework */; };
+		4E7235EE2128E55100EEEAFE /* DeepDiff.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7235E02128E54400EEEAFE /* DeepDiff.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */; };
 		4E7E45582127F3F800ACDDB8 /* GRDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; };
 		4E7E45592127F3F800ACDDB8 /* GRDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -106,6 +108,62 @@
 			remoteGlobalIDString = 4EC0E8EC2124B2DD004FB000;
 			remoteInfo = DataLayer;
 		};
+		4E7235DF2128E54400EEEAFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D5B2E89F1C3A780C00C0327D;
+			remoteInfo = "DeepDiff-iOS";
+		};
+		4E7235E12128E54400EEEAFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D5B2E8A91C3A780C00C0327D;
+			remoteInfo = "DeepDiff-iOS-Tests";
+		};
+		4E7235E32128E54400EEEAFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D5C629401C3A7FAA007F7B7C;
+			remoteInfo = "DeepDiff-macOS";
+		};
+		4E7235E52128E54400EEEAFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D5C629491C3A7FAA007F7B7C;
+			remoteInfo = "DeepDiff-macOS-Tests";
+		};
+		4E7235E72128E54400EEEAFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D284B0FC1F79038B00D94AF3;
+			remoteInfo = "DeepDiff-tvOS";
+		};
+		4E7235E92128E54400EEEAFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D284B1041F79038B00D94AF3;
+			remoteInfo = "DeepDiff-tvOS-Tests";
+		};
+		4E7235EB2128E54400EEEAFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D284B1181F79039F00D94AF3;
+			remoteInfo = "DeepDiff-watchOS";
+		};
+		4E7235EF2128E55100EEEAFE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D5B2E89E1C3A780C00C0327D;
+			remoteInfo = "DeepDiff-iOS";
+		};
 		4EBE66DD210FD1F600878CA0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */;
@@ -139,6 +197,7 @@
 				4E721EAB21251AF30001BBB9 /* DataLayer.framework in Embed Frameworks */,
 				4E7E45592127F3F800ACDDB8 /* GRDB.framework in Embed Frameworks */,
 				4E5D8486212697AC0081B273 /* FSCalendar.framework in Embed Frameworks */,
+				4E7235EE2128E55100EEEAFE /* DeepDiff.framework in Embed Frameworks */,
 				4EBE6703210FE4CE00878CA0 /* DrawerKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -179,6 +238,7 @@
 		4E70D5C62113C0AF0089BBB1 /* PricePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricePickerViewController.swift; sourceTree = "<group>"; };
 		4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DBComparison.xcodeproj; path = Modules/DBComparison/DBComparison.xcodeproj; sourceTree = "<group>"; };
 		4E721EB4212522770001BBB9 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
+		4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DeepDiff.xcodeproj; path = "External/DeepDiff-master/DeepDiff.xcodeproj"; sourceTree = "<group>"; };
 		4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingPopupViewController.swift; sourceTree = "<group>"; };
 		4E7E45572127F3F800ACDDB8 /* GRDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GRDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E8F048E21114DBB00038F09 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
@@ -239,6 +299,7 @@
 				4E721EAA21251AF30001BBB9 /* DataLayer.framework in Frameworks */,
 				4E7E45582127F3F800ACDDB8 /* GRDB.framework in Frameworks */,
 				4E5D8485212697AC0081B273 /* FSCalendar.framework in Frameworks */,
+				4E7235ED2128E55100EEEAFE /* DeepDiff.framework in Frameworks */,
 				4EBE6702210FE4CE00878CA0 /* DrawerKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -357,6 +418,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		4E7235D62128E54300EEEAFE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4E7235E02128E54400EEEAFE /* DeepDiff.framework */,
+				4E7235E22128E54400EEEAFE /* DeepDiff-iOS-Tests.xctest */,
+				4E7235E42128E54400EEEAFE /* DeepDiff.framework */,
+				4E7235E62128E54400EEEAFE /* DeepDiff-macOS-Tests.xctest */,
+				4E7235E82128E54400EEEAFE /* DeepDiff_tvOS.framework */,
+				4E7235EA2128E54400EEEAFE /* DeepDiff-tvOS-Tests.xctest */,
+				4E7235EC2128E54400EEEAFE /* DeepDiff_watchOS.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		4E8F049021124CCA00038F09 /* Check-In */ = {
 			isa = PBXGroup;
 			children = (
@@ -373,12 +448,13 @@
 		4EA2F17420FEE7C700CE30E1 = {
 			isa = PBXGroup;
 			children = (
-				4E7E45572127F3F800ACDDB8 /* GRDB.framework */,
 				4E5D8476212697890081B273 /* BeerBuddy-Bridging-Header.h */,
 				4EA2F17F20FEE7C700CE30E1 /* BeerBuddy */,
 				4EBE66D3210FD12800878CA0 /* External */,
 				4E5D847F212697AC0081B273 /* FSCalendar */,
 				4EA2F17E20FEE7C700CE30E1 /* Products */,
+				4E7E45572127F3F800ACDDB8 /* GRDB.framework */,
+				4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */,
 				4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */,
 				4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */,
 			);
@@ -483,6 +559,7 @@
 				4EBE6705210FE4CE00878CA0 /* PBXTargetDependency */,
 				4E721EAD21251AF30001BBB9 /* PBXTargetDependency */,
 				4E5D8484212697AC0081B273 /* PBXTargetDependency */,
+				4E7235F02128E55100EEEAFE /* PBXTargetDependency */,
 			);
 			name = BeerBuddy;
 			productName = BeerBuddy;
@@ -525,6 +602,10 @@
 					ProjectRef = 4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */;
 				},
 				{
+					ProductGroup = 4E7235D62128E54300EEEAFE /* Products */;
+					ProjectRef = 4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */;
+				},
+				{
 					ProductGroup = 4EBE66DA210FD1F600878CA0 /* Products */;
 					ProjectRef = 4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */;
 				},
@@ -557,6 +638,55 @@
 			fileType = wrapper.cfbundle;
 			path = DataLayerTests.xctest;
 			remoteRef = 4E721EA121251ADC0001BBB9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4E7235E02128E54400EEEAFE /* DeepDiff.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DeepDiff.framework;
+			remoteRef = 4E7235DF2128E54400EEEAFE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4E7235E22128E54400EEEAFE /* DeepDiff-iOS-Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "DeepDiff-iOS-Tests.xctest";
+			remoteRef = 4E7235E12128E54400EEEAFE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4E7235E42128E54400EEEAFE /* DeepDiff.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DeepDiff.framework;
+			remoteRef = 4E7235E32128E54400EEEAFE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4E7235E62128E54400EEEAFE /* DeepDiff-macOS-Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "DeepDiff-macOS-Tests.xctest";
+			remoteRef = 4E7235E52128E54400EEEAFE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4E7235E82128E54400EEEAFE /* DeepDiff_tvOS.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DeepDiff_tvOS.framework;
+			remoteRef = 4E7235E72128E54400EEEAFE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4E7235EA2128E54400EEEAFE /* DeepDiff-tvOS-Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "DeepDiff-tvOS-Tests.xctest";
+			remoteRef = 4E7235E92128E54400EEEAFE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4E7235EC2128E54400EEEAFE /* DeepDiff_watchOS.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DeepDiff_watchOS.framework;
+			remoteRef = 4E7235EB2128E54400EEEAFE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */ = {
@@ -662,6 +792,11 @@
 			isa = PBXTargetDependency;
 			name = DataLayer;
 			targetProxy = 4E721EAC21251AF30001BBB9 /* PBXContainerItemProxy */;
+		};
+		4E7235F02128E55100EEEAFE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "DeepDiff-iOS";
+			targetProxy = 4E7235EF2128E55100EEEAFE /* PBXContainerItemProxy */;
 		};
 		4EBE66F9210FD21E00878CA0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

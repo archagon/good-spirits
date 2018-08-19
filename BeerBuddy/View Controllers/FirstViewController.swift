@@ -9,6 +9,7 @@
 import UIKit
 import DrawerKit
 import DataLayer
+import DeepDiff
 
 extension FirstViewController: CheckInViewControllerDelegate
 {
@@ -379,11 +380,6 @@ class FirstViewController: UIViewController, DrawerCoordinating
                 let sortedNewOps = SortedArray<Model>.init(unsorted: v.0.filter { !$0.metadata.deleted }) { return $0.checkIn.time < $1.checkIn.time }
                 var outOps: [Int:[Model]] = [:]
                 
-                // TODO:
-                tableAdjustment: do
-                {
-                }
-                
                 // update
 //                if let cache = self.cache, cache.range.0 <= from && to <= cache.range.1
 //                {
@@ -420,16 +416,48 @@ class FirstViewController: UIViewController, DrawerCoordinating
                 while nextDay <= to
                 {
                     let models: [Model] = sortedNewOps.filter { startDay <= $0.checkIn.time && $0.checkIn.time < nextDay }
-                    outOps[i] = models
+                    
+                    if models.count > 0
+                    {
+                        outOps[i] = models
+                    }
                     
                     startDay = nextDay
                     nextDay = calendar.date(byAdding: .day, value: 1, to: startDay)!
                     i += 1
                 }
                 
-                self.cache = (calendar, (from, to), i, outOps, v.1)
-                
-                self.tableView.reloadData()
+                tableAdjustment: do
+                {
+                    let previousData = self.cache?.data ?? [:]
+                    let previousDays = self.cache?.days ?? 0
+                    let previousRange = self.cache?.range ?? (Date.distantPast, Date.distantFuture)
+                    self.cache = (calendar, (from, to), i, outOps, v.1)
+                    
+                    if previousRange.0 == self.cache.range.0 && previousRange.1 == self.cache.range.1 && previousDays == self.cache.days
+                    {
+                        let unionKeys = Set(previousData.keys).union(Set(outOps.keys))
+                        var allChanges: ChangeWithIndexPath = ChangeWithIndexPath.init(inserts: [], deletes: [], replaces: [], moves: [])
+                        
+                        for section in unionKeys
+                        {
+                            let changes = diff(old: previousData[section] ?? [], new: outOps[section] ?? [])
+                            
+                            let converter = IndexPathConverter()
+                            let indexPaths = converter.convert(changes: changes, section: section)
+                            allChanges.moves += indexPaths.moves
+                            allChanges.deletes += indexPaths.deletes
+                            allChanges.replaces += indexPaths.replaces
+                            allChanges.inserts += indexPaths.inserts
+                        }
+                        
+                        self.tableView.reload(changesWithIndexPath: allChanges, completion: { _ in })
+                    }
+                    else
+                    {
+                        self.tableView.reloadData()
+                    }
+                }
             }
         }
     }
