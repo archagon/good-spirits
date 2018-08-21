@@ -253,9 +253,10 @@ class FirstViewController: UIViewController, DrawerCoordinating
     @IBOutlet var tableView: UITableView!
     @IBOutlet var calendar: FSCalendar!
     @IBOutlet var calendarHeight: NSLayoutConstraint!
-    //var progressBar: YLProgressBar!
+    
     var progressBar: UIView!
     var overflowProgressBar: UIView!
+    var progressLabel: UILabel!
     
     var data: DataLayer!
     
@@ -285,28 +286,6 @@ class FirstViewController: UIViewController, DrawerCoordinating
             else
             {
                 //self.progressBar.progressTintColor = UIColor.red.withAlphaComponent(0.6)
-                progress.progressTintColor = UIColor.red.withAlphaComponent(0.6)
-            }
-        }
-        else if let progress = self.progressBar as? YLProgressBar
-        {
-            let goodRange = CGFloat(0)...0.5
-            let warningRange = goodRange.lowerBound...0.7
-            
-            let random = CGFloat.random(in: 0...1.0)
-            
-            progress.setProgress(random, animated: true)
-            
-            if goodRange.contains(random)
-            {
-                progress.progressTintColor = UIColor.init(red: 21/255.0, green: 126/255.0, blue: 251/255.0, alpha: 0.6)
-            }
-            else if warningRange.contains(random)
-            {
-                progress.progressTintColor = UIColor.yellow
-            }
-            else
-            {
                 progress.progressTintColor = UIColor.red.withAlphaComponent(0.6)
             }
         }
@@ -341,18 +320,7 @@ class FirstViewController: UIViewController, DrawerCoordinating
         bar.trackTintColor = UIColor.init(white: 0.95, alpha: 1)
         bar2.progressTintColor = UIColor.lightGray
         bar2.trackTintColor = UIColor.clear
-//        let bar = YLProgressBar.init()
-//        bar.type = .rounded
-//        bar.progress = 0.7
-//        bar.hideStripes = true
-//        //bar.indicatorTextDisplayMode = .progress
-//        //bar.indicatorTextLabel.textColor = UIColor.init(red: 21/255.0, green: 126/255.0, blue: 251/255.0, alpha: 1).mixed(with: UIColor.white, by: 0.75)
-//        //bar.indicatorTextLabel.font = UIFont.systemFont(ofSize: bar.indicatorTextLabel.font.pointSize, weight: UIFont.Weight.regular)
-//        bar.hideGloss = true
-//        bar.uniformTintColor = true
-//        bar.trackTintColor = UIColor.init(red: 212/255.0, green: 212/255.0, blue: 212/255.0, alpha: 1)
-//        //bar.progressTintColors = [UIColor.init(red: 21/255.0, green: 124/255.0, blue: 249/255.0, alpha: 1)]
-//        bar.progressTintColors = [UIColor.init(red: 21/255.0, green: 126/255.0, blue: 251/255.0, alpha: 1)]
+        
         let progressView = UIView()
         progressView.translatesAutoresizingMaskIntoConstraints = false
         bar.translatesAutoresizingMaskIntoConstraints = false
@@ -375,6 +343,7 @@ class FirstViewController: UIViewController, DrawerCoordinating
         stack.spacing = 4
         self.progressBar = bar
         self.overflowProgressBar = bar2
+        self.progressLabel = label
         self.calendar.progressView = stack
         self.calendar.progressViewHeight = bar.intrinsicContentSize.height + 4 + label.intrinsicContentSize.height
         self.navigationItem.title = nil
@@ -483,34 +452,6 @@ class FirstViewController: UIViewController, DrawerCoordinating
                 let sortedNewOps = SortedArray<Model>.init(unsorted: v.0.filter { !$0.metadata.deleted }) { return $0.checkIn.time < $1.checkIn.time }
                 var outOps: [Int:[Model]] = [:]
                 
-                // update
-//                if let cache = self.cache, cache.range.0 <= from && to <= cache.range.1
-//                {
-//                    var updatedOps = self.cache?.data ?? []
-//                    for i in 0..<updatedOps.count
-//                    {
-//                        let op = updatedOps[i]
-//                        if let newOp = newOps[op.metadata.id]
-//                        {
-//                            updatedOps[i] = newOp
-//                            newOps[op.metadata.id] = nil
-//                        }
-//                    }
-//                    updatedOps += Array(newOps.values)
-//                    updatedOps = updatedOps.filter { !$0.metadata.deleted }
-//
-//                    self.cache = (calendar, (from, to), updatedOps, v.1)
-//                }
-//                // fresh reload
-//                else
-//                {
-//                    var updatedOps = Array(newOps.values)
-//                    updatedOps = updatedOps.filter { !$0.metadata.deleted }
-//                    updatedOps.sort { $0.checkIn.time < $1.checkIn.time }
-//
-//                    self.cache = (calendar, (from, to), updatedOps, v.1)
-//                }
-                
                 var startDay = from
                 var nextDay = calendar.date(byAdding: .day, value: 1, to: startDay)!
                 var i = 0
@@ -560,6 +501,24 @@ class FirstViewController: UIViewController, DrawerCoordinating
                     {
                         self.tableView.reloadData()
                     }
+                }
+                
+                progressAdjustment: do
+                {
+                    let progress = Stats(self.data).progress(forModels: v.0, inRange: from..<to)
+                    
+                    (self.progressBar as? UIProgressView)?.setProgress(progress.previous + progress.current, animated: true)
+                    (self.overflowProgressBar as? UIProgressView)?.setProgress(progress.previous, animated: true)
+                    
+                    let drinksDrank = Stats(self.data).percentToDrinks(progress.current + progress.previous, inRange: from..<to)
+                    let drinksPrevious = Stats(self.data).percentToDrinks(progress.previous, inRange: from..<to)
+                    let drinksTotal = Stats(self.data).percentToDrinks(1, inRange: from..<to)
+                    
+                    // TODO: monthly
+                    let previousText = String.init(format: "including %.1f drink overflow", drinksPrevious)
+                    let text = String.init(format: "%.1f of %.1f weekly drinks\(progress.previous > 0 ? ", \(previousText)" : "")", drinksDrank, drinksTotal)
+                    
+                    self.progressLabel.text = text
                 }
             }
         }

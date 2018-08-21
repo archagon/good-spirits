@@ -18,7 +18,6 @@
 		4E721EB5212522770001BBB9 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E721EB4212522770001BBB9 /* SampleData.swift */; };
 		4E7235ED2128E55100EEEAFE /* DeepDiff.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7235E02128E54400EEEAFE /* DeepDiff.framework */; };
 		4E7235EE2128E55100EEEAFE /* DeepDiff.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7235E02128E54400EEEAFE /* DeepDiff.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4E7235F42128F94C00EEEAFE /* YLProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E7235F22128F94C00EEEAFE /* YLProgressBar.m */; };
 		4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */; };
 		4E7E45582127F3F800ACDDB8 /* GRDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; };
 		4E7E45592127F3F800ACDDB8 /* GRDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -241,8 +240,6 @@
 		4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DBComparison.xcodeproj; path = Modules/DBComparison/DBComparison.xcodeproj; sourceTree = "<group>"; };
 		4E721EB4212522770001BBB9 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DeepDiff.xcodeproj; path = "External/DeepDiff-master/DeepDiff.xcodeproj"; sourceTree = "<group>"; };
-		4E7235F22128F94C00EEEAFE /* YLProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YLProgressBar.m; path = "External/YLProgressBar-3.10.2/YLProgressBar/YLProgressBar.m"; sourceTree = SOURCE_ROOT; };
-		4E7235F32128F94C00EEEAFE /* YLProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YLProgressBar.h; path = "External/YLProgressBar-3.10.2/YLProgressBar/YLProgressBar.h"; sourceTree = SOURCE_ROOT; };
 		4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingPopupViewController.swift; sourceTree = "<group>"; };
 		4E7E45572127F3F800ACDDB8 /* GRDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GRDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E8F048E21114DBB00038F09 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
@@ -438,15 +435,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4E7235F12128F93D00EEEAFE /* YLProgressBar */ = {
-			isa = PBXGroup;
-			children = (
-				4E7235F32128F94C00EEEAFE /* YLProgressBar.h */,
-				4E7235F22128F94C00EEEAFE /* YLProgressBar.m */,
-			);
-			path = YLProgressBar;
-			sourceTree = "<group>";
-		};
 		4E8F049021124CCA00038F09 /* Check-In */ = {
 			isa = PBXGroup;
 			children = (
@@ -511,7 +499,6 @@
 			isa = PBXGroup;
 			children = (
 				4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */,
-				4E7235F12128F93D00EEEAFE /* YLProgressBar */,
 				4E5D847F212697AC0081B273 /* FSCalendar */,
 			);
 			name = External;
@@ -767,7 +754,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E70D5C72113C0AF0089BBB1 /* PricePickerViewController.swift in Sources */,
-				4E7235F42128F94C00EEEAFE /* YLProgressBar.m in Sources */,
 				4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */,
 				4EA2F18520FEE7C700CE30E1 /* SecondViewController.swift in Sources */,
 				4E9C8553210D598C00DA959D /* ABPrettyButton.swift in Sources */,

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Defaults
+public struct Defaults
 {
     private static let weekStartsOnMondayKey: String = "WeekStartsOnMonday"
     private static let untappdTokenKey: String = "UntappdToken"
@@ -17,24 +17,120 @@ public class Defaults
     private static let peakLimitKey: String = "PeakLimit"
     private static let drinkFreeDaysKey: String = "DrinkFreeDays"
     
+    private let defaults: UserDefaults
+    
+    public init(_ defaults: UserDefaults = UserDefaults.standard)
+    {
+        self.defaults = defaults
+    }
+}
+
+extension Defaults
+{
+    public func registerDefaults()
+    {
+        self.defaults.register(defaults: [
+            Defaults.weekStartsOnMondayKey:false,
+            Defaults.standardDrinkSizeKey:14
+            ])
+    }
+    
+    public var weekStartsOnMonday: Bool
+    {
+        get
+        {
+            let val = self.defaults.bool(forKey: Defaults.weekStartsOnMondayKey)
+            return val
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.weekStartsOnMondayKey)
+        }
+    }
+    
+    public var untappdToken: String?
+    {
+        get
+        {
+            let val = self.defaults.string(forKey: Defaults.untappdTokenKey)
+            return val
+        }
+        set
+        {
+            self.defaults.setValue(newValue, forKey: Defaults.untappdTokenKey)
+        }
+    }
+    
+    public var standardDrinkSize: Double?
+    {
+        get
+        {
+            let val = self.defaults.double(forKey: Defaults.standardDrinkSizeKey)
+            return val
+        }
+        set
+        {
+            self.defaults.setValue(newValue, forKey: Defaults.standardDrinkSizeKey)
+        }
+    }
+    
+    public var weeklyLimit: Double?
+    {
+        get
+        {
+            let val = self.defaults.double(forKey: Defaults.weeklyLimitKey)
+            return val
+        }
+        set
+        {
+            self.defaults.setValue(newValue, forKey: Defaults.weeklyLimitKey)
+        }
+    }
+    
+    public var peakLimit: Double?
+    {
+        get
+        {
+            let val = self.defaults.double(forKey: Defaults.peakLimitKey)
+            return val
+        }
+        set
+        {
+            self.defaults.setValue(newValue, forKey: Defaults.peakLimitKey)
+        }
+    }
+    
+    public var drinkFreeDays: Double?
+    {
+        get
+        {
+            let val = self.defaults.double(forKey: Defaults.drinkFreeDaysKey)
+            return val
+        }
+        set
+        {
+            self.defaults.setValue(newValue, forKey: Defaults.drinkFreeDaysKey)
+        }
+    }
+}
+    
+extension Defaults
+{
     public static func registerDefaults()
     {
-        UserDefaults.standard.register(defaults: [
-            weekStartsOnMondayKey:false,
-            standardDrinkSizeKey:14
-            ])
+        Defaults().registerDefaults()
     }
     
     public static var weekStartsOnMonday: Bool
     {
         get
         {
-            let val = UserDefaults.standard.bool(forKey: weekStartsOnMondayKey)
-            return val
+            return Defaults().weekStartsOnMonday
         }
         set
         {
-            UserDefaults.standard.set(newValue, forKey: weekStartsOnMondayKey)
+            var defaults = Defaults()
+            defaults.weekStartsOnMonday = newValue
         }
     }
     
@@ -42,12 +138,12 @@ public class Defaults
     {
         get
         {
-            let val = UserDefaults.standard.string(forKey: untappdTokenKey)
-            return val
+            return Defaults().untappdToken
         }
         set
         {
-            UserDefaults.standard.setValue(newValue, forKey: untappdTokenKey)
+            var defaults = Defaults()
+            defaults.untappdToken = newValue
         }
     }
     
@@ -55,12 +151,12 @@ public class Defaults
     {
         get
         {
-            let val = UserDefaults.standard.double(forKey: standardDrinkSizeKey)
-            return val
+            return Defaults().standardDrinkSize
         }
         set
         {
-            UserDefaults.standard.setValue(newValue, forKey: standardDrinkSizeKey)
+            var defaults = Defaults()
+            defaults.standardDrinkSize = newValue
         }
     }
     
@@ -68,12 +164,12 @@ public class Defaults
     {
         get
         {
-            let val = UserDefaults.standard.double(forKey: weeklyLimitKey)
-            return val
+            return Defaults().weeklyLimit
         }
         set
         {
-            UserDefaults.standard.setValue(newValue, forKey: weeklyLimitKey)
+            var defaults = Defaults()
+            defaults.weeklyLimit = newValue
         }
     }
     
@@ -81,12 +177,12 @@ public class Defaults
     {
         get
         {
-            let val = UserDefaults.standard.double(forKey: peakLimitKey)
-            return val
+            return Defaults().peakLimit
         }
         set
         {
-            UserDefaults.standard.setValue(newValue, forKey: peakLimitKey)
+            var defaults = Defaults()
+            defaults.peakLimit = newValue
         }
     }
     
@@ -94,12 +190,12 @@ public class Defaults
     {
         get
         {
-            let val = UserDefaults.standard.double(forKey: drinkFreeDaysKey)
-            return val
+            return Defaults().drinkFreeDays
         }
         set
         {
-            UserDefaults.standard.setValue(newValue, forKey: drinkFreeDaysKey)
+            var defaults = Defaults()
+            defaults.drinkFreeDays = newValue
         }
     }
 }
