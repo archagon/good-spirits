@@ -46,6 +46,10 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="headerHeight">
                                         <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showsProgressView" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="progressViewHeight">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="dataSource" destination="9pv-A4-QxB" id="zr8-Lc-SF0"/>

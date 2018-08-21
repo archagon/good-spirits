@@ -190,7 +190,9 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
         }
         else
         {
-            return true
+            testAnimateProgressView()
+            return false
+            //return true
         }
     }
     
@@ -251,8 +253,64 @@ class FirstViewController: UIViewController, DrawerCoordinating
     @IBOutlet var tableView: UITableView!
     @IBOutlet var calendar: FSCalendar!
     @IBOutlet var calendarHeight: NSLayoutConstraint!
+    //var progressBar: YLProgressBar!
+    var progressBar: UIView!
+    var overflowProgressBar: UIView!
     
     var data: DataLayer!
+    
+    func testAnimateProgressView()
+    {
+        if let progress = self.progressBar as? UIProgressView, let progress2 = self.overflowProgressBar as? UIProgressView
+        {
+            let goodRange = Float(0)...0.5
+            let warningRange = goodRange.lowerBound...0.7
+
+            let random = Float.random(in: 0...1.0)
+            let random2 = Float.random(in: 0...random)
+
+            progress.setProgress(random, animated: true)
+            progress2.setProgress(random2, animated: true)
+            
+            if goodRange.contains(random)
+            {
+                //self.progressBar.progressTintColor = UIColor.init(red: 21/255.0, green: 126/255.0, blue: 251/255.0, alpha: 0.6)
+                progress.progressTintColor = nil
+            }
+            else if warningRange.contains(random)
+            {
+                //self.progressBar.progressTintColor = UIColor.yellow
+                progress.progressTintColor = UIColor.yellow.mixed(with: .black, by: 0.1)
+            }
+            else
+            {
+                //self.progressBar.progressTintColor = UIColor.red.withAlphaComponent(0.6)
+                progress.progressTintColor = UIColor.red.withAlphaComponent(0.6)
+            }
+        }
+        else if let progress = self.progressBar as? YLProgressBar
+        {
+            let goodRange = CGFloat(0)...0.5
+            let warningRange = goodRange.lowerBound...0.7
+            
+            let random = CGFloat.random(in: 0...1.0)
+            
+            progress.setProgress(random, animated: true)
+            
+            if goodRange.contains(random)
+            {
+                progress.progressTintColor = UIColor.init(red: 21/255.0, green: 126/255.0, blue: 251/255.0, alpha: 0.6)
+            }
+            else if warningRange.contains(random)
+            {
+                progress.progressTintColor = UIColor.yellow
+            }
+            else
+            {
+                progress.progressTintColor = UIColor.red.withAlphaComponent(0.6)
+            }
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool)
     {
@@ -274,6 +332,51 @@ class FirstViewController: UIViewController, DrawerCoordinating
         let range = Time.currentWeek()
         let midpoint = Date.init(timeIntervalSince1970: (range.0.timeIntervalSince1970 + range.0.timeIntervalSince1970) / 2)
         self.calendar.setCurrentPage(midpoint, animated: false)
+        let bar = UIProgressView.init()
+        bar.layer.cornerRadius = bar.intrinsicContentSize.height/2
+        bar.progress = 0.5
+        let bar2 = UIProgressView.init()
+        bar2.layer.cornerRadius = bar2.intrinsicContentSize.height/2
+        bar2.progress = 0.25
+        bar.trackTintColor = UIColor.init(white: 0.95, alpha: 1)
+        bar2.progressTintColor = UIColor.lightGray
+        bar2.trackTintColor = UIColor.clear
+//        let bar = YLProgressBar.init()
+//        bar.type = .rounded
+//        bar.progress = 0.7
+//        bar.hideStripes = true
+//        //bar.indicatorTextDisplayMode = .progress
+//        //bar.indicatorTextLabel.textColor = UIColor.init(red: 21/255.0, green: 126/255.0, blue: 251/255.0, alpha: 1).mixed(with: UIColor.white, by: 0.75)
+//        //bar.indicatorTextLabel.font = UIFont.systemFont(ofSize: bar.indicatorTextLabel.font.pointSize, weight: UIFont.Weight.regular)
+//        bar.hideGloss = true
+//        bar.uniformTintColor = true
+//        bar.trackTintColor = UIColor.init(red: 212/255.0, green: 212/255.0, blue: 212/255.0, alpha: 1)
+//        //bar.progressTintColors = [UIColor.init(red: 21/255.0, green: 124/255.0, blue: 249/255.0, alpha: 1)]
+//        bar.progressTintColors = [UIColor.init(red: 21/255.0, green: 126/255.0, blue: 251/255.0, alpha: 1)]
+        let progressView = UIView()
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        bar.translatesAutoresizingMaskIntoConstraints = false
+        bar2.translatesAutoresizingMaskIntoConstraints = false
+        progressView.addSubview(bar)
+        progressView.addSubview(bar2)
+        var hConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[bar]|", options: [], metrics: nil, views: ["bar":bar])
+        var vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[bar]|", options: [], metrics: nil, views: ["bar":bar])
+        NSLayoutConstraint.activate(hConstraints + vConstraints)
+        hConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[bar]|", options: [], metrics: nil, views: ["bar":bar2])
+        vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[bar]|", options: [], metrics: nil, views: ["bar":bar2])
+        NSLayoutConstraint.activate(hConstraints + vConstraints)
+        let label = UILabel()
+        label.text = "1.2 of 5.2 weekly drinks, including 1.2 drink overflow"
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        label.textColor = UIColor.lightGray.mixed(with: .white, by: 0.1)
+        label.textAlignment = .center
+        let stack = UIStackView.init(arrangedSubviews: [progressView, label])
+        stack.axis = .vertical
+        stack.spacing = 4
+        self.progressBar = bar
+        self.overflowProgressBar = bar2
+        self.calendar.progressView = stack
+        self.calendar.progressViewHeight = bar.intrinsicContentSize.height + 4 + label.intrinsicContentSize.height
         self.navigationItem.title = nil
         
         // QQQ:

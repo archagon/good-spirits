@@ -18,6 +18,7 @@
 		4E721EB5212522770001BBB9 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E721EB4212522770001BBB9 /* SampleData.swift */; };
 		4E7235ED2128E55100EEEAFE /* DeepDiff.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7235E02128E54400EEEAFE /* DeepDiff.framework */; };
 		4E7235EE2128E55100EEEAFE /* DeepDiff.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7235E02128E54400EEEAFE /* DeepDiff.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4E7235F42128F94C00EEEAFE /* YLProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E7235F22128F94C00EEEAFE /* YLProgressBar.m */; };
 		4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */; };
 		4E7E45582127F3F800ACDDB8 /* GRDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; };
 		4E7E45592127F3F800ACDDB8 /* GRDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -46,6 +47,7 @@
 		4EB75B8F2127CFEB00A14FCF /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */; };
 		4EBE6702210FE4CE00878CA0 /* DrawerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; };
 		4EBE6703210FE4CE00878CA0 /* DrawerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4ED560CB212BABDE009B3413 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED560CA212BABDE009B3413 /* Stats.swift */; };
 		4ED7ACF72102E151002BB0F1 /* standard_drinks.json in Resources */ = {isa = PBXBuildFile; fileRef = 4ED7ACF62102E151002BB0F1 /* standard_drinks.json */; };
 		4EDCE3D22126980F00A90C83 /* FSCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDCE3CE2126980F00A90C83 /* FSCalendarCell.m */; };
 		4EDCE3D32126980F00A90C83 /* FSCalendarCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EDCE3D12126980F00A90C83 /* FSCalendarCell.h */; };
@@ -239,6 +241,8 @@
 		4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DBComparison.xcodeproj; path = Modules/DBComparison/DBComparison.xcodeproj; sourceTree = "<group>"; };
 		4E721EB4212522770001BBB9 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DeepDiff.xcodeproj; path = "External/DeepDiff-master/DeepDiff.xcodeproj"; sourceTree = "<group>"; };
+		4E7235F22128F94C00EEEAFE /* YLProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YLProgressBar.m; path = "External/YLProgressBar-3.10.2/YLProgressBar/YLProgressBar.m"; sourceTree = SOURCE_ROOT; };
+		4E7235F32128F94C00EEEAFE /* YLProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YLProgressBar.h; path = "External/YLProgressBar-3.10.2/YLProgressBar/YLProgressBar.h"; sourceTree = SOURCE_ROOT; };
 		4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingPopupViewController.swift; sourceTree = "<group>"; };
 		4E7E45572127F3F800ACDDB8 /* GRDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GRDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E8F048E21114DBB00038F09 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
@@ -267,6 +271,7 @@
 		4EA2F1A020FF347D00CE30E1 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SortedArray.swift; path = "External/SortedArray-0.7.0/Sources/SortedArray.swift"; sourceTree = "<group>"; };
 		4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawerKit.xcodeproj; path = "External/DrawerKit-0.6.0/DrawerKit/DrawerKit.xcodeproj"; sourceTree = "<group>"; };
+		4ED560CA212BABDE009B3413 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 		4ED7ACF62102E151002BB0F1 /* standard_drinks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = standard_drinks.json; sourceTree = "<group>"; };
 		4EDCE3CE2126980F00A90C83 /* FSCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSCalendarCell.m; path = "External/FSCalendar-2.7.9/FSCalendar/FSCalendarCell.m"; sourceTree = SOURCE_ROOT; };
 		4EDCE3D12126980F00A90C83 /* FSCalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FSCalendarCell.h; path = "External/FSCalendar-2.7.9/FSCalendar/FSCalendarCell.h"; sourceTree = SOURCE_ROOT; };
@@ -354,6 +359,7 @@
 				4EA2F19A20FF07C100CE30E1 /* Model.swift */,
 				4EA2F19620FEF8B900CE30E1 /* Data.swift */,
 				4E721EB4212522770001BBB9 /* SampleData.swift */,
+				4ED560CA212BABDE009B3413 /* Stats.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -432,6 +438,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		4E7235F12128F93D00EEEAFE /* YLProgressBar */ = {
+			isa = PBXGroup;
+			children = (
+				4E7235F32128F94C00EEEAFE /* YLProgressBar.h */,
+				4E7235F22128F94C00EEEAFE /* YLProgressBar.m */,
+			);
+			path = YLProgressBar;
+			sourceTree = "<group>";
+		};
 		4E8F049021124CCA00038F09 /* Check-In */ = {
 			isa = PBXGroup;
 			children = (
@@ -451,9 +466,8 @@
 				4E5D8476212697890081B273 /* BeerBuddy-Bridging-Header.h */,
 				4EA2F17F20FEE7C700CE30E1 /* BeerBuddy */,
 				4EBE66D3210FD12800878CA0 /* External */,
-				4E5D847F212697AC0081B273 /* FSCalendar */,
-				4EA2F17E20FEE7C700CE30E1 /* Products */,
 				4E7E45572127F3F800ACDDB8 /* GRDB.framework */,
+				4EA2F17E20FEE7C700CE30E1 /* Products */,
 				4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */,
 				4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */,
 				4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */,
@@ -497,6 +511,8 @@
 			isa = PBXGroup;
 			children = (
 				4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */,
+				4E7235F12128F93D00EEEAFE /* YLProgressBar */,
+				4E5D847F212697AC0081B273 /* FSCalendar */,
 			);
 			name = External;
 			sourceTree = "<group>";
@@ -751,6 +767,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E70D5C72113C0AF0089BBB1 /* PricePickerViewController.swift in Sources */,
+				4E7235F42128F94C00EEEAFE /* YLProgressBar.m in Sources */,
 				4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */,
 				4EA2F18520FEE7C700CE30E1 /* SecondViewController.swift in Sources */,
 				4E9C8553210D598C00DA959D /* ABPrettyButton.swift in Sources */,
@@ -759,6 +776,7 @@
 				4E6B75792106BF1A009B6C0D /* UntappdLoginViewController.swift in Sources */,
 				4EA2F18120FEE7C700CE30E1 /* AppDelegate.swift in Sources */,
 				4E721EB5212522770001BBB9 /* SampleData.swift in Sources */,
+				4ED560CB212BABDE009B3413 /* Stats.swift in Sources */,
 				4E8F04962112577E00038F09 /* ABVPickerViewController.swift in Sources */,
 				4E8F04982112C44E00038F09 /* StylePickerViewController.swift in Sources */,
 				4EE3369B2108043E00D72B7D /* CheckInViewController.swift in Sources */,
