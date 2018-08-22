@@ -43,6 +43,29 @@
 		4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */; };
 		4EA2F19F20FF30F500CE30E1 /* DrinkIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */; };
 		4EA2F1A120FF347D00CE30E1 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F1A020FF347D00CE30E1 /* Util.swift */; };
+		4EB437D8212CE311001D5734 /* CGImage+Accelerate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437BF212CE311001D5734 /* CGImage+Accelerate.swift */; };
+		4EB437D9212CE311001D5734 /* CGContext+CGImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437C0212CE311001D5734 /* CGContext+CGImage.swift */; };
+		4EB437DA212CE311001D5734 /* CaptureQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437C1212CE311001D5734 /* CaptureQuality.swift */; };
+		4EB437DB212CE311001D5734 /* TrackingMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437C3212CE311001D5734 /* TrackingMode.swift */; };
+		4EB437DC212CE311001D5734 /* UIImage+Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437C4212CE311001D5734 /* UIImage+Blur.swift */; };
+		4EB437DD212CE311001D5734 /* BlurLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437C5212CE311001D5734 /* BlurLayer.swift */; };
+		4EB437DE212CE311001D5734 /* DynamicBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437C6212CE311001D5734 /* DynamicBlurView.swift */; };
+		4EB437DF212CE311001D5734 /* InteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437C8212CE311001D5734 /* InteractiveTransition.swift */; };
+		4EB437E0212CE311001D5734 /* PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437C9212CE311001D5734 /* PresentationController.swift */; };
+		4EB437E1212CE311001D5734 /* UIImageView+Calculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437CA212CE311001D5734 /* UIImageView+Calculations.swift */; };
+		4EB437E2212CE311001D5734 /* UIView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437CB212CE311001D5734 /* UIView+Animations.swift */; };
+		4EB437E3212CE311001D5734 /* PopupDialogDefaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437CC212CE311001D5734 /* PopupDialogDefaultView.swift */; };
+		4EB437E4212CE311001D5734 /* PopupDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437CD212CE311001D5734 /* PopupDialog.swift */; };
+		4EB437E5212CE311001D5734 /* PopupDialogOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437CE212CE311001D5734 /* PopupDialogOverlayView.swift */; };
+		4EB437E6212CE311001D5734 /* PopupDialogButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437CF212CE311001D5734 /* PopupDialogButton.swift */; };
+		4EB437E7212CE311001D5734 /* UIViewController+Visibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437D0212CE311001D5734 /* UIViewController+Visibility.swift */; };
+		4EB437E8212CE311001D5734 /* TransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437D1212CE311001D5734 /* TransitionAnimator.swift */; };
+		4EB437E9212CE311001D5734 /* PopupDialog+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437D2212CE311001D5734 /* PopupDialog+Keyboard.swift */; };
+		4EB437EA212CE311001D5734 /* PopupDialogDefaultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437D3212CE311001D5734 /* PopupDialogDefaultViewController.swift */; };
+		4EB437EB212CE311001D5734 /* TransitionAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437D4212CE311001D5734 /* TransitionAnimations.swift */; };
+		4EB437EC212CE311001D5734 /* PopupDialogDefaultButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437D5212CE311001D5734 /* PopupDialogDefaultButtons.swift */; };
+		4EB437ED212CE311001D5734 /* PresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437D6212CE311001D5734 /* PresentationManager.swift */; };
+		4EB437EE212CE311001D5734 /* PopupDialogContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437D7212CE311001D5734 /* PopupDialogContainerView.swift */; };
 		4EB75B8F2127CFEB00A14FCF /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */; };
 		4EBE6702210FE4CE00878CA0 /* DrawerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; };
 		4EBE6703210FE4CE00878CA0 /* DrawerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -266,6 +289,30 @@
 		4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInCell.swift; sourceTree = "<group>"; };
 		4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DrinkIcons.xcassets; sourceTree = "<group>"; };
 		4EA2F1A020FF347D00CE30E1 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		4EB437BF212CE311001D5734 /* CGImage+Accelerate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGImage+Accelerate.swift"; sourceTree = "<group>"; };
+		4EB437C0212CE311001D5734 /* CGContext+CGImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGContext+CGImage.swift"; sourceTree = "<group>"; };
+		4EB437C1212CE311001D5734 /* CaptureQuality.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureQuality.swift; sourceTree = "<group>"; };
+		4EB437C2212CE311001D5734 /* DynamicBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicBlurView.h; sourceTree = "<group>"; };
+		4EB437C3212CE311001D5734 /* TrackingMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackingMode.swift; sourceTree = "<group>"; };
+		4EB437C4212CE311001D5734 /* UIImage+Blur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Blur.swift"; sourceTree = "<group>"; };
+		4EB437C5212CE311001D5734 /* BlurLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurLayer.swift; sourceTree = "<group>"; };
+		4EB437C6212CE311001D5734 /* DynamicBlurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicBlurView.swift; sourceTree = "<group>"; };
+		4EB437C8212CE311001D5734 /* InteractiveTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveTransition.swift; sourceTree = "<group>"; };
+		4EB437C9212CE311001D5734 /* PresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
+		4EB437CA212CE311001D5734 /* UIImageView+Calculations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Calculations.swift"; sourceTree = "<group>"; };
+		4EB437CB212CE311001D5734 /* UIView+Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Animations.swift"; sourceTree = "<group>"; };
+		4EB437CC212CE311001D5734 /* PopupDialogDefaultView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDialogDefaultView.swift; sourceTree = "<group>"; };
+		4EB437CD212CE311001D5734 /* PopupDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDialog.swift; sourceTree = "<group>"; };
+		4EB437CE212CE311001D5734 /* PopupDialogOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDialogOverlayView.swift; sourceTree = "<group>"; };
+		4EB437CF212CE311001D5734 /* PopupDialogButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDialogButton.swift; sourceTree = "<group>"; };
+		4EB437D0212CE311001D5734 /* UIViewController+Visibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Visibility.swift"; sourceTree = "<group>"; };
+		4EB437D1212CE311001D5734 /* TransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
+		4EB437D2212CE311001D5734 /* PopupDialog+Keyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PopupDialog+Keyboard.swift"; sourceTree = "<group>"; };
+		4EB437D3212CE311001D5734 /* PopupDialogDefaultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDialogDefaultViewController.swift; sourceTree = "<group>"; };
+		4EB437D4212CE311001D5734 /* TransitionAnimations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionAnimations.swift; sourceTree = "<group>"; };
+		4EB437D5212CE311001D5734 /* PopupDialogDefaultButtons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDialogDefaultButtons.swift; sourceTree = "<group>"; };
+		4EB437D6212CE311001D5734 /* PresentationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationManager.swift; sourceTree = "<group>"; };
+		4EB437D7212CE311001D5734 /* PopupDialogContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDialogContainerView.swift; sourceTree = "<group>"; };
 		4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SortedArray.swift; path = "External/SortedArray-0.7.0/Sources/SortedArray.swift"; sourceTree = "<group>"; };
 		4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawerKit.xcodeproj; path = "External/DrawerKit-0.6.0/DrawerKit/DrawerKit.xcodeproj"; sourceTree = "<group>"; };
 		4ED560CA212BABDE009B3413 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
@@ -495,10 +542,52 @@
 			path = BeerBuddy;
 			sourceTree = "<group>";
 		};
+		4EB437BE212CE311001D5734 /* DynamicBlurView */ = {
+			isa = PBXGroup;
+			children = (
+				4EB437BF212CE311001D5734 /* CGImage+Accelerate.swift */,
+				4EB437C0212CE311001D5734 /* CGContext+CGImage.swift */,
+				4EB437C1212CE311001D5734 /* CaptureQuality.swift */,
+				4EB437C2212CE311001D5734 /* DynamicBlurView.h */,
+				4EB437C3212CE311001D5734 /* TrackingMode.swift */,
+				4EB437C4212CE311001D5734 /* UIImage+Blur.swift */,
+				4EB437C5212CE311001D5734 /* BlurLayer.swift */,
+				4EB437C6212CE311001D5734 /* DynamicBlurView.swift */,
+			);
+			name = DynamicBlurView;
+			path = "External/PopupDialog-0.8.1/DynamicBlurView";
+			sourceTree = "<group>";
+		};
+		4EB437C7212CE311001D5734 /* PopupDialog */ = {
+			isa = PBXGroup;
+			children = (
+				4EB437C8212CE311001D5734 /* InteractiveTransition.swift */,
+				4EB437C9212CE311001D5734 /* PresentationController.swift */,
+				4EB437CA212CE311001D5734 /* UIImageView+Calculations.swift */,
+				4EB437CB212CE311001D5734 /* UIView+Animations.swift */,
+				4EB437CC212CE311001D5734 /* PopupDialogDefaultView.swift */,
+				4EB437CD212CE311001D5734 /* PopupDialog.swift */,
+				4EB437CE212CE311001D5734 /* PopupDialogOverlayView.swift */,
+				4EB437CF212CE311001D5734 /* PopupDialogButton.swift */,
+				4EB437D0212CE311001D5734 /* UIViewController+Visibility.swift */,
+				4EB437D1212CE311001D5734 /* TransitionAnimator.swift */,
+				4EB437D2212CE311001D5734 /* PopupDialog+Keyboard.swift */,
+				4EB437D3212CE311001D5734 /* PopupDialogDefaultViewController.swift */,
+				4EB437D4212CE311001D5734 /* TransitionAnimations.swift */,
+				4EB437D5212CE311001D5734 /* PopupDialogDefaultButtons.swift */,
+				4EB437D6212CE311001D5734 /* PresentationManager.swift */,
+				4EB437D7212CE311001D5734 /* PopupDialogContainerView.swift */,
+			);
+			name = PopupDialog;
+			path = "External/PopupDialog-0.8.1/PopupDialog";
+			sourceTree = "<group>";
+		};
 		4EBE66D3210FD12800878CA0 /* External */ = {
 			isa = PBXGroup;
 			children = (
 				4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */,
+				4EB437BE212CE311001D5734 /* DynamicBlurView */,
+				4EB437C7212CE311001D5734 /* PopupDialog */,
 				4E5D847F212697AC0081B273 /* FSCalendar */,
 			);
 			name = External;
@@ -755,16 +844,29 @@
 			files = (
 				4E70D5C72113C0AF0089BBB1 /* PricePickerViewController.swift in Sources */,
 				4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */,
+				4EB437E8212CE311001D5734 /* TransitionAnimator.swift in Sources */,
 				4EA2F18520FEE7C700CE30E1 /* SecondViewController.swift in Sources */,
+				4EB437D9212CE311001D5734 /* CGContext+CGImage.swift in Sources */,
+				4EB437E9212CE311001D5734 /* PopupDialog+Keyboard.swift in Sources */,
+				4EB437DA212CE311001D5734 /* CaptureQuality.swift in Sources */,
+				4EB437E2212CE311001D5734 /* UIView+Animations.swift in Sources */,
+				4EB437DB212CE311001D5734 /* TrackingMode.swift in Sources */,
 				4E9C8553210D598C00DA959D /* ABPrettyButton.swift in Sources */,
 				4EB75B8F2127CFEB00A14FCF /* SortedArray.swift in Sources */,
 				4E9C8555210D68F900DA959D /* ColorUtil.swift in Sources */,
 				4E6B75792106BF1A009B6C0D /* UntappdLoginViewController.swift in Sources */,
+				4EB437D8212CE311001D5734 /* CGImage+Accelerate.swift in Sources */,
+				4EB437DF212CE311001D5734 /* InteractiveTransition.swift in Sources */,
 				4EA2F18120FEE7C700CE30E1 /* AppDelegate.swift in Sources */,
 				4E721EB5212522770001BBB9 /* SampleData.swift in Sources */,
+				4EB437EE212CE311001D5734 /* PopupDialogContainerView.swift in Sources */,
 				4ED560CB212BABDE009B3413 /* Stats.swift in Sources */,
+				4EB437E5212CE311001D5734 /* PopupDialogOverlayView.swift in Sources */,
+				4EB437EB212CE311001D5734 /* TransitionAnimations.swift in Sources */,
 				4E8F04962112577E00038F09 /* ABVPickerViewController.swift in Sources */,
 				4E8F04982112C44E00038F09 /* StylePickerViewController.swift in Sources */,
+				4EB437DD212CE311001D5734 /* BlurLayer.swift in Sources */,
+				4EB437EA212CE311001D5734 /* PopupDialogDefaultViewController.swift in Sources */,
 				4EE3369B2108043E00D72B7D /* CheckInViewController.swift in Sources */,
 				4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */,
 				4E900B9C20FFF8180095A71A /* StubViewController.swift in Sources */,
@@ -773,11 +875,21 @@
 				4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */,
 				4EA2F19B20FF07C100CE30E1 /* Model.swift in Sources */,
 				4E8F049421124FDD00038F09 /* VolumePickerViewController.swift in Sources */,
+				4EB437E3212CE311001D5734 /* PopupDialogDefaultView.swift in Sources */,
+				4EB437ED212CE311001D5734 /* PresentationManager.swift in Sources */,
 				4E93F00721015B7800B51709 /* Defaults.swift in Sources */,
+				4EB437DC212CE311001D5734 /* UIImage+Blur.swift in Sources */,
 				4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */,
 				4E93F00921017A5C00B51709 /* DayHeaderCell.swift in Sources */,
+				4EB437E1212CE311001D5734 /* UIImageView+Calculations.swift in Sources */,
+				4EB437E0212CE311001D5734 /* PresentationController.swift in Sources */,
+				4EB437EC212CE311001D5734 /* PopupDialogDefaultButtons.swift in Sources */,
 				4EA2F18320FEE7C700CE30E1 /* FirstViewController.swift in Sources */,
+				4EB437E7212CE311001D5734 /* UIViewController+Visibility.swift in Sources */,
 				4EE336992108043300D72B7D /* ABVViewController.swift in Sources */,
+				4EB437DE212CE311001D5734 /* DynamicBlurView.swift in Sources */,
+				4EB437E4212CE311001D5734 /* PopupDialog.swift in Sources */,
+				4EB437E6212CE311001D5734 /* PopupDialogButton.swift in Sources */,
 				4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */,
 				4EA2F19720FEF8B900CE30E1 /* Data.swift in Sources */,
 				4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */,

@@ -237,24 +237,16 @@
                                     <constraint firstItem="ZeO-C6-wSY" firstAttribute="centerY" secondItem="KLB-6v-VOH" secondAttribute="centerY" id="uoj-9j-Z4d"/>
                                 </constraints>
                             </scrollView>
-                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="343" placeholderIntrinsicHeight="42" translatesAutoresizingMaskIntoConstraints="NO" id="GNX-b1-9RC" customClass="ABPrettyButton" customModule="BeerBuddy" customModuleProvider="target">
-                                <rect key="frame" x="16" y="617" width="343" height="42"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="KLB-6v-VOH" secondAttribute="trailing" id="6FD-lG-HcZ"/>
-                            <constraint firstItem="cjo-Hu-Ceu" firstAttribute="bottom" secondItem="GNX-b1-9RC" secondAttribute="bottom" constant="8" id="EaT-0I-2Xf"/>
-                            <constraint firstItem="cjo-Hu-Ceu" firstAttribute="trailing" secondItem="GNX-b1-9RC" secondAttribute="trailing" constant="16" id="QG4-fh-MW0"/>
                             <constraint firstItem="KLB-6v-VOH" firstAttribute="top" secondItem="tFz-CP-wjw" secondAttribute="top" id="W2k-o7-7Vw"/>
                             <constraint firstItem="KLB-6v-VOH" firstAttribute="leading" secondItem="tFz-CP-wjw" secondAttribute="leading" id="XO5-pP-NlN"/>
                             <constraint firstAttribute="bottom" secondItem="KLB-6v-VOH" secondAttribute="bottom" id="uUI-Fw-LtQ"/>
-                            <constraint firstItem="GNX-b1-9RC" firstAttribute="leading" secondItem="cjo-Hu-Ceu" secondAttribute="leading" constant="16" id="z91-RL-PWa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="cjo-Hu-Ceu"/>
                     </view>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="conclusionText" destination="qCl-Lm-u0L" id="EI3-kD-A81"/>
                         <outlet property="descriptionText" destination="9fv-03-sYf" id="XDN-mi-wjq"/>

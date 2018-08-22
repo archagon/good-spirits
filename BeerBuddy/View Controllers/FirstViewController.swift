@@ -11,6 +11,31 @@ import DrawerKit
 import DataLayer
 import DeepDiff
 
+class PopupNav: UINavigationController
+{
+    let presenter: Presentr =
+    {
+        let width = ModalSize.fluid(percentage: 0.9)
+        let height = ModalSize.fluid(percentage: 0.85)
+        let center = ModalCenterPosition.center
+        let type = PresentationType.custom(width: width, height: height, center: center)
+        
+        let customPresenter = Presentr(presentationType: type)
+        customPresenter.transitionType = TransitionType.coverVertical
+        customPresenter.dismissTransitionType = TransitionType.coverVertical
+        customPresenter.roundCorners = true
+        customPresenter.cornerRadius = 16
+        customPresenter.backgroundTap = .noAction
+        customPresenter.dropShadow = PresentrShadow.init(shadowColor: UIColor.black, shadowOpacity: 0.4, shadowOffset: CGSize.init(width: 0, height: 5), shadowRadius: 5)
+        //customPresenter.backgroundColor = .green
+        customPresenter.backgroundOpacity = 0.4
+        //customPresenter.dismissOnSwipe = true
+        //customPresenter.dismissOnSwipeDirection = .top
+        
+        return customPresenter
+    }()
+}
+
 extension FirstViewController: CheckInViewControllerDelegate
 {
     public func defaultCheckIn(for: CheckInViewController) -> Model.Drink
@@ -71,7 +96,7 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
         {
             pulleyTest: do
             {
-                //break pulleyTest
+                break pulleyTest
                 let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
                 let controller = storyboard.instantiateViewController(withIdentifier: "CheckIn") as! CheckInViewController
                 controller.delegate = self
@@ -108,10 +133,66 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
             
             testABV: do
             {
+//                let title = "THIS IS THE DIALOG TITLE"
+//                let message = "This is the message section of the popup dialog default view"
+//                let popup = PopupDialog.init(title: title, message: message, image: nil, buttonAlignment: .vertical, transitionStyle: .bounceUp, preferredWidth: 340, tapGestureDismissal: false, panGestureDismissal: false, hideStatusBar: false, completion: nil)
+//
+//                let appearance = PopupDialogOverlayView.appearance()
+//                appearance.blurEnabled = false
+//                appearance.opacity = 0.4
+//
+//                let buttonOne = CancelButton(title: "CANCEL") {
+//                    print("You canceled the car dialog.")
+//                }
+//                let buttonTwo = DefaultButton(title: "ADMIRE CAR", dismissOnTap: false) {
+//                    print("What a beauty!")
+//                }
+//                let buttonThree = DefaultButton(title: "BUY CAR", height: 60) {
+//                    print("Ah, maybe next time :)")
+//                }
+//                popup.addButtons([buttonOne, buttonTwo, buttonThree])
+//
+//                self.present(popup, animated: true, completion: nil)
+//
+//                return false
+                
                 let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
                 let controller = storyboard.instantiateViewController(withIdentifier: "ABV") as! ABVViewController
-                let nav = UINavigationController.init(rootViewController: controller)
-                self.present(nav, animated: true, completion: nil)
+                controller.preferredContentSize = CGSize.init(width: 100, height: 300)
+//                self.modalPresentationStyle = .overCurrentContext
+//                self.providesPresentationContextTransitionStyle = true
+//                self.definesPresentationContext = true
+//                let nav = PopupNav.init(rootViewController: controller)
+//                nav.preferredContentSize = CGSize.init(width: 100, height: 300)
+//                nav.modalPresentationStyle = .overCurrentContext
+//                //nav.view.clipsToBounds = true
+//                nav.view.layer.cornerRadius = 16
+//
+//                customPresentViewController(nav.presenter, viewController: nav, animated: true)
+                
+                controller.view.translatesAutoresizingMaskIntoConstraints = false
+                controller.view.widthAnchor.constraint(equalToConstant: 340).isActive = true
+                controller.view.heightAnchor.constraint(equalToConstant: 600).isActive = true
+                
+                let popup = PopupDialog.init(viewController: controller, buttonAlignment: .vertical, transitionStyle: .bounceUp, preferredWidth: 340, tapGestureDismissal: false, panGestureDismissal: false, hideStatusBar: false, completion: nil)
+                
+                let appearance = PopupDialogOverlayView.appearance()
+                appearance.blurEnabled = false
+                appearance.opacity = 0.4
+                
+                let containerAppearance = PopupDialogContainerView.appearance()
+                //containerAppearance.backgroundColor = UIColor(red:0.23, green:0.23, blue:0.27, alpha:1.00)
+                containerAppearance.cornerRadius = 16
+                //containerAppearance.shadowOpacity = 0.6
+                //containerAppearance.shadowRadius = 20
+                containerAppearance.shadowOffset = CGSize(width: 0, height: 4)
+                
+                let buttonOne = CancelButton(title: "CANCEL") {
+                    print("You canceled the car dialog.")
+                }
+                popup.addButtons([buttonOne])
+                
+                self.present(popup, animated: true, completion: nil)
                 
                 return false
             }
