@@ -61,7 +61,7 @@ extension Defaults
         }
     }
     
-    public var standardDrinkSize: Double?
+    public var standardDrinkSize: Double
     {
         get
         {
@@ -78,8 +78,15 @@ extension Defaults
     {
         get
         {
-            let val = self.defaults.double(forKey: Defaults.weeklyLimitKey)
-            return val
+            if self.defaults.value(forKey: Defaults.weeklyLimitKey) != nil
+            {
+                let val = self.defaults.double(forKey: Defaults.weeklyLimitKey)
+                return val
+            }
+            else
+            {
+                return nil
+            }
         }
         set
         {
@@ -91,8 +98,15 @@ extension Defaults
     {
         get
         {
-            let val = self.defaults.double(forKey: Defaults.peakLimitKey)
-            return val
+            if self.defaults.value(forKey: Defaults.peakLimitKey) != nil
+            {
+                let val = self.defaults.double(forKey: Defaults.peakLimitKey)
+                return val
+            }
+            else
+            {
+                return nil
+            }
         }
         set
         {
@@ -104,8 +118,15 @@ extension Defaults
     {
         get
         {
-            let val = self.defaults.double(forKey: Defaults.drinkFreeDaysKey)
-            return val
+            if self.defaults.value(forKey: Defaults.drinkFreeDaysKey) != nil
+            {
+                let val = self.defaults.double(forKey: Defaults.drinkFreeDaysKey)
+                return val
+            }
+            else
+            {
+                return nil
+            }
         }
         set
         {
@@ -147,7 +168,7 @@ extension Defaults
         }
     }
     
-    public static var standardDrinkSize: Double?
+    public static var standardDrinkSize: Double
     {
         get
         {

@@ -10,259 +10,41 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="lfz-Ay-aHN">
+        <!--Limit Setup-->
+        <scene sceneID="bCR-M9-h0b">
             <objects>
-                <viewController storyboardIdentifier="ABV" id="Jdr-GU-FZK" customClass="ABVViewController" customModule="BeerBuddy" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="tFz-CP-wjw">
+                <tableViewController id="bsh-kd-nqz" customClass="StartupViewController" customModule="BeerBuddy" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="OQG-Hs-puj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KLB-6v-VOH">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZeO-C6-wSY">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="twJ-y9-bfA">
-                                                <rect key="frame" x="8" y="8" width="359" height="748.5"/>
-                                                <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2ga-pL-stF">
-                                                        <rect key="frame" x="0.0" y="0.0" width="359" height="50"/>
-                                                        <subviews>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X6p-GI-m5k">
-                                                                <rect key="frame" x="0.0" y="0.0" width="4" height="50"/>
-                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" constant="4" id="9DO-8G-lsZ"/>
-                                                                </constraints>
-                                                            </view>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First-Time Setup" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IJY-bA-cJW">
-                                                                <rect key="frame" x="4" y="0.0" width="355" height="50"/>
-                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="27"/>
-                                                                <color key="textColor" red="0.4198910039" green="0.62013102720000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                        </subviews>
-                                                        <constraints>
-                                                            <constraint firstItem="X6p-GI-m5k" firstAttribute="height" secondItem="IJY-bA-cJW" secondAttribute="height" id="F7k-XM-GPh"/>
-                                                        </constraints>
-                                                    </stackView>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ecp-LI-8ga">
-                                                        <rect key="frame" x="0.0" y="58" width="359" height="49.5"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <attributedString key="attributedText">
-                                                            <fragment content="Welcome to $name! To make full use of this drink tracker, please enter your intended drinking limits.">
-                                                                <attributes>
-                                                                    <font key="NSFont" metaFont="system" size="14"/>
-                                                                </attributes>
-                                                            </fragment>
-                                                        </attributedString>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    </textView>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xAB-fk-eDj">
-                                                        <rect key="frame" x="0.0" y="115.5" width="359" height="0.0"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    </view>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fU0-7f-9yq">
-                                                        <rect key="frame" x="0.0" y="123.5" width="359" height="160"/>
-                                                        <subviews>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hvK-ds-leD">
-                                                                <rect key="frame" x="0.0" y="0.0" width="15" height="160"/>
-                                                            </view>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bgl-nu-LGx">
-                                                                <rect key="frame" x="15" y="0.0" width="329.5" height="160"/>
-                                                                <subviews>
-                                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fS7-Jh-39F">
-                                                                        <rect key="frame" x="16" y="8" width="297.5" height="144"/>
-                                                                        <subviews>
-                                                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qf7-hC-lVC">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="297.5" height="30"/>
-                                                                                <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="900" text="Alcohol (g) in Standard Drink" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="go8-eE-iNJ">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="199.5" height="30"/>
-                                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
-                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="14" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="TgK-oV-D3X">
-                                                                                        <rect key="frame" x="207.5" y="0.0" width="90" height="30"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
-                                                                                    </textField>
-                                                                                </subviews>
-                                                                            </stackView>
-                                                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="0FY-G3-gc8">
-                                                                                <rect key="frame" x="0.0" y="38" width="297.5" height="30"/>
-                                                                                <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="900" text="Max Drinks per Week" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yqz-vS-zhK">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="199.5" height="30"/>
-                                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
-                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="mVf-Se-vx5">
-                                                                                        <rect key="frame" x="207.5" y="0.0" width="90" height="30"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
-                                                                                    </textField>
-                                                                                </subviews>
-                                                                            </stackView>
-                                                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tgH-0a-L9I">
-                                                                                <rect key="frame" x="0.0" y="76" width="297.5" height="30"/>
-                                                                                <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="900" text="Max Drinks at Single Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bG8-A1-uAf">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="199.5" height="30"/>
-                                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
-                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="kLS-Tl-fjD">
-                                                                                        <rect key="frame" x="207.5" y="0.0" width="90" height="30"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
-                                                                                    </textField>
-                                                                                </subviews>
-                                                                            </stackView>
-                                                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ktb-Tz-hUV">
-                                                                                <rect key="frame" x="0.0" y="114" width="297.5" height="30"/>
-                                                                                <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="900" text="Drink-Free Days per Week" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ns-VG-Nwt">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="199.5" height="30"/>
-                                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
-                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="zST-10-M79">
-                                                                                        <rect key="frame" x="207.5" y="0.0" width="90" height="30"/>
-                                                                                        <constraints>
-                                                                                            <constraint firstAttribute="width" constant="90" id="jvE-Rg-sae"/>
-                                                                                        </constraints>
-                                                                                        <nil key="textColor"/>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
-                                                                                    </textField>
-                                                                                </subviews>
-                                                                            </stackView>
-                                                                        </subviews>
-                                                                        <constraints>
-                                                                            <constraint firstItem="zST-10-M79" firstAttribute="leading" secondItem="TgK-oV-D3X" secondAttribute="leading" id="3Sk-HO-mw4"/>
-                                                                            <constraint firstItem="zST-10-M79" firstAttribute="leading" secondItem="mVf-Se-vx5" secondAttribute="leading" id="CpQ-qF-OZ2"/>
-                                                                            <constraint firstItem="zST-10-M79" firstAttribute="width" secondItem="mVf-Se-vx5" secondAttribute="width" id="dig-lI-Vh0"/>
-                                                                            <constraint firstItem="zST-10-M79" firstAttribute="leading" secondItem="kLS-Tl-fjD" secondAttribute="leading" id="hT7-bp-gLK"/>
-                                                                            <constraint firstItem="zST-10-M79" firstAttribute="width" secondItem="TgK-oV-D3X" secondAttribute="width" id="pfS-Us-M7B"/>
-                                                                            <constraint firstItem="zST-10-M79" firstAttribute="width" secondItem="kLS-Tl-fjD" secondAttribute="width" id="wp5-Br-JYQ"/>
-                                                                        </constraints>
-                                                                    </stackView>
-                                                                </subviews>
-                                                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="trailing" secondItem="fS7-Jh-39F" secondAttribute="trailing" constant="16" id="2Gu-Jx-xJS"/>
-                                                                    <constraint firstItem="fS7-Jh-39F" firstAttribute="top" secondItem="Bgl-nu-LGx" secondAttribute="top" constant="8" id="Hhv-Sb-oRm"/>
-                                                                    <constraint firstAttribute="bottom" secondItem="fS7-Jh-39F" secondAttribute="bottom" constant="8" id="OeH-r6-vwN"/>
-                                                                    <constraint firstItem="fS7-Jh-39F" firstAttribute="leading" secondItem="Bgl-nu-LGx" secondAttribute="leading" constant="16" id="wXL-2y-qmu"/>
-                                                                </constraints>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                        <integer key="value" value="8"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                            </view>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dQd-Sh-uR6">
-                                                                <rect key="frame" x="344.5" y="0.0" width="14.5" height="160"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" id="DZV-at-NFO"/>
-                                                                </constraints>
-                                                                <variation key="default">
-                                                                    <mask key="constraints">
-                                                                        <exclude reference="DZV-at-NFO"/>
-                                                                    </mask>
-                                                                </variation>
-                                                            </view>
-                                                        </subviews>
-                                                        <constraints>
-                                                            <constraint firstItem="dQd-Sh-uR6" firstAttribute="width" secondItem="hvK-ds-leD" secondAttribute="width" id="bOz-8s-5qg"/>
-                                                        </constraints>
-                                                    </stackView>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aNO-6o-0rZ">
-                                                        <rect key="frame" x="0.0" y="291.5" width="359" height="0.0"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" id="R5G-6p-I8A"/>
-                                                        </constraints>
-                                                    </view>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9fv-03-sYf">
-                                                        <rect key="frame" x="0.0" y="299.5" width="359" height="233.5"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <string key="text">Research has shown that there is no safe amount of alcohol consumption. However, the health departments and institutes of different countries have published recommendations for what constitutes a "low-risk" amount of drinking.  Based on my own studies, I would suggest starting with a limit of %default_men% for men and %default_women% for women—perhaps a little difficult for beer and wine enthusiasts, but relatively safe. However, feel free to pick a limit from one of the countries below. You can change these settings at any time.</string>
-                                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    </textView>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TDc-WN-iyz">
-                                                        <rect key="frame" x="0.0" y="541" width="359" height="166.5"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <string key="text">• The United States has a 14g alcohol standard drink and recommends 14 drinks per week for men and 7 drinks per week for women. • China, Brazil, Argentian, and Chile have a 14g standard drink and recommend 14 drinks per week for men and 7 drinks per week for women. • Russia has a 12g standard drink and recommends 14 drinks per week for men and 7 drinks per week for women.</string>
-                                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    </textView>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="This is the conclusion." textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qCl-Lm-u0L">
-                                                        <rect key="frame" x="0.0" y="715.5" width="359" height="33"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    </textView>
-                                                </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="aNO-6o-0rZ" firstAttribute="height" secondItem="xAB-fk-eDj" secondAttribute="height" id="ppL-K9-7Fj"/>
-                                                </constraints>
-                                            </stackView>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstItem="twJ-y9-bfA" firstAttribute="leading" secondItem="ZeO-C6-wSY" secondAttribute="leading" constant="8" id="aNk-fL-KGg"/>
-                                            <constraint firstAttribute="trailing" secondItem="twJ-y9-bfA" secondAttribute="trailing" constant="8" id="jm0-3f-IoJ"/>
-                                            <constraint firstItem="twJ-y9-bfA" firstAttribute="top" secondItem="ZeO-C6-wSY" secondAttribute="top" constant="8" id="zG7-UT-tAu"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="ZeO-C6-wSY" secondAttribute="trailing" id="B8Q-3y-z9M"/>
-                                    <constraint firstItem="ZeO-C6-wSY" firstAttribute="centerX" secondItem="KLB-6v-VOH" secondAttribute="centerX" id="SdA-mY-j8C"/>
-                                    <constraint firstItem="ZeO-C6-wSY" firstAttribute="top" secondItem="KLB-6v-VOH" secondAttribute="top" id="dxc-QU-N0o"/>
-                                    <constraint firstAttribute="bottom" secondItem="ZeO-C6-wSY" secondAttribute="bottom" id="neW-2V-ZFi"/>
-                                    <constraint firstItem="ZeO-C6-wSY" firstAttribute="leading" secondItem="KLB-6v-VOH" secondAttribute="leading" id="oAI-gz-hOp"/>
-                                    <constraint firstItem="ZeO-C6-wSY" firstAttribute="centerY" secondItem="KLB-6v-VOH" secondAttribute="centerY" id="uoj-9j-Z4d"/>
-                                </constraints>
-                            </scrollView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="KLB-6v-VOH" secondAttribute="trailing" id="6FD-lG-HcZ"/>
-                            <constraint firstItem="KLB-6v-VOH" firstAttribute="top" secondItem="tFz-CP-wjw" secondAttribute="top" id="W2k-o7-7Vw"/>
-                            <constraint firstItem="KLB-6v-VOH" firstAttribute="leading" secondItem="tFz-CP-wjw" secondAttribute="leading" id="XO5-pP-NlN"/>
-                            <constraint firstAttribute="bottom" secondItem="KLB-6v-VOH" secondAttribute="bottom" id="uUI-Fw-LtQ"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="cjo-Hu-Ceu"/>
-                    </view>
-                    <connections>
-                        <outlet property="conclusionText" destination="qCl-Lm-u0L" id="EI3-kD-A81"/>
-                        <outlet property="descriptionText" destination="9fv-03-sYf" id="XDN-mi-wjq"/>
-                        <outlet property="drinkFreeDaysPerWeekField" destination="zST-10-M79" id="9m9-Vi-dAz"/>
-                        <outlet property="drinksPerWeekField" destination="mVf-Se-vx5" id="a8c-Pf-ghF"/>
-                        <outlet property="linkText" destination="TDc-WN-iyz" id="b1b-R3-zGm"/>
-                        <outlet property="peakDrinksField" destination="kLS-Tl-fjD" id="tZB-4Q-wFw"/>
-                        <outlet property="scrollView" destination="KLB-6v-VOH" id="xCv-iU-zhh"/>
-                        <outlet property="standardDrinkField" destination="TgK-oV-D3X" id="0TD-1y-tbJ"/>
-                        <outlet property="titleLabel" destination="IJY-bA-cJW" id="hNu-pb-GVH"/>
-                        <outlet property="welcomeText" destination="ecp-LI-8ga" id="sQy-gY-DGG"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2NN-pu-9Ov" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="bsh-kd-nqz" id="Qad-Jy-JUc"/>
+                            <outlet property="delegate" destination="bsh-kd-nqz" id="m6v-Vr-8lm"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Limit Setup" id="DY1-hd-J0z"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ycf-dV-798" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-140" y="54.422788605697157"/>
+            <point key="canvasLocation" x="405.60000000000002" y="730.88455772113946"/>
+        </scene>
+        <!--Startup List Popup View Controller-->
+        <scene sceneID="qE8-PJ-W3q">
+            <objects>
+                <navigationController storyboardIdentifier="FirstTimeSetupTest" id="N8o-6o-Tas" customClass="StartupListPopupViewController" customModule="BeerBuddy" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="NHH-M8-SAL">
+                        <rect key="frame" x="0.0" y="20" width="375" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="bsh-kd-nqz" kind="relationship" relationship="rootViewController" id="FKm-17-exx"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QEj-r1-feG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-318" y="740"/>
         </scene>
         <!--Check In View Controller-->
         <scene sceneID="sGL-oS-Tgb">
