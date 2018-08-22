@@ -148,7 +148,7 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
                 
                 controller.view.translatesAutoresizingMaskIntoConstraints = false
                 controller.view.widthAnchor.constraint(equalToConstant: 340).isActive = true
-                controller.view.heightAnchor.constraint(equalToConstant: 600).isActive = true
+                controller.view.heightAnchor.constraint(equalToConstant: 500).isActive = true
                 
                 let popup = PopupDialog.init(viewController: controller, buttonAlignment: .vertical, transitionStyle: .bounceUp, preferredWidth: 340, tapGestureDismissal: false, panGestureDismissal: false, hideStatusBar: false, completion: nil)
                 
@@ -163,10 +163,15 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
                 //containerAppearance.shadowRadius = 20
                 containerAppearance.shadowOffset = CGSize(width: 0, height: 4)
                 
-                let buttonOne = CancelButton(title: "CANCEL") {
-                    print("You canceled the car dialog.")
+                let doneButton = DefaultButton.init(title: "Done", height: 45, dismissOnTap: false)
+                {
+                    popup.shake()
                 }
-                popup.addButtons([buttonOne])
+                doneButton.backgroundColor = Appearance.themeColor.withAlphaComponent(0.7)
+                doneButton.titleColor = UIColor.white
+                doneButton.titleFont = UIFont.systemFont(ofSize: 20)
+                doneButton.tag = 1
+                popup.addButtons([doneButton])
                 
                 self.present(popup, animated: true, completion: nil)
                 
@@ -556,7 +561,26 @@ class FirstViewController: UIViewController, DrawerCoordinating
                     }
                     else
                     {
-                        self.tableView.reloadData()
+                        // TODO: pretty animation
+                        if false && !UIAccessibility.isReduceMotionEnabled && previousDays == self.cache?.days
+                        {
+                            if previousRange.1 <= self.cache.range.0
+                            {
+                                self.tableView.reloadSections(IndexSet.init(integersIn: 0..<self.tableView.numberOfSections), with: .left)
+                            }
+                            else if previousRange.0 >= self.cache.range.1
+                            {
+                                self.tableView.reloadSections(IndexSet.init(integersIn: 0..<self.tableView.numberOfSections), with: .right)
+                            }
+                            else
+                            {
+                                self.tableView.reloadData()
+                            }
+                        }
+                        else
+                        {
+                            self.tableView.reloadData()
+                        }
                     }
                 }
                 

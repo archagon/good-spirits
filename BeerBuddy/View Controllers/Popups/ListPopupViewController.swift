@@ -23,6 +23,11 @@ class ListPopupViewController<T: UIViewController>: UINavigationController
         self.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:Appearance.themeColor]
         self.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor:Appearance.themeColor]
     }
+    
+    var popupController: PopupDialog?
+    {
+        return self.parent as? PopupDialog
+    }
 }
 
 // AB: kludge to work with interface builder, which does not support generics

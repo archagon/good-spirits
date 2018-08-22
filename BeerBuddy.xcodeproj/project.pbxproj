@@ -94,7 +94,6 @@
 		4EDCE3EC212698B200A90C83 /* FSCalendarScopeHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E5D84A0212697EA0081B273 /* FSCalendarScopeHandle.m */; };
 		4EDCE3ED212698B200A90C83 /* FSCalendarStickyHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E5D8491212697E80081B273 /* FSCalendarStickyHeader.m */; };
 		4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE336962107D6F700D72B7D /* Untappd_Schema.swift */; };
-		4EE336992108043300D72B7D /* ABVViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE336982108043300D72B7D /* ABVViewController.swift */; };
 		4EE3369B2108043E00D72B7D /* CheckInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE3369A2108043E00D72B7D /* CheckInViewController.swift */; };
 		4EE3369D2108058500D72B7D /* Controllers.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EE3369C2108058500D72B7D /* Controllers.storyboard */; };
 		4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */; };
@@ -335,7 +334,6 @@
 		4EDCE3DF2126989500A90C83 /* FSCalendarTransitionCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FSCalendarTransitionCoordinator.h; path = "External/FSCalendar-2.7.9/FSCalendar/FSCalendarTransitionCoordinator.h"; sourceTree = SOURCE_ROOT; };
 		4EDCE3E02126989500A90C83 /* FSCalendarWeekdayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FSCalendarWeekdayView.h; path = "External/FSCalendar-2.7.9/FSCalendar/FSCalendarWeekdayView.h"; sourceTree = SOURCE_ROOT; };
 		4EE336962107D6F700D72B7D /* Untappd_Schema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untappd_Schema.swift; sourceTree = "<group>"; };
-		4EE336982108043300D72B7D /* ABVViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABVViewController.swift; sourceTree = "<group>"; };
 		4EE3369A2108043E00D72B7D /* CheckInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInViewController.swift; sourceTree = "<group>"; };
 		4EE3369C2108058500D72B7D /* Controllers.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Controllers.storyboard; sourceTree = "<group>"; };
 		4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemCell.swift; sourceTree = "<group>"; };
@@ -461,7 +459,6 @@
 			isa = PBXGroup;
 			children = (
 				4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */,
-				4EE336982108043300D72B7D /* ABVViewController.swift */,
 				4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */,
 				4EB437EF212CF6C7001D5734 /* ListPopupViewController.swift */,
 				4EB437F1212CF77B001D5734 /* StartupViewController.swift */,
@@ -902,7 +899,6 @@
 				4EB437EC212CE311001D5734 /* PopupDialogDefaultButtons.swift in Sources */,
 				4EA2F18320FEE7C700CE30E1 /* FirstViewController.swift in Sources */,
 				4EB437E7212CE311001D5734 /* UIViewController+Visibility.swift in Sources */,
-				4EE336992108043300D72B7D /* ABVViewController.swift in Sources */,
 				4EB437DE212CE311001D5734 /* DynamicBlurView.swift in Sources */,
 				4EB437E4212CE311001D5734 /* PopupDialog.swift in Sources */,
 				4EB437E6212CE311001D5734 /* PopupDialogButton.swift in Sources */,
@@ -1155,7 +1151,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "BeerBuddy-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1176,7 +1172,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BeerBuddy-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

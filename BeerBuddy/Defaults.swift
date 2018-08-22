@@ -10,6 +10,10 @@ import Foundation
 
 public struct Defaults
 {
+    // AB: record-keeping for re-adding drink-free days (and others?)
+    private static let limitCountry: String = "LimitCountry"
+    private static let limitMale: String = "LimitMale"
+    
     private static let weekStartsOnMondayKey: String = "WeekStartsOnMonday"
     private static let untappdTokenKey: String = "UntappdToken"
     private static let standardDrinkSizeKey: String = "StandardDrinkSize"
@@ -27,12 +31,54 @@ public struct Defaults
 
 extension Defaults
 {
+    public static let standardDrinkSizeDefault: Double = 14
+    public static let standardDrinkSizeRange: ClosedRange<Double> = 3...30
+    public static let weeklyLimitRange: ClosedRange<Double> = 0...999
+    public static let peakLimitRange: ClosedRange<Double> = 0...999
+    public static let drinkFreeDaysRange: ClosedRange<Int> = 0...8
+}
+
+extension Defaults
+{
     public func registerDefaults()
     {
         self.defaults.register(defaults: [
             Defaults.weekStartsOnMondayKey:false,
-            Defaults.standardDrinkSizeKey:14
+            Defaults.standardDrinkSizeKey:Defaults.standardDrinkSizeDefault
             ])
+    }
+    
+    public var limitCountry: String?
+    {
+        get
+        {
+            let val = self.defaults.string(forKey: Defaults.limitCountry)
+            return val
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.limitCountry)
+        }
+    }
+    
+    public var limitMale: Bool?
+    {
+        get
+        {
+            if self.defaults.value(forKey: Defaults.limitMale) != nil
+            {
+                let val = self.defaults.bool(forKey: Defaults.limitMale)
+                return val
+            }
+            else
+            {
+                return nil
+            }
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.limitMale)
+        }
     }
     
     public var weekStartsOnMonday: Bool
@@ -70,7 +116,8 @@ extension Defaults
         }
         set
         {
-            self.defaults.setValue(newValue, forKey: Defaults.standardDrinkSizeKey)
+            let commitValue = min(max(newValue, Defaults.standardDrinkSizeRange.lowerBound), Defaults.standardDrinkSizeRange.upperBound)
+            self.defaults.setValue(commitValue, forKey: Defaults.standardDrinkSizeKey)
         }
     }
     
@@ -81,7 +128,7 @@ extension Defaults
             if self.defaults.value(forKey: Defaults.weeklyLimitKey) != nil
             {
                 let val = self.defaults.double(forKey: Defaults.weeklyLimitKey)
-                return val
+                return (val == 0 ? nil : val)
             }
             else
             {
@@ -90,7 +137,15 @@ extension Defaults
         }
         set
         {
-            self.defaults.setValue(newValue, forKey: Defaults.weeklyLimitKey)
+            if let value = newValue
+            {
+                let commitValue = min(max(value, Defaults.weeklyLimitRange.lowerBound), Defaults.weeklyLimitRange.upperBound)
+                self.defaults.setValue(commitValue, forKey: Defaults.weeklyLimitKey)
+            }
+            else
+            {
+                self.defaults.setValue(nil, forKey: Defaults.weeklyLimitKey)
+            }
         }
     }
     
@@ -101,7 +156,7 @@ extension Defaults
             if self.defaults.value(forKey: Defaults.peakLimitKey) != nil
             {
                 let val = self.defaults.double(forKey: Defaults.peakLimitKey)
-                return val
+                return (val == 0 ? nil : val)
             }
             else
             {
@@ -110,18 +165,26 @@ extension Defaults
         }
         set
         {
-            self.defaults.setValue(newValue, forKey: Defaults.peakLimitKey)
+            if let value = newValue
+            {
+                let commitValue = min(max(value, Defaults.peakLimitRange.lowerBound), Defaults.peakLimitRange.upperBound)
+                self.defaults.setValue(commitValue, forKey: Defaults.peakLimitKey)
+            }
+            else
+            {
+                self.defaults.setValue(nil, forKey: Defaults.peakLimitKey)
+            }
         }
     }
     
-    public var drinkFreeDays: Double?
+    public var drinkFreeDays: Int?
     {
         get
         {
             if self.defaults.value(forKey: Defaults.drinkFreeDaysKey) != nil
             {
-                let val = self.defaults.double(forKey: Defaults.drinkFreeDaysKey)
-                return val
+                let val = self.defaults.integer(forKey: Defaults.drinkFreeDaysKey)
+                return (val == 0 ? nil : val)
             }
             else
             {
@@ -130,7 +193,15 @@ extension Defaults
         }
         set
         {
-            self.defaults.setValue(newValue, forKey: Defaults.drinkFreeDaysKey)
+            if let value = newValue
+            {
+                let commitValue = min(max(value, Defaults.drinkFreeDaysRange.lowerBound), Defaults.drinkFreeDaysRange.upperBound)
+                self.defaults.setValue(commitValue, forKey: Defaults.drinkFreeDaysKey)
+            }
+            else
+            {
+                self.defaults.setValue(nil, forKey: Defaults.drinkFreeDaysKey)
+            }
         }
     }
 }
@@ -207,7 +278,7 @@ extension Defaults
         }
     }
     
-    public static var drinkFreeDays: Double?
+    public static var drinkFreeDays: Int?
     {
         get
         {

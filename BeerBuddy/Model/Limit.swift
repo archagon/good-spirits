@@ -235,18 +235,28 @@ public struct Limit
     
     private func floz(_ grams: Double) -> Measurement<UnitVolume>
     {
+        return Limit.floz(grams)
+    }
+    
+    private func grams(_ floz: Measurement<UnitVolume>) -> Double
+    {
+        return Limit.grams(floz)
+    }
+    
+    private static func floz(_ grams: Double) -> Measurement<UnitVolume>
+    {
         let val = (0.6 / 14) * grams
         let measure = Measurement<UnitVolume>.init(value: val, unit: .fluidOunces)
         return measure
     }
     
-    private func grams(_ floz: Measurement<UnitVolume>) -> Double
+    private static func grams(_ floz: Measurement<UnitVolume>) -> Double
     {
         let std = floz.converted(to: .fluidOunces)
         let val = (14 / 0.6) * std.value
         return val
     }
     
-    public func alcoholToFluidOunces(fromGrams grams: Double) -> Measurement<UnitVolume> { return floz(grams) }
-    public func alcoholToGrams(fromFluidOunces floz: Measurement<UnitVolume>) -> Double { return grams(floz) }
+    public static func alcoholToFluidOunces(fromGrams grams: Double) -> Measurement<UnitVolume> { return Limit.floz(grams) }
+    public static func alcoholToGrams(fromFluidOunces floz: Measurement<UnitVolume>) -> Double { return Limit.grams(floz) }
 }
