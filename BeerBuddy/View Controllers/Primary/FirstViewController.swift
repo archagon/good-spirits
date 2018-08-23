@@ -69,15 +69,9 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
     {
         if viewController is StubViewController
         {
-            settingsTest: do
-            {
-                (self.tabBarController as? RootViewController)?.showSettingsPopup()
-                return false
-            }
-            
             pulleyTest: do
             {
-                break pulleyTest
+                //break pulleyTest
                 let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
                 let controller = storyboard.instantiateViewController(withIdentifier: "CheckIn") as! CheckInViewController
                 controller.delegate = self
@@ -121,6 +115,7 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
             
             testProgressView: do
             {
+                break testProgressView
                 testAnimateProgressView()
                 return false
             }

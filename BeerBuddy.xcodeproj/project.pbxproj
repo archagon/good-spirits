@@ -26,7 +26,7 @@
 		4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */; };
 		4E7FB9EC212E3B1400052BFC /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9EB212E3B1400052BFC /* RootViewController.swift */; };
 		4E7FB9F1212E3F2A00052BFC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */; };
-		4E7FB9F3212E58BD00052BFC /* HealthKitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F2212E58BD00052BFC /* HealthKitViewController.swift */; };
+		4E7FB9F3212E58BD00052BFC /* HealthKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F2212E58BD00052BFC /* HealthKit.swift */; };
 		4E7FB9F5212E58E200052BFC /* PopupCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F4212E58E200052BFC /* PopupCells.swift */; };
 		4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F048E21114DBB00038F09 /* Formatting.swift */; };
 		4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */; };
@@ -282,7 +282,7 @@
 		4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicPopupButton.swift; sourceTree = "<group>"; };
 		4E7FB9EB212E3B1400052BFC /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		4E7FB9F2212E58BD00052BFC /* HealthKitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitViewController.swift; sourceTree = "<group>"; };
+		4E7FB9F2212E58BD00052BFC /* HealthKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKit.swift; sourceTree = "<group>"; };
 		4E7FB9F4212E58E200052BFC /* PopupCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupCells.swift; sourceTree = "<group>"; };
 		4E8F048E21114DBB00038F09 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
 		4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInDrawerViewController.swift; sourceTree = "<group>"; };
@@ -481,7 +481,6 @@
 				4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */,
 				4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */,
 				4EB437F1212CF77B001D5734 /* StartupViewController.swift */,
-				4E7FB9F2212E58BD00052BFC /* HealthKitViewController.swift */,
 				4EC26CCD212E5E84006E156B /* TextDisplayController.swift */,
 				4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */,
 				4E7FB9F4212E58E200052BFC /* PopupCells.swift */,
@@ -590,6 +589,7 @@
 				4E70D5CC2113D4B80089BBB1 /* View Controllers */,
 				4E70D5C82113D4480089BBB1 /* Model */,
 				4E70D5CA2113D46A0089BBB1 /* Untappd */,
+				4E7FB9F2212E58BD00052BFC /* HealthKit.swift */,
 				4E7FB9EE212E3EFC00052BFC /* Globals */,
 				4E7FB9EF212E3F0500052BFC /* Util */,
 				4EA2F18920FEE7CB00CE30E1 /* Assets.xcassets */,
@@ -962,7 +962,7 @@
 				4E7FB9EC212E3B1400052BFC /* RootViewController.swift in Sources */,
 				4E93F00721015B7800B51709 /* Defaults.swift in Sources */,
 				4E169190212E8647007F51D9 /* Constants.swift in Sources */,
-				4E7FB9F3212E58BD00052BFC /* HealthKitViewController.swift in Sources */,
+				4E7FB9F3212E58BD00052BFC /* HealthKit.swift in Sources */,
 				4EB437DC212CE311001D5734 /* UIImage+Blur.swift in Sources */,
 				4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */,
 				4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */,

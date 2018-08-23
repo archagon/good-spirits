@@ -8,6 +8,18 @@
 
 import Foundation
 
+public func onMain(_ block: @escaping ()->Void)
+{
+    if !Thread.current.isMainThread
+    {
+        DispatchQueue.main.async(execute: block)
+    }
+    else
+    {
+        block()
+    }
+}
+
 public func equalish<T: Dimension>(first: Measurement<T>, second: Measurement<T>, delta: Measurement<T>) -> Bool
 {
     let baseFirst = first.converted(to: T.baseUnit())
@@ -34,6 +46,11 @@ public func appError(_ message: String)
 {
     print("Error: \(message)")
     assert(false)
+}
+
+public func appWarning(_ message: String)
+{
+    print("Warning: \(message)")
 }
 
 public func appDebug(_ message: String)

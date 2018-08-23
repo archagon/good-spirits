@@ -85,7 +85,11 @@
                     </view>
                     <tabBarItem key="tabBarItem" badgeValue="3" systemItem="history" id="acW-dT-cKf"/>
                     <navigationItem key="navigationItem" title="August 2018" id="CZz-nO-VV4">
-                        <barButtonItem key="leftBarButtonItem" systemItem="organize" id="bv1-O2-TuQ"/>
+                        <barButtonItem key="leftBarButtonItem" image="gear" id="bv1-O2-TuQ">
+                            <connections>
+                                <segue destination="49e-Tb-3d3" kind="custom" identifier="Settings" customClass="SettingsSegue" customModule="BeerBuddy" customModuleProvider="target" id="qTZ-a0-XAT"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Today" id="qTR-ZY-cTj">
                             <connections>
                                 <action selector="todayTapped:" destination="9pv-A4-QxB" id="e1s-d0-df3"/>
@@ -164,8 +168,12 @@
                         <viewLayoutGuide key="safeArea" id="82h-dL-H5I"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Stats" image="second" id="jDb-r8-6sp"/>
-                    <navigationItem key="navigationItem" id="oRL-iw-YIz">
-                        <barButtonItem key="leftBarButtonItem" systemItem="organize" id="z6g-WQ-Xi5"/>
+                    <navigationItem key="navigationItem" title="Stats" id="oRL-iw-YIz">
+                        <barButtonItem key="leftBarButtonItem" image="gear" id="z6g-WQ-Xi5">
+                            <connections>
+                                <segue destination="49e-Tb-3d3" kind="custom" identifier="Settings" customClass="SettingsSegue" customModule="BeerBuddy" customModuleProvider="target" id="SXH-ke-j1X"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
@@ -232,6 +240,10 @@
         <image name="checkin" width="50" height="50"/>
         <image name="clear" width="1" height="1"/>
         <image name="first" width="30" height="30"/>
+        <image name="gear" width="22" height="22"/>
         <image name="second" width="30" height="30"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="SXH-ke-j1X"/>
+    </inferredMetricsTieBreakers>
 </document>

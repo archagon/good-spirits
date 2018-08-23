@@ -104,4 +104,21 @@ class RootViewController: UITabBarController
         
         self.present(popup, animated: true, completion: nil)
     }
+    
+    override func performSegue(withIdentifier identifier: String, sender: Any?)
+    {
+        if identifier == "Settings"
+        {
+            showSettingsPopup()
+        }
+    }
+}
+
+// AB: this is a hack, but hey, it works
+class SettingsSegue: UIStoryboardSegue
+{
+    override func perform()
+    {
+        (self.source.tabBarController as? RootViewController)?.showSettingsPopup()
+    }
 }

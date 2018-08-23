@@ -80,3 +80,34 @@ class ToggleCell: UITableViewCell
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+class SubtitleToggleCell: ToggleCell
+{
+    var spinner: UIActivityIndicatorView
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?)
+    {
+        self.spinner = UIActivityIndicatorView.init(activityIndicatorStyle: .gray)
+        
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        
+        self.detailTextLabel?.numberOfLines = 1000
+    }
+    
+    required init?(coder aDecoder: NSCoder)
+    {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func enable()
+    {
+        self.spinner.stopAnimating()
+        self.accessoryView = self.toggle
+    }
+    
+    func disable()
+    {
+        self.accessoryView = self.spinner
+        self.spinner.startAnimating()
+    }
+}

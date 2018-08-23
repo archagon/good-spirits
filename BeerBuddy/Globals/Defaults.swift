@@ -17,11 +17,17 @@ public struct Defaults
     private static let limitMale: String = "LimitMale"
     
     private static let weekStartsOnMondayKey: String = "WeekStartsOnMonday"
-    private static let untappdTokenKey: String = "UntappdToken"
     private static let standardDrinkSizeKey: String = "StandardDrinkSize"
     private static let weeklyLimitKey: String = "WeeklyLimit"
     private static let peakLimitKey: String = "PeakLimit"
     private static let drinkFreeDaysKey: String = "DrinkFreeDays"
+    
+    // Having this set means HK was authorized at some point.
+    private static let healthKitEnabledKey: String = "HealthKitEnabled"
+    
+    private static let untappdEnabledKey: String = "UntappdEnabled"
+    private static let untappdTokenKey: String = "UntappdToken"
+    private static let untappdBaselineKey: String = "UntappdBaseline"
     
     private let defaults: UserDefaults
     
@@ -33,20 +39,13 @@ public struct Defaults
 
 extension Defaults
 {
-    public static let standardDrinkSizeDefault: Double = 14
-    public static let standardDrinkSizeRange: ClosedRange<Double> = 3...30
-    public static let weeklyLimitRange: ClosedRange<Double> = 0...999
-    public static let peakLimitRange: ClosedRange<Double> = 0...999
-    public static let drinkFreeDaysRange: ClosedRange<Int> = 0...8
-}
-
-extension Defaults
-{
     public func registerDefaults()
     {
         self.defaults.register(defaults: [
-            Defaults.weekStartsOnMondayKey:false,
-            Defaults.standardDrinkSizeKey:Defaults.standardDrinkSizeDefault
+            Defaults.weekStartsOnMondayKey: false,
+            Defaults.standardDrinkSizeKey: Constants.standardDrinkSizeDefault,
+            Defaults.healthKitEnabledKey: false,
+            Defaults.untappdEnabledKey: false
             ])
     }
     
@@ -60,6 +59,45 @@ extension Defaults
         set
         {
             self.defaults.set(newValue, forKey: Defaults.configuredKey)
+        }
+    }
+    
+    public var healthKitEnabled: Bool
+    {
+        get
+        {
+            let val = self.defaults.bool(forKey: Defaults.healthKitEnabledKey)
+            return val
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.healthKitEnabledKey)
+        }
+    }
+    
+    public var untappdEnabled: Bool
+    {
+        get
+        {
+            let val = self.defaults.bool(forKey: Defaults.untappdEnabledKey)
+            return val
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.untappdEnabledKey)
+        }
+    }
+    
+    public var untappdToken: String?
+    {
+        get
+        {
+            let val = self.defaults.string(forKey: Defaults.untappdTokenKey)
+            return val
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.untappdTokenKey)
         }
     }
     
@@ -109,19 +147,6 @@ extension Defaults
         }
     }
     
-    public var untappdToken: String?
-    {
-        get
-        {
-            let val = self.defaults.string(forKey: Defaults.untappdTokenKey)
-            return val
-        }
-        set
-        {
-            self.defaults.setValue(newValue, forKey: Defaults.untappdTokenKey)
-        }
-    }
-    
     public var standardDrinkSize: Double
     {
         get
@@ -131,7 +156,7 @@ extension Defaults
         }
         set
         {
-            let commitValue = min(max(newValue, Defaults.standardDrinkSizeRange.lowerBound), Defaults.standardDrinkSizeRange.upperBound)
+            let commitValue = min(max(newValue, Constants.standardDrinkSizeRange.lowerBound), Constants.standardDrinkSizeRange.upperBound)
             self.defaults.setValue(commitValue, forKey: Defaults.standardDrinkSizeKey)
         }
     }
@@ -154,7 +179,7 @@ extension Defaults
         {
             if let value = newValue
             {
-                let commitValue = min(max(value, Defaults.weeklyLimitRange.lowerBound), Defaults.weeklyLimitRange.upperBound)
+                let commitValue = min(max(value, Constants.weeklyLimitRange.lowerBound), Constants.weeklyLimitRange.upperBound)
                 self.defaults.setValue(commitValue, forKey: Defaults.weeklyLimitKey)
             }
             else
@@ -182,7 +207,7 @@ extension Defaults
         {
             if let value = newValue
             {
-                let commitValue = min(max(value, Defaults.peakLimitRange.lowerBound), Defaults.peakLimitRange.upperBound)
+                let commitValue = min(max(value, Constants.peakLimitRange.lowerBound), Constants.peakLimitRange.upperBound)
                 self.defaults.setValue(commitValue, forKey: Defaults.peakLimitKey)
             }
             else
@@ -210,7 +235,7 @@ extension Defaults
         {
             if let value = newValue
             {
-                let commitValue = min(max(value, Defaults.drinkFreeDaysRange.lowerBound), Defaults.drinkFreeDaysRange.upperBound)
+                let commitValue = min(max(value, Constants.drinkFreeDaysRange.lowerBound), Constants.drinkFreeDaysRange.upperBound)
                 self.defaults.setValue(commitValue, forKey: Defaults.drinkFreeDaysKey)
             }
             else
@@ -241,16 +266,29 @@ extension Defaults
         }
     }
     
-    public static var weekStartsOnMonday: Bool
+    public static var healthKitEnabled: Bool
     {
         get
         {
-            return Defaults().weekStartsOnMonday
+            return Defaults().healthKitEnabled
         }
         set
         {
             var defaults = Defaults()
-            defaults.weekStartsOnMonday = newValue
+            defaults.healthKitEnabled = newValue
+        }
+    }
+    
+    public static var untappdEnabled: Bool
+    {
+        get
+        {
+            return Defaults().untappdEnabled
+        }
+        set
+        {
+            var defaults = Defaults()
+            defaults.untappdEnabled = newValue
         }
     }
     
@@ -264,6 +302,19 @@ extension Defaults
         {
             var defaults = Defaults()
             defaults.untappdToken = newValue
+        }
+    }
+    
+    public static var weekStartsOnMonday: Bool
+    {
+        get
+        {
+            return Defaults().weekStartsOnMonday
+        }
+        set
+        {
+            var defaults = Defaults()
+            defaults.weekStartsOnMonday = newValue
         }
     }
     

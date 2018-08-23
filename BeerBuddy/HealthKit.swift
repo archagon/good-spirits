@@ -9,10 +9,20 @@
 import Foundation
 import UIKit
 import HealthKit
+import DataLayer
 
-class HealthKitViewController: UITableViewController
+// NEXT:
+// STATES:
+//  * token not set, auth status not determined
+//  * token not set, auth status ???
+//  * token set, but calls fail
+//  * token set, calls succeed
+
+class HealthKit
 {
-    static var store: HKHealthStore? =
+    static let shared = HealthKit()
+    
+    var store: HKHealthStore? =
     {
         // NEXT: add this check to settings
         if HKHealthStore.isHealthDataAvailable()
@@ -26,20 +36,19 @@ class HealthKitViewController: UITableViewController
         }
     }()
     
-    override func viewDidLoad()
+    var testUUID = UUID()
+    
+    func authStatus() -> HKAuthorizationStatus?
     {
-        super.viewDidLoad()
-        
-        self.navigationItem.title = "HealthKit Setup"
+        let type = HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)!
+        return self.store?.authorizationStatus(for: type)
     }
     
-    static var testUUID = UUID()
-    
-    static func test()
+    func test()
     {
         let allTypes: Set<HKSampleType> = [ HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)! ]
         
-        HealthKitViewController.store?.requestAuthorization(toShare: allTypes, read: allTypes)
+        HealthKit.shared.store?.requestAuthorization(toShare: allTypes, read: nil)
         { (success, error) in
             if !success
             {
@@ -51,7 +60,7 @@ class HealthKitViewController: UITableViewController
                 let quantity = HKQuantity.init(unit: HKUnit.kilocalorie(), doubleValue: Double.random(in: 75..<200))
                 let date = Date()
                 
-                let id = testUUID.uuidString
+                let id = self.testUUID.uuidString
                 let v = Date().timeIntervalSince1970
                 let style = "beer"
                 let name = "Random Beve"
@@ -78,11 +87,11 @@ class HealthKitViewController: UITableViewController
                 //let sample = HKQuantitySample.init(type: type, quantity: quantity, start: date, end: date, metadata: sampleMetadata)
                 let food = HKCorrelation.init(type: HKCorrelationType.correlationType(forIdentifier: HKCorrelationTypeIdentifier.food)!, start: date, end: date, objects: [sample], metadata: sampleMetadata)
                 
-                let authType = HealthKitViewController.store?.authorizationStatus(for: type) ?? .sharingDenied
+                let authType = HealthKit.shared.store?.authorizationStatus(for: type) ?? .sharingDenied
                 
                 if authType == .sharingAuthorized
                 {
-                    HealthKitViewController.store?.save(food, withCompletion:
+                    HealthKit.shared.store?.save(food, withCompletion:
                     { (success, error) in
                         if !success
                         {
@@ -112,30 +121,30 @@ class HealthKitViewController: UITableViewController
                                             {
                                                 print("found correlation \(i)")
                                                 
-//                                                HealthKitViewController.store?.delete(Array(correlation.objects + [correlation]), withCompletion:
-//                                                { (success, error) in
-//                                                    if !success
-//                                                    {
-//                                                        if let aError = error as? HKError, aError.code == HKError.errorInvalidArgument
-//                                                        {
-//                                                            print("object already deleted")
-//                                                        }
-//                                                        else
-//                                                        {
-//                                                            appError("\(error!)")
-//                                                        }
-//                                                    }
-//                                                    else
-//                                                    {
-//                                                        print("deleted!")
-//                                                    }
-//                                                })
+                                                HealthKit.shared.store?.delete(Array(correlation.objects + [correlation]), withCompletion:
+                                                { (success, error) in
+                                                    if !success
+                                                    {
+                                                        if let aError = error as? HKError, aError.code == HKError.errorInvalidArgument
+                                                        {
+                                                            print("object already deleted")
+                                                        }
+                                                        else
+                                                        {
+                                                            appError("\(error!)")
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        print("deleted!")
+                                                    }
+                                                })
                                             }
                                         }
                                     }
                                 })
                                 
-                                HealthKitViewController.store?.execute(query)
+                                HealthKit.shared.store?.execute(query)
                             })
                         }
                     })
@@ -146,7 +155,13 @@ class HealthKitViewController: UITableViewController
                 }
             }
         }
-        
-        
+    }
+}
+
+// Model interface.
+extension HealthKit
+{
+    func commit(model: Model)
+    {
     }
 }

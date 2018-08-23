@@ -9,12 +9,10 @@
 import Foundation
 import UIKit
 import StoreKit
+import HealthKit
 
-// NEXT: toggles w/spinners (?)
 // NEXT: healthkit
-// NEXT: untappd vc -- checkbox goes to UntappdLoginViewController
 // NEXT: week starts on monday defaults hookups + calendar hookup
-// NEXT: settings icon and VC hookup
 
 class SettingsViewController: UITableViewController
 {
@@ -27,8 +25,27 @@ class SettingsViewController: UITableViewController
         case healthKit
         case info
     }
-    
     let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, 3), (.settings, 2), (.untappd, 1), (.healthKit, 1), (.info, 1)]
+    
+    var healthKitLoginPending: Bool = false
+    enum HealthKitLoginStatus
+    {
+        case unavailable
+        case unauthorized
+        case disabled
+        case pendingAuthorization
+        case enabledAndAuthorized
+    }
+    
+    var notificationObservers: [Any] = []
+    
+    deinit
+    {
+        for observer in notificationObservers
+        {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
     
     override func viewDidLoad()
     {
@@ -40,9 +57,21 @@ class SettingsViewController: UITableViewController
         
         self.tableView.sectionFooterHeight = UITableViewAutomaticDimension
         self.tableView.estimatedSectionFooterHeight = 50
+        
+        let activeNotification = NotificationCenter.default.addObserver(forName: Notification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil)
+        { [weak `self`] _ in
+            self?.updateHealthKitToggleAppearance()
+        }
+        notificationObservers.append(activeNotification)
+    }
+    
+    func viewWillAppear()
+    {
+        updateHealthKitToggleAppearance()
     }
 }
 
+// Table View
 extension SettingsViewController
 {
     override func numberOfSections(in tableView: UITableView) -> Int
@@ -58,7 +87,7 @@ extension SettingsViewController
         
         if sectionCounts[section].0 == .iap
         {
-            var iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time. If you're able to visit my website and buy something through my Amazon affiliate link, or donate $donation$ through an in-app purchase, I would be incredibly grateful!"
+            var iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of my time and effort. If you're able to visit my website and buy something through my Amazon affiliate link, or donate $donation$ through an in-app purchase, I would be incredibly grateful!"
             
             iapPrompt.replaceAnchorText("name", value: Constants.appName)
             iapPrompt.replaceAnchorText("donation", value: "$1")
@@ -150,8 +179,6 @@ extension SettingsViewController
             return "Health Kit"
         case .info:
             return nil
-        default:
-            return nil
         }
     }
     
@@ -168,6 +195,26 @@ extension SettingsViewController
                 footer.textLabel?.textColor = UIColor.gray
             }
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath?
+    {
+        let section = indexPath.section
+        let type = sectionCounts[section].0
+        
+        if type == .healthKit
+        {
+            if let cell = tableView.cellForRow(at: indexPath) as? SubtitleToggleCell
+            {
+                return (cell.toggle.isEnabled ? indexPath : nil)
+            }
+            else
+            {
+                return nil
+            }
+        }
+        
+        return indexPath
     }
     
     override func tableView(_ tableView: UITableView, willDisplay aCell: UITableViewCell, forRowAt indexPath: IndexPath)
@@ -203,7 +250,12 @@ extension SettingsViewController
                 let cell = aCell as! ToggleCell
                 cell.accessoryType = .none
                 
+                cell.toggle.removeTarget(self, action: nil, for: .valueChanged)
+                cell.toggle.addTarget(self, action: #selector(weekStartsOnMondayToggled), for: .valueChanged)
+                cell.toggle.isOn = Defaults.weekStartsOnMonday
+                
                 cell.textLabel?.text = "Week Starts on Monday"
+                cell.textLabel?.numberOfLines = 10
             }
             else if row == 1
             {
@@ -216,9 +268,14 @@ extension SettingsViewController
             let cell = aCell as! ToggleCell
             cell.accessoryType = .none
             
+            cell.toggle.removeTarget(self, action: nil, for: .valueChanged)
+            cell.toggle.addTarget(self, action: #selector(untappdToggled), for: .valueChanged)
+            cell.toggle.isOn = Defaults.untappdEnabled
+            
             if row == 0
             {
                 cell.textLabel?.text = "Pull Check-Ins from Untappd"
+                cell.textLabel?.numberOfLines = 10
                 cell.detailTextLabel?.numberOfLines = 1000
                 cell.detailTextLabel?.text = "Logged in as Archagon"
             }
@@ -226,9 +283,17 @@ extension SettingsViewController
             let cell = aCell as! ToggleCell
             cell.accessoryType = .none
             
+            cell.toggle.removeTarget(self, action: nil, for: .valueChanged)
+            cell.toggle.addTarget(self, action: #selector(healthKitToggled), for: .valueChanged)
+            cell.toggle.isOn = Defaults.healthKitEnabled
+            
             if row == 0
             {
                 cell.textLabel?.text = "Send Check-Ins to Health Kit"
+                cell.textLabel?.numberOfLines = 10
+                cell.detailTextLabel?.numberOfLines = 1000
+                cell.detailTextLabel?.textColor = .red
+                updateHealthKitToggleAppearance(withCell: cell)
             }
         case .info:
             let cell = aCell
@@ -325,30 +390,148 @@ extension SettingsViewController
     
     @objc func untappdToggled(_ sender: UISwitch)
     {
-        let controller = UntappdLoginViewController.init
-        { (token, error) in
-        }
+        //let controller = UntappdLoginViewController.init
+        //{ (token, error) in
+        //}
+        //
+        //controller.navigationItem.title = "Untappd Login"
+        //self.navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func updateHealthKitToggleAppearance(withCell aCell: UITableViewCell? = nil)
+    {
+        let section: Int = self.sectionCounts.firstIndex { $0.0 == .healthKit }!
         
-        controller.navigationItem.title = "Untappd Login"
-        self.navigationController?.pushViewController(controller, animated: true)
+        if
+            let genericCell = aCell ?? self.tableView.cellForRow(at: IndexPath.init(row: 0, section: section)),
+            let cell = genericCell as? SubtitleToggleCell
+        {
+            tableView.beginUpdates()
+            switch self.healthKitLoginStatus
+            {
+            case .unavailable:
+                cell.enable()
+                cell.toggle.isOn = false
+                cell.toggle.isEnabled = false
+                cell.detailTextLabel?.text = "HealthKit not available"
+            case .unauthorized:
+                cell.enable()
+                cell.toggle.isOn = false
+                cell.toggle.isEnabled = false
+                cell.detailTextLabel?.text = "Please authorize \(Constants.appName) in HealthKit settings"
+            case .disabled:
+                cell.enable()
+                cell.toggle.isOn = false
+                cell.toggle.isEnabled = true
+                cell.detailTextLabel?.text = nil
+            case .pendingAuthorization:
+                cell.disable()
+                //cell.toggle.isOn = true
+                cell.toggle.isEnabled = false
+                cell.detailTextLabel?.text = nil
+            case .enabledAndAuthorized:
+                cell.enable()
+                cell.toggle.isOn = true
+                cell.toggle.isEnabled = true
+                cell.detailTextLabel?.text = nil
+            }
+            tableView.endUpdates()
+        }
     }
     
     @objc func healthKitToggled(_ sender: UISwitch)
     {
-        HealthKitViewController.test()
+        let newValue = sender.isOn
+        transitionHealthKitStatus(newValue)
     }
 }
 
-class SubtitleToggleCell: ToggleCell
+// Quick and dirty HealthKit state machine.
+extension SettingsViewController
 {
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?)
+    var healthKitLoginStatus: HealthKitLoginStatus
     {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-        self.detailTextLabel?.numberOfLines = 1000
+        if self.healthKitLoginPending
+        {
+            return .pendingAuthorization
+        }
+        
+        if let status = HealthKit.shared.authStatus()
+        {
+            switch status
+            {
+            case .notDetermined:
+                return .disabled
+            case .sharingAuthorized:
+                return (Defaults.healthKitEnabled ?.enabledAndAuthorized : .disabled)
+            case .sharingDenied:
+                return . unauthorized
+            }
+        }
+        else
+        {
+            return .unavailable
+        }
     }
     
-    required init?(coder aDecoder: NSCoder)
+    func transitionHealthKitStatus(_ enabled: Bool)
     {
-        fatalError("init(coder:) has not been implemented")
+        switch self.healthKitLoginStatus
+        {
+        case .unavailable:
+            break //no-op, can't do anything
+        case .unauthorized:
+            break //no-op, can't do anything
+        case .disabled:
+            if enabled
+            {
+                // TODO: move this to HealthKit proper
+                authorizeHealthKit: do
+                {
+                    // no need to authorize, already done
+                    if HealthKit.shared.authStatus() == .sharingAuthorized
+                    {
+                        Defaults.healthKitEnabled = true
+                    }
+                    // need to attempt authorization
+                    else
+                    {
+                        self.healthKitLoginPending = true
+                        //self.updateHealthKitToggleAppearance() happens below
+                        
+                        let allTypes: Set<HKSampleType> = [ HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)! ]
+                        HealthKit.shared.store?.requestAuthorization(toShare: allTypes, read: nil)
+                        { (success, error) in
+                            onMain
+                            {
+                                if success
+                                {
+                                    Defaults.healthKitEnabled = true
+                                }
+                                else
+                                {
+                                    if let error = error
+                                    {
+                                        appWarning("HealthKit error -- \(error)")
+                                    }
+                                }
+                                
+                                self.healthKitLoginPending = false
+                                self.updateHealthKitToggleAppearance()
+                            }
+                        }
+                    }
+                }
+            }
+        case .pendingAuthorization:
+            break //can't do anything until login completes
+        case .enabledAndAuthorized:
+            if !enabled
+            {
+                Defaults.healthKitEnabled = false
+            }
+        }
+        
+        self.updateHealthKitToggleAppearance()
     }
 }

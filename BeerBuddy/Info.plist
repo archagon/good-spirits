@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>Share update description</string>
+	<string>Your check-ins will be logged as calories based on their alcohol content. Any check-in changes will be synced as well.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Share usage description</string>
+	<string>Previous check-ins will be read from HealthKit only in the case where they need to be deleted, following a local check-in being removed.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
