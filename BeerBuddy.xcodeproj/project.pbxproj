@@ -24,6 +24,8 @@
 		4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */; };
 		4E7FB9EC212E3B1400052BFC /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9EB212E3B1400052BFC /* RootViewController.swift */; };
 		4E7FB9F1212E3F2A00052BFC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */; };
+		4E7FB9F3212E58BD00052BFC /* HealthKitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F2212E58BD00052BFC /* HealthKitViewController.swift */; };
+		4E7FB9F5212E58E200052BFC /* PopupCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F4212E58E200052BFC /* PopupCells.swift */; };
 		4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F048E21114DBB00038F09 /* Formatting.swift */; };
 		4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */; };
 		4E8F049421124FDD00038F09 /* VolumePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */; };
@@ -76,6 +78,7 @@
 		4EB75B8F2127CFEB00A14FCF /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */; };
 		4EBE6702210FE4CE00878CA0 /* DrawerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; };
 		4EBE6703210FE4CE00878CA0 /* DrawerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4EC26CCE212E5E84006E156B /* TextDisplayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC26CCD212E5E84006E156B /* TextDisplayController.swift */; };
 		4ED560CB212BABDE009B3413 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED560CA212BABDE009B3413 /* Stats.swift */; };
 		4ED7ACF72102E151002BB0F1 /* standard_drinks.json in Resources */ = {isa = PBXBuildFile; fileRef = 4ED7ACF62102E151002BB0F1 /* standard_drinks.json */; };
 		4EDCE3D22126980F00A90C83 /* FSCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDCE3CE2126980F00A90C83 /* FSCalendarCell.m */; };
@@ -274,6 +277,8 @@
 		4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicPopupButton.swift; sourceTree = "<group>"; };
 		4E7FB9EB212E3B1400052BFC /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		4E7FB9F2212E58BD00052BFC /* HealthKitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitViewController.swift; sourceTree = "<group>"; };
+		4E7FB9F4212E58E200052BFC /* PopupCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupCells.swift; sourceTree = "<group>"; };
 		4E8F048E21114DBB00038F09 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
 		4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInDrawerViewController.swift; sourceTree = "<group>"; };
 		4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumePickerViewController.swift; sourceTree = "<group>"; };
@@ -328,6 +333,7 @@
 		4EB437F5212D0EB1001D5734 /* Limit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Limit.swift; sourceTree = "<group>"; };
 		4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SortedArray.swift; path = "External/SortedArray-0.7.0/Sources/SortedArray.swift"; sourceTree = "<group>"; };
 		4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawerKit.xcodeproj; path = "External/DrawerKit-0.6.0/DrawerKit/DrawerKit.xcodeproj"; sourceTree = "<group>"; };
+		4EC26CCD212E5E84006E156B /* TextDisplayController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayController.swift; sourceTree = "<group>"; };
 		4ED560CA212BABDE009B3413 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 		4ED7ACF62102E151002BB0F1 /* standard_drinks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = standard_drinks.json; sourceTree = "<group>"; };
 		4EDCE3CE2126980F00A90C83 /* FSCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSCalendarCell.m; path = "External/FSCalendar-2.7.9/FSCalendar/FSCalendarCell.m"; sourceTree = SOURCE_ROOT; };
@@ -467,7 +473,10 @@
 				4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */,
 				4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */,
 				4EB437F1212CF77B001D5734 /* StartupViewController.swift */,
+				4E7FB9F2212E58BD00052BFC /* HealthKitViewController.swift */,
+				4EC26CCD212E5E84006E156B /* TextDisplayController.swift */,
 				4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */,
+				4E7FB9F4212E58E200052BFC /* PopupCells.swift */,
 			);
 			path = Popups;
 			sourceTree = "<group>";
@@ -916,6 +925,7 @@
 				4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */,
 				4E900B9C20FFF8180095A71A /* StubViewController.swift in Sources */,
 				4EA2F1A120FF347D00CE30E1 /* Util.swift in Sources */,
+				4EC26CCE212E5E84006E156B /* TextDisplayController.swift in Sources */,
 				4E6B75772106BEB5009B6C0D /* Untappd.swift in Sources */,
 				4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */,
 				4EB437F0212CF6C7001D5734 /* ListPopupViewController.swift in Sources */,
@@ -925,6 +935,7 @@
 				4EB437ED212CE311001D5734 /* PresentationManager.swift in Sources */,
 				4E7FB9EC212E3B1400052BFC /* RootViewController.swift in Sources */,
 				4E93F00721015B7800B51709 /* Defaults.swift in Sources */,
+				4E7FB9F3212E58BD00052BFC /* HealthKitViewController.swift in Sources */,
 				4EB437DC212CE311001D5734 /* UIImage+Blur.swift in Sources */,
 				4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */,
 				4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */,
@@ -938,6 +949,7 @@
 				4EB437DE212CE311001D5734 /* DynamicBlurView.swift in Sources */,
 				4EB437E4212CE311001D5734 /* PopupDialog.swift in Sources */,
 				4EB437E6212CE311001D5734 /* PopupDialogButton.swift in Sources */,
+				4E7FB9F5212E58E200052BFC /* PopupCells.swift in Sources */,
 				4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */,
 				4EA2F19720FEF8B900CE30E1 /* Data.swift in Sources */,
 				4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */,

@@ -88,7 +88,7 @@ class StartupViewController: UITableViewController
                 return
             }
             
-            button.triggerLight(Appearance.themeColor.withAlphaComponent(0.6), textColor: UIColor.white)
+            button.triggerLight(Appearance.themeColor.withAlphaComponent(0.7), textColor: UIColor.white)
         }
     }
     
@@ -259,14 +259,14 @@ class StartupViewController: UITableViewController
             // AB: doing this here breaks auto-sizing... hope there aren't any caching problems
             //footer.textLabel?.text = titleForFooterInSection(section)
             
-            //if section == 0
-            //{
+            if section == 0
+            {
                 footer.textLabel?.textColor = UIColor.black
-            //}
-            //else
-            //{
-            //    footer.textLabel?.textColor = nil
-            //}
+            }
+            else
+            {
+                footer.textLabel?.textColor = UIColor.gray
+            }
         }
     }
     
@@ -562,57 +562,4 @@ extension StartupViewController: UITextFieldDelegate
         self.country = nil
         self.choiceMade = true
     }
-}
-
-class SelectionCell: UITableViewCell
-{
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?)
-    {
-        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
-        
-        self.accessoryType = .checkmark
-    }
-    
-    required init?(coder aDecoder: NSCoder)
-    {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-class TextEntryCell: UITableViewCell
-{
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?)
-    {
-        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
-        
-        self.selectionStyle = .none
-        
-        let detailLabel = self.detailTextLabel!
-        detailLabel.text = "aaaaaaaa"
-        
-        let inputLabel = UITextField.init()
-        self.contentView.addSubview(inputLabel)
-
-        inputLabel.textColor = UIColor.gray
-        inputLabel.textAlignment = .right
-        inputLabel.keyboardType = .decimalPad
-
-        inputLabel.translatesAutoresizingMaskIntoConstraints = false
-        let l = inputLabel.leftAnchor.constraint(equalTo: detailLabel.leftAnchor)
-        let r = inputLabel.rightAnchor.constraint(equalTo: detailLabel.rightAnchor)
-        let t = inputLabel.topAnchor.constraint(equalTo: detailLabel.topAnchor)
-        let b = inputLabel.bottomAnchor.constraint(equalTo: detailLabel.bottomAnchor)
-        NSLayoutConstraint.activate([l, r, t, b])
-        
-        detailLabel.isHidden = true
-        
-        self.inputLabel = inputLabel
-    }
-    
-    required init?(coder aDecoder: NSCoder)
-    {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    var inputLabel: UITextField?
 }

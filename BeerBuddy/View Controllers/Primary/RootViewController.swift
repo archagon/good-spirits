@@ -95,7 +95,7 @@ class RootViewController: UITabBarController
         // AB: the rest of this is done from the controller itself
         let doneButton = DefaultButton.init(title: "Close", height: 50, dismissOnTap: true, action: nil)
         
-        doneButton.backgroundColor = Appearance.themeColor.withAlphaComponent(0.6)
+        doneButton.backgroundColor = Appearance.themeColor.withAlphaComponent(0.7)
         doneButton.titleColor = UIColor.init(white: 1, alpha: 1)
         doneButton.titleFont = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.regular)
         

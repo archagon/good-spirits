@@ -8,12 +8,13 @@
 
 import Foundation
 import UIKit
+import StoreKit
 
 // NEXT: healthkit -- "healthkit will estimate your alcohol calorie consumption as 1.5 times the abv * volume — roughly in the ballpark for most common beers"
-// NEXT: untappd vc
-// NEXT: affiliate link
+// NEXT: untappd vc -- checkbox goes to UntappdLoginViewController
 // NEXT: about text
 // NEXT: license text
+// NEXT: intro label
 // NEXT: week starts on monday defaults hookups + calendar hookup
 // NEXT: settings icon and VC hookup
 
@@ -22,19 +23,25 @@ class SettingsViewController: UITableViewController
     enum Section
     {
         case iap
-        case toggles
-        case configs
+        case meta
+        case settings
+        case untappd
+        case healthKit
         case info
     }
     
-    let sectionCounts: [(Section, Int)] = [(.iap, 1), (.toggles, 1), (.configs, 3), (.info, 2)]
+    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, 3), (.settings, 2), (.untappd, 1), (.healthKit, 1), (.info, 2)]
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
+        self.tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "Footer")
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        self.tableView.register(ToggleCell.self, forCellReuseIdentifier: "ToggleCell")
+        self.tableView.register(SubtitleToggleCell.self, forCellReuseIdentifier: "ToggleCell")
+        
+        self.tableView.sectionFooterHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedSectionFooterHeight = 50
     }
 }
 
@@ -43,6 +50,34 @@ extension SettingsViewController
     override func numberOfSections(in tableView: UITableView) -> Int
     {
         return sectionCounts.count
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView?
+    {
+        let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: "Footer")!
+        
+        footer.textLabel?.numberOfLines = 1000
+        
+        if sectionCounts[section].0 == .iap
+        {
+            var iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. Nonetheless, making the app took a good amount of time, and if you're able to visit my website and buy something through my Amazon affiliate link, or donate $donation$ through the app, I would be incredibly grateful!"
+            
+            footer.textLabel?.text = iapPrompt
+        }
+        else if sectionCounts[section].0 == .untappd
+        {
+            footer.textLabel?.text = "New check-ins will automatically be pulled from your Untappd account. Check-ins will still need to be completed (or cancelled) within the app."
+        }
+        else if sectionCounts[section].0 == .healthKit
+        {
+            footer.textLabel?.text = "New check-ins will be added as foods to your HealthKit diet tracking, with an estimate of 1.5 times the pure alcohol calories."
+        }
+        else
+        {
+            footer.textLabel?.text = nil
+        }
+        
+        return footer
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -60,15 +95,63 @@ extension SettingsViewController
         case .iap:
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
             return cell
-        case .toggles:
+        case .meta:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
+            return cell
+        case .settings:
+            if indexPath.row == 0
+            {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
+                return cell
+            }
+            else
+            {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
+                return cell
+            }
+        case .untappd:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
             return cell
-        case .configs:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
+        case .healthKit:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
             return cell
         case .info:
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
             return cell
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+    {
+        let type = sectionCounts[section].0
+        
+        switch type
+        {
+        case .iap:
+            return nil
+        case .meta:
+            return nil
+        case .settings:
+            return "Settings"
+        case .info:
+            return "Information"
+        default:
+            return nil
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayFooterView aView: UIView, forSection section: Int)
+    {
+        if let footer = aView as? UITableViewHeaderFooterView
+        {
+            if section == 0
+            {
+                footer.textLabel?.textColor = UIColor.black
+            }
+            else
+            {
+                footer.textLabel?.textColor = UIColor.gray
+            }
         }
     }
     
@@ -83,26 +166,54 @@ extension SettingsViewController
         case .iap:
             let cell = aCell
             cell.accessoryType = .none
-        case .toggles:
-            let cell = aCell as! ToggleCell
-            cell.accessoryType = .none
-            
-            cell.textLabel?.text = "Week Starts on Monday"
-        case .configs:
+        case .meta:
             let cell = aCell
             cell.accessoryType = .disclosureIndicator
             
             if row == 0
             {
-                cell.textLabel?.text = "Limits Setup"
+                cell.textLabel?.text = "Visit Website"
             }
             else if row == 1
             {
-                cell.textLabel?.text = "Untappd Integration"
+                cell.textLabel?.text = "Leave a Review"
             }
             else if row == 2
             {
-                cell.textLabel?.text = "HealthKit Integration"
+                cell.textLabel?.text = "Donate"
+            }
+        case .settings:
+            if row == 0
+            {
+                let cell = aCell as! ToggleCell
+                cell.accessoryType = .none
+                
+                cell.textLabel?.text = "Week Starts on Monday"
+            }
+            else if row == 1
+            {
+                let cell = aCell
+                cell.accessoryType = .disclosureIndicator
+                
+                cell.textLabel?.text = "Limits Setup"
+            }
+        case .untappd:
+            let cell = aCell as! ToggleCell
+            cell.accessoryType = .none
+            
+            if row == 0
+            {
+                cell.textLabel?.text = "Pull Check-Ins from Untappd"
+                cell.detailTextLabel?.numberOfLines = 1000
+                cell.detailTextLabel?.text = "Logged in as Archagon"
+            }
+        case .healthKit:
+            let cell = aCell as! ToggleCell
+            cell.accessoryType = .none
+            
+            if row == 0
+            {
+                cell.textLabel?.text = "Send Check-Ins to Health Kit"
             }
         case .info:
             let cell = aCell
@@ -129,45 +240,64 @@ extension SettingsViewController
         {
         case .iap:
             break
-        case .configs:
+        case .meta:
             if row == 0
+            {
+                UIApplication.shared.open(Defaults.url, options: [:], completionHandler: nil)
+            }
+            else if row == 1
+            {
+                SKStoreReviewController.requestReview()
+            }
+            else if row == 2
+            {
+                //donation
+            }
+            
+            tableView.deselectRow(at: indexPath, animated: true)
+        case .settings:
+            if row == 0
+            {
+                tableView.deselectRow(at: indexPath, animated: true)
+            }
+            else if row == 1
             {
                 let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
                 let controller = storyboard.instantiateViewController(withIdentifier: "FirstTimeSetupTest") as! StartupListPopupViewController
                 
                 self.navigationController?.pushViewController(controller.child, animated: true)
             }
-            else if row == 1
-            {
-                //untappd
-            }
-            else if row == 2
-            {
-                //healthkit
-            }
+        case .untappd:
+            tableView.deselectRow(at: indexPath, animated: true)
+        case .healthKit:
+            tableView.deselectRow(at: indexPath, animated: true)
         case .info:
             if row == 0
             {
-                //about
+                let text = TextDisplayController.init(style: .grouped)
+                text.navigationTitle = "About"
+                text.content = "This is a test about section, just to have some content.\n\nBlah blah blah blah blah."
+                
+                self.navigationController?.pushViewController(text, animated: true)
             }
             else if row == 1
             {
-                //licenses
+                let text = TextDisplayController.init(style: .grouped)
+                text.navigationTitle = "Licenses"
+                text.content = "This is a test licenses section, just to have some content.\n\nBlah blah blah blah blah."
+                
+                self.navigationController?.pushViewController(text, animated: true)
             }
-        default:
-            break
         }
     }
 }
 
-class ToggleCell: UITableViewCell
+class SubtitleToggleCell: ToggleCell
 {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?)
     {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        let aSwitch = UISwitch()
-        self.accessoryView = aSwitch
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        self.detailTextLabel?.numberOfLines = 1000
     }
     
     required init?(coder aDecoder: NSCoder)
