@@ -9,8 +9,10 @@
 import Foundation
 import UIKit
 
-class TextDisplayController: UITableViewController
+class TextDisplayController: UIViewController
 {
+    var textView: UITextView!
+    
     var navigationTitle: String?
     {
         get
@@ -27,7 +29,8 @@ class TextDisplayController: UITableViewController
     {
         didSet
         {
-            self.tableView.reloadData()
+            self.loadViewIfNeeded()
+            self.textView.text = content
         }
     }
     
@@ -35,41 +38,16 @@ class TextDisplayController: UITableViewController
     {
         super.viewDidLoad()
         
-        self.tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "Footer")
+        self.textView = UITextView()
+        self.textView.isEditable = false
         
-        self.tableView.sectionFooterHeight = UITableViewAutomaticDimension
-        self.tableView.estimatedSectionFooterHeight = 500
-        
-        self.view.backgroundColor = UIColor.white
+        self.view.addSubview(self.textView)
+        self.textView.frame = self.view.bounds
+        self.textView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int
+    override func viewWillAppear(_ animated: Bool)
     {
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
-    {
-        return 0
-    }
-    
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView?
-    {
-        let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: "Footer")!
-        
-        footer.textLabel?.numberOfLines = 1000
-        
-        footer.textLabel?.text = self.content
-        
-        return footer
-    }
-    
-    override func tableView(_ tableView: UITableView, willDisplayFooterView aView: UIView, forSection section: Int)
-    {
-        if let footer = aView as? UITableViewHeaderFooterView
-        {
-            footer.textLabel?.font = UIFont.systemFont(ofSize: 16)
-            footer.textLabel?.textColor = UIColor.black
-        }
+        self.textView.setContentOffset(CGPoint.zero, animated: false)
     }
 }

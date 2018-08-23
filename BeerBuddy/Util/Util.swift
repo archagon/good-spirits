@@ -89,6 +89,17 @@ extension String
     }
 }
 
+extension String
+{
+    mutating func replaceAnchorText<T: CustomStringConvertible>(_ anchor: String, value: T, withDelimiter delim: String = "$")
+    {
+        if let aRange = range(of: "\(delim)\(anchor)\(delim)")
+        {
+            self.replaceSubrange(aRange, with: value.description)
+        }
+    }
+}
+
 public func ml(_ v: Double) -> Measurement<UnitVolume>
 {
     return Measurement<UnitVolume>.init(value: v, unit: .milliliters)

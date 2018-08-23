@@ -63,11 +63,15 @@ class TextEntryCell: UITableViewCell
 
 class ToggleCell: UITableViewCell
 {
+    var toggle: UISwitch
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?)
     {
+        let aSwitch = UISwitch()
+        self.toggle = aSwitch
+        
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
-        let aSwitch = UISwitch()
         self.accessoryView = aSwitch
     }
     

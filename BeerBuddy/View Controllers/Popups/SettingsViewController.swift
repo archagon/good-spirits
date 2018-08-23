@@ -10,11 +10,9 @@ import Foundation
 import UIKit
 import StoreKit
 
-// NEXT: healthkit -- "healthkit will estimate your alcohol calorie consumption as 1.5 times the abv * volume — roughly in the ballpark for most common beers"
+// NEXT: toggles w/spinners (?)
+// NEXT: healthkit
 // NEXT: untappd vc -- checkbox goes to UntappdLoginViewController
-// NEXT: about text
-// NEXT: license text
-// NEXT: intro label
 // NEXT: week starts on monday defaults hookups + calendar hookup
 // NEXT: settings icon and VC hookup
 
@@ -30,7 +28,7 @@ class SettingsViewController: UITableViewController
         case info
     }
     
-    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, 3), (.settings, 2), (.untappd, 1), (.healthKit, 1), (.info, 2)]
+    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, 3), (.settings, 2), (.untappd, 1), (.healthKit, 1), (.info, 1)]
     
     override func viewDidLoad()
     {
@@ -60,17 +58,30 @@ extension SettingsViewController
         
         if sectionCounts[section].0 == .iap
         {
-            var iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. Nonetheless, making the app took a good amount of time, and if you're able to visit my website and buy something through my Amazon affiliate link, or donate $donation$ through the app, I would be incredibly grateful!"
+            var iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time. If you're able to visit my website and buy something through my Amazon affiliate link, or donate $donation$ through an in-app purchase, I would be incredibly grateful!"
+            
+            iapPrompt.replaceAnchorText("name", value: Constants.appName)
+            iapPrompt.replaceAnchorText("donation", value: "$1")
             
             footer.textLabel?.text = iapPrompt
         }
         else if sectionCounts[section].0 == .untappd
         {
-            footer.textLabel?.text = "New check-ins will automatically be pulled from your Untappd account. Check-ins will still need to be completed (or cancelled) within the app."
+            footer.textLabel?.text = "New check-ins will automatically be pulled from your Untappd account. Check-ins will still need to be completed (or cancelled) from the History view. Does not track past check-ins."
         }
         else if sectionCounts[section].0 == .healthKit
         {
-            footer.textLabel?.text = "New check-ins will be added as foods to your HealthKit diet tracking, with an estimate of 1.5 times the pure alcohol calories."
+            footer.textLabel?.text = "New check-ins will be added as nutrition to your HealthKit measurements, with an estimate for the calories based on the volume and alcohol content of your drinks. Does not track past check-ins."
+        }
+        else if sectionCounts[section].0 == .info
+        {
+            var about = "$name$ $version$ ($build$) is copyright © Alexei Baboulevitch (\"Archagon\") $year$."
+            about.replaceAnchorText("name", value: Constants.appName)
+            about.replaceAnchorText("version", value: Constants.version)
+            about.replaceAnchorText("build", value: Constants.build)
+            about.replaceAnchorText("year", value: 2018)
+            
+            footer.textLabel?.text = about
         }
         else
         {
@@ -133,8 +144,12 @@ extension SettingsViewController
             return nil
         case .settings:
             return "Settings"
+        case .untappd:
+            return "Untappd"
+        case .healthKit:
+            return "Health Kit"
         case .info:
-            return "Information"
+            return nil
         default:
             return nil
         }
@@ -221,10 +236,6 @@ extension SettingsViewController
             
             if row == 0
             {
-                cell.textLabel?.text = "About"
-            }
-            else if row == 1
-            {
                 cell.textLabel?.text = "Licenses"
             }
         }
@@ -243,7 +254,7 @@ extension SettingsViewController
         case .meta:
             if row == 0
             {
-                UIApplication.shared.open(Defaults.url, options: [:], completionHandler: nil)
+                UIApplication.shared.open(Constants.url, options: [:], completionHandler: nil)
             }
             else if row == 1
             {
@@ -258,6 +269,12 @@ extension SettingsViewController
         case .settings:
             if row == 0
             {
+                if let cell = tableView.cellForRow(at: indexPath) as? ToggleCell
+                {
+                    cell.toggle.isOn = !cell.toggle.isOn
+                    //healthKitToggled(cell.toggle)
+                }
+                
                 tableView.deselectRow(at: indexPath, animated: true)
             }
             else if row == 1
@@ -268,27 +285,57 @@ extension SettingsViewController
                 self.navigationController?.pushViewController(controller.child, animated: true)
             }
         case .untappd:
+            if let cell = tableView.cellForRow(at: indexPath) as? ToggleCell
+            {
+                cell.toggle.isOn = !cell.toggle.isOn
+                untappdToggled(cell.toggle)
+            }
+            
             tableView.deselectRow(at: indexPath, animated: true)
         case .healthKit:
+            if let cell = tableView.cellForRow(at: indexPath) as? ToggleCell
+            {
+                cell.toggle.isOn = !cell.toggle.isOn
+                healthKitToggled(cell.toggle)
+            }
+            
             tableView.deselectRow(at: indexPath, animated: true)
         case .info:
             if row == 0
             {
-                let text = TextDisplayController.init(style: .grouped)
-                text.navigationTitle = "About"
-                text.content = "This is a test about section, just to have some content.\n\nBlah blah blah blah blah."
+                let textPath = Bundle.main.url(forResource: "Licenses", withExtension: "txt")
+                let textContent = try! String.init(contentsOf: textPath!, encoding: String.Encoding.utf8)
                 
-                self.navigationController?.pushViewController(text, animated: true)
-            }
-            else if row == 1
-            {
-                let text = TextDisplayController.init(style: .grouped)
+                //let text = TextDisplayController.init(style: .grouped)
+                let text = TextDisplayController.init(nibName: nil, bundle: nil)
                 text.navigationTitle = "Licenses"
-                text.content = "This is a test licenses section, just to have some content.\n\nBlah blah blah blah blah."
+                text.content = textContent
                 
                 self.navigationController?.pushViewController(text, animated: true)
             }
         }
+    }
+}
+
+extension SettingsViewController
+{
+    @objc func weekStartsOnMondayToggled(_ sender: UISwitch)
+    {
+    }
+    
+    @objc func untappdToggled(_ sender: UISwitch)
+    {
+        let controller = UntappdLoginViewController.init
+        { (token, error) in
+        }
+        
+        controller.navigationItem.title = "Untappd Login"
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    @objc func healthKitToggled(_ sender: UISwitch)
+    {
+        HealthKitViewController.test()
     }
 }
 

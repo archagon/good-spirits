@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E169190212E8647007F51D9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E16918F212E8647007F51D9 /* Constants.swift */; };
+		4E16919C212E8AB7007F51D9 /* Licenses.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E16919B212E8AB7007F51D9 /* Licenses.txt */; };
 		4E5D8482212697AC0081B273 /* FSCalendarPublic.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5D8480212697AC0081B273 /* FSCalendarPublic.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4E5D8485212697AC0081B273 /* FSCalendar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E5D847E212697AC0081B273 /* FSCalendar.framework */; };
 		4E5D8486212697AC0081B273 /* FSCalendar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E5D847E212697AC0081B273 /* FSCalendar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -79,6 +81,7 @@
 		4EBE6702210FE4CE00878CA0 /* DrawerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; };
 		4EBE6703210FE4CE00878CA0 /* DrawerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4EC26CCE212E5E84006E156B /* TextDisplayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC26CCD212E5E84006E156B /* TextDisplayController.swift */; };
+		4EC26CE7212E674F006E156B /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EC26CE6212E674F006E156B /* HealthKit.framework */; };
 		4ED560CB212BABDE009B3413 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED560CA212BABDE009B3413 /* Stats.swift */; };
 		4ED7ACF72102E151002BB0F1 /* standard_drinks.json in Resources */ = {isa = PBXBuildFile; fileRef = 4ED7ACF62102E151002BB0F1 /* standard_drinks.json */; };
 		4EDCE3D22126980F00A90C83 /* FSCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDCE3CE2126980F00A90C83 /* FSCalendarCell.m */; };
@@ -239,6 +242,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4E16918F212E8647007F51D9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		4E16919B212E8AB7007F51D9 /* Licenses.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Licenses.txt; sourceTree = "<group>"; };
 		4E5D8476212697890081B273 /* BeerBuddy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BeerBuddy-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		4E5D847E212697AC0081B273 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E5D8480212697AC0081B273 /* FSCalendarPublic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FSCalendarPublic.h; sourceTree = "<group>"; };
@@ -334,6 +339,8 @@
 		4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SortedArray.swift; path = "External/SortedArray-0.7.0/Sources/SortedArray.swift"; sourceTree = "<group>"; };
 		4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawerKit.xcodeproj; path = "External/DrawerKit-0.6.0/DrawerKit/DrawerKit.xcodeproj"; sourceTree = "<group>"; };
 		4EC26CCD212E5E84006E156B /* TextDisplayController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayController.swift; sourceTree = "<group>"; };
+		4EC26CE4212E674F006E156B /* BeerBuddy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeerBuddy.entitlements; sourceTree = "<group>"; };
+		4EC26CE6212E674F006E156B /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		4ED560CA212BABDE009B3413 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 		4ED7ACF62102E151002BB0F1 /* standard_drinks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = standard_drinks.json; sourceTree = "<group>"; };
 		4EDCE3CE2126980F00A90C83 /* FSCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSCalendarCell.m; path = "External/FSCalendar-2.7.9/FSCalendar/FSCalendarCell.m"; sourceTree = SOURCE_ROOT; };
@@ -366,6 +373,7 @@
 				4E721EAA21251AF30001BBB9 /* DataLayer.framework in Frameworks */,
 				4E7E45582127F3F800ACDDB8 /* GRDB.framework in Frameworks */,
 				4E5D8485212697AC0081B273 /* FSCalendar.framework in Frameworks */,
+				4EC26CE7212E674F006E156B /* HealthKit.framework in Frameworks */,
 				4E7235ED2128E55100EEEAFE /* DeepDiff.framework in Frameworks */,
 				4EBE6702210FE4CE00878CA0 /* DrawerKit.framework in Frameworks */,
 			);
@@ -522,6 +530,7 @@
 				4E8F048E21114DBB00038F09 /* Formatting.swift */,
 				4EB437F3212CF7D4001D5734 /* Appearance.swift */,
 				4E93F00621015B7800B51709 /* Defaults.swift */,
+				4E16918F212E8647007F51D9 /* Constants.swift */,
 			);
 			path = Globals;
 			sourceTree = "<group>";
@@ -559,6 +568,7 @@
 				4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */,
 				4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */,
 				4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */,
+				4EC26CE5212E674F006E156B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -574,6 +584,7 @@
 		4EA2F17F20FEE7C700CE30E1 /* BeerBuddy */ = {
 			isa = PBXGroup;
 			children = (
+				4EC26CE4212E674F006E156B /* BeerBuddy.entitlements */,
 				4EA2F18020FEE7C700CE30E1 /* AppDelegate.swift */,
 				4E70D5C92113D4610089BBB1 /* Views */,
 				4E70D5CC2113D4B80089BBB1 /* View Controllers */,
@@ -586,6 +597,7 @@
 				4EA2F18620FEE7C700CE30E1 /* Main.storyboard */,
 				4EE3369C2108058500D72B7D /* Controllers.storyboard */,
 				4EA2F18B20FEE7CB00CE30E1 /* LaunchScreen.storyboard */,
+				4E16919B212E8AB7007F51D9 /* Licenses.txt */,
 				4EA2F18E20FEE7CB00CE30E1 /* Info.plist */,
 				4ED7ACF62102E151002BB0F1 /* standard_drinks.json */,
 				4EA2F19420FEE80D00CE30E1 /* stub.json */,
@@ -650,6 +662,14 @@
 				4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4EC26CE5212E674F006E156B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4EC26CE6212E674F006E156B /* HealthKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -725,6 +745,11 @@
 					4EA2F17C20FEE7C700CE30E1 = {
 						CreatedOnToolsVersion = 9.3;
 						LastSwiftMigration = 1000;
+						SystemCapabilities = {
+							com.apple.HealthKit = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -859,6 +884,7 @@
 				4EA2F18820FEE7C700CE30E1 /* Main.storyboard in Resources */,
 				4EA2F19F20FF30F500CE30E1 /* DrinkIcons.xcassets in Resources */,
 				4EA2F19520FEE80D00CE30E1 /* stub.json in Resources */,
+				4E16919C212E8AB7007F51D9 /* Licenses.txt in Resources */,
 				4EE3369D2108058500D72B7D /* Controllers.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -935,6 +961,7 @@
 				4EB437ED212CE311001D5734 /* PresentationManager.swift in Sources */,
 				4E7FB9EC212E3B1400052BFC /* RootViewController.swift in Sources */,
 				4E93F00721015B7800B51709 /* Defaults.swift in Sources */,
+				4E169190212E8647007F51D9 /* Constants.swift in Sources */,
 				4E7FB9F3212E58BD00052BFC /* HealthKitViewController.swift in Sources */,
 				4EB437DC212CE311001D5734 /* UIImage+Blur.swift in Sources */,
 				4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */,
@@ -1187,6 +1214,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = BeerBuddy/BeerBuddy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				INFOPLIST_FILE = BeerBuddy/Info.plist;
@@ -1209,6 +1237,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = BeerBuddy/BeerBuddy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				INFOPLIST_FILE = BeerBuddy/Info.plist;

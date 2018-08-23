@@ -10,9 +10,6 @@ import Foundation
 
 public struct Defaults
 {
-    // NEXT:
-    public static let url = URL.init(string: "http://www.apple.com")!
-    
     private static let configuredKey = "Configured"
     
     // AB: record-keeping for re-adding drink-free days (and others?)
