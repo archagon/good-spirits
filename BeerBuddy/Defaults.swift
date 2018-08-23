@@ -10,6 +10,8 @@ import Foundation
 
 public struct Defaults
 {
+    private static let configuredKey = "Configured"
+    
     // AB: record-keeping for re-adding drink-free days (and others?)
     private static let limitCountry: String = "LimitCountry"
     private static let limitMale: String = "LimitMale"
@@ -46,6 +48,19 @@ extension Defaults
             Defaults.weekStartsOnMondayKey:false,
             Defaults.standardDrinkSizeKey:Defaults.standardDrinkSizeDefault
             ])
+    }
+    
+    public var configured: Bool
+    {
+        get
+        {
+            let val = self.defaults.bool(forKey: Defaults.configuredKey)
+            return val
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.configuredKey)
+        }
     }
     
     public var limitCountry: String?
@@ -211,6 +226,19 @@ extension Defaults
     public static func registerDefaults()
     {
         Defaults().registerDefaults()
+    }
+    
+    public static var configured: Bool
+    {
+        get
+        {
+            return Defaults().configured
+        }
+        set
+        {
+            var defaults = Defaults()
+            defaults.configured = newValue
+        }
     }
     
     public static var weekStartsOnMonday: Bool

@@ -108,72 +108,7 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
             
             testABV: do
             {
-//                let title = "THIS IS THE DIALOG TITLE"
-//                let message = "This is the message section of the popup dialog default view"
-//                let popup = PopupDialog.init(title: title, message: message, image: nil, buttonAlignment: .vertical, transitionStyle: .bounceUp, preferredWidth: 340, tapGestureDismissal: false, panGestureDismissal: false, hideStatusBar: false, completion: nil)
-//
-//                let appearance = PopupDialogOverlayView.appearance()
-//                appearance.blurEnabled = false
-//                appearance.opacity = 0.4
-//
-//                let buttonOne = CancelButton(title: "CANCEL") {
-//                    print("You canceled the car dialog.")
-//                }
-//                let buttonTwo = DefaultButton(title: "ADMIRE CAR", dismissOnTap: false) {
-//                    print("What a beauty!")
-//                }
-//                let buttonThree = DefaultButton(title: "BUY CAR", height: 60) {
-//                    print("Ah, maybe next time :)")
-//                }
-//                popup.addButtons([buttonOne, buttonTwo, buttonThree])
-//
-//                self.present(popup, animated: true, completion: nil)
-//
-//                return false
-                
-                let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
-                //let controller = storyboard.instantiateViewController(withIdentifier: "ABV") as! ABVViewController
-                let controller = storyboard.instantiateViewController(withIdentifier: "FirstTimeSetupTest") as! StartupListPopupViewController
-                controller.preferredContentSize = CGSize.init(width: 100, height: 300)
-//                self.modalPresentationStyle = .overCurrentContext
-//                self.providesPresentationContextTransitionStyle = true
-//                self.definesPresentationContext = true
-//                let nav = PopupNav.init(rootViewController: controller)
-//                nav.preferredContentSize = CGSize.init(width: 100, height: 300)
-//                nav.modalPresentationStyle = .overCurrentContext
-//                //nav.view.clipsToBounds = true
-//                nav.view.layer.cornerRadius = 16
-//
-//                customPresentViewController(nav.presenter, viewController: nav, animated: true)
-                
-                controller.view.translatesAutoresizingMaskIntoConstraints = false
-                controller.view.widthAnchor.constraint(equalToConstant: 340).isActive = true
-                controller.view.heightAnchor.constraint(equalToConstant: 500).isActive = true
-                
-                let popup = PopupDialog.init(viewController: controller, buttonAlignment: .vertical, transitionStyle: .bounceUp, preferredWidth: 340, tapGestureDismissal: false, panGestureDismissal: false, hideStatusBar: false, completion: nil)
-                
-                let appearance = PopupDialogOverlayView.appearance()
-                appearance.blurEnabled = false
-                appearance.opacity = 0.4
-                
-                let containerAppearance = PopupDialogContainerView.appearance()
-                //containerAppearance.backgroundColor = UIColor(red:0.23, green:0.23, blue:0.27, alpha:1.00)
-                containerAppearance.cornerRadius = 16
-                //containerAppearance.shadowOpacity = 0.6
-                //containerAppearance.shadowRadius = 20
-                containerAppearance.shadowOffset = CGSize(width: 0, height: 4)
-                
-                let doneButton = DefaultButton.init(title: "Done", height: 45, dismissOnTap: false)
-                {
-                    popup.shake()
-                }
-                doneButton.backgroundColor = Appearance.themeColor.withAlphaComponent(0.7)
-                doneButton.titleColor = UIColor.white
-                doneButton.titleFont = UIFont.systemFont(ofSize: 20)
-                doneButton.tag = 1
-                popup.addButtons([doneButton])
-                
-                self.present(popup, animated: true, completion: nil)
+                (self.tabBarController as? RootViewController)?.showLimitPopup()
                 
                 return false
             }
@@ -322,6 +257,8 @@ class FirstViewController: UIViewController, DrawerCoordinating
     
     var data: DataLayer!
     
+    var notificationObserver: Any?
+    
     func testAnimateProgressView()
     {
         if let progress = self.progressBar as? UIProgressView, let progress2 = self.overflowProgressBar as? UIProgressView
@@ -350,6 +287,14 @@ class FirstViewController: UIViewController, DrawerCoordinating
                 //self.progressBar.progressTintColor = UIColor.red.withAlphaComponent(0.6)
                 progress.progressTintColor = UIColor.red.withAlphaComponent(0.6)
             }
+        }
+    }
+    
+    deinit
+    {
+        if let observer = notificationObserver
+        {
+            NotificationCenter.default.removeObserver(observer)
         }
     }
     
@@ -459,8 +404,8 @@ class FirstViewController: UIViewController, DrawerCoordinating
         
         //reloadData()
         
-        NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
-        { _ in
+        self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
+        { [unowned `self`] _ in
             print("Requesting change with token \(self.cache?.token ?? DataLayer.NullToken)...")
             self.reloadData(animated: true, fromScratch: false)
         }
@@ -632,6 +577,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         return (self.cache.data[section]?.count ?? 0) + 1
     }
     
+    // NEXT: configure cells on appear, not on dequeue
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
         if self.cache == nil { return nil }

@@ -21,6 +21,8 @@
 		4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */; };
 		4E7E45582127F3F800ACDDB8 /* GRDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; };
 		4E7E45592127F3F800ACDDB8 /* GRDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */; };
+		4E7FB9EC212E3B1400052BFC /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9EB212E3B1400052BFC /* RootViewController.swift */; };
 		4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F048E21114DBB00038F09 /* Formatting.swift */; };
 		4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */; };
 		4E8F049421124FDD00038F09 /* VolumePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */; };
@@ -268,6 +270,8 @@
 		4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DeepDiff.xcodeproj; path = "External/DeepDiff-master/DeepDiff.xcodeproj"; sourceTree = "<group>"; };
 		4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingPopupViewController.swift; sourceTree = "<group>"; };
 		4E7E45572127F3F800ACDDB8 /* GRDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GRDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicPopupButton.swift; sourceTree = "<group>"; };
+		4E7FB9EB212E3B1400052BFC /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		4E8F048E21114DBB00038F09 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
 		4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInDrawerViewController.swift; sourceTree = "<group>"; };
 		4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumePickerViewController.swift; sourceTree = "<group>"; };
@@ -419,6 +423,7 @@
 			isa = PBXGroup;
 			children = (
 				4E9C8552210D598C00DA959D /* ABPrettyButton.swift */,
+				4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -448,6 +453,7 @@
 				4E70D5CB2113D4810089BBB1 /* Check-Ins List */,
 				4E8F049021124CCA00038F09 /* Check-In */,
 				4E70D5CD2113D4EE0089BBB1 /* Popups */,
+				4E7FB9EB212E3B1400052BFC /* RootViewController.swift */,
 				4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */,
 				4EA2F18420FEE7C700CE30E1 /* SecondViewController.swift */,
 				4E900B9B20FFF8180095A71A /* StubViewController.swift */,
@@ -889,9 +895,11 @@
 				4E8F049421124FDD00038F09 /* VolumePickerViewController.swift in Sources */,
 				4EB437E3212CE311001D5734 /* PopupDialogDefaultView.swift in Sources */,
 				4EB437ED212CE311001D5734 /* PresentationManager.swift in Sources */,
+				4E7FB9EC212E3B1400052BFC /* RootViewController.swift in Sources */,
 				4E93F00721015B7800B51709 /* Defaults.swift in Sources */,
 				4EB437DC212CE311001D5734 /* UIImage+Blur.swift in Sources */,
 				4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */,
+				4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */,
 				4E93F00921017A5C00B51709 /* DayHeaderCell.swift in Sources */,
 				4EB437F2212CF77B001D5734 /* StartupViewController.swift in Sources */,
 				4EB437E1212CE311001D5734 /* UIImageView+Calculations.swift in Sources */,

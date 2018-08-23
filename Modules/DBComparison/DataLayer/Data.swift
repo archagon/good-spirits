@@ -27,6 +27,8 @@ public class DataLayer
     private var stores: [DataType]
     private var mainStoreIndex: Int
     
+    private var notificationObserver: Any?
+    
     public var primaryStore: DataType & DataAccessProtocolImmediate
     {
         return self.stores[self.mainStoreIndex] as! (DataType & DataAccessProtocolImmediate)
@@ -37,6 +39,14 @@ public class DataLayer
         return self.stores[i]
     }
     
+    deinit
+    {
+        if let observer = notificationObserver
+        {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
     public init(withStore store: DataType & DataAccessProtocolImmediate, owner: SiteID = UIDevice.current.identifierForVendor!)
     {
         self.owner = owner
@@ -45,8 +55,8 @@ public class DataLayer
         
         self.addStore(store)
         
-        NotificationCenter.default.addObserver(forName: type(of: store).DataDidChangeNotification, object: nil, queue: nil)
-        { notification in
+        self.notificationObserver = NotificationCenter.default.addObserver(forName: type(of: store).DataDidChangeNotification, object: nil, queue: nil)
+        { [unowned `self`] notification in
             // BUGFIX: We get into a locked state without this async! GRDB posts notification and then locks
             // while waiting on other db access from main thread.
             onMain

@@ -51,8 +51,8 @@ class StartupViewController: UITableViewController
                 defaults.limitCountry = nil
                 defaults.limitMale = nil
             }
-            
-            self.tableView.reloadSections(IndexSet.init(integer: 2), with: UITableViewRowAnimation.none)
+
+            quickReloadSection(2)
         }
     }
     
@@ -60,23 +60,46 @@ class StartupViewController: UITableViewController
     {
         didSet
         {
+            quickReloadSection(1)
+            
+            // AB: this reloads section 2 as well
             self.country = nil
             regenerateLimits(forMen: male)
-         
-            self.tableView.reloadSections(IndexSet.init(integer: 1), with: UITableViewRowAnimation.none)
-            //self.tableView.reloadSections(IndexSet.init(integer: 2), with: UITableViewRowAnimation.left)
-            self.tableView.reloadSections(IndexSet.init(integer: 2), with: UITableViewRowAnimation.none)
         }
     }
     
-    func updateButton()
+    var choiceMade: Bool = false
     {
-        guard let popupController = (self.parent as? StartupListPopupViewController)?.popupController else
+        // AB: this does not really belong here, but it's the easiest way to do it w/o wiring up delegates
+        didSet
         {
-            return
+            if !(choiceMade == true && oldValue == false)
+            {
+                return
+            }
+            
+            guard let listPopup = self.parent as? StartupListPopupViewController else
+            {
+                return
+            }
+            
+            guard let button = listPopup.popupController?.view.viewWithTag(1) as? DynamicPopupButton else
+            {
+                return
+            }
+            
+            button.triggerLight(Appearance.themeColor.withAlphaComponent(0.6), textColor: UIColor.white)
         }
-        
-        
+    }
+    
+    private var notificationObserver: Any?
+    
+    deinit
+    {
+        if let observer = notificationObserver
+        {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
     
     override init(style: UITableViewStyle)
@@ -106,9 +129,24 @@ class StartupViewController: UITableViewController
         self.tableView.register(SelectionCell.self, forCellReuseIdentifier: "SelectionCell")
         self.tableView.register(TextEntryCell.self, forCellReuseIdentifier: "TextEntryCell")
         
-        NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil)
-        { n in
-            self.tableView.reloadSections(IndexSet.init(integer: 3), with: UITableViewRowAnimation.none)
+        self.tableView.sectionFooterHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedSectionFooterHeight = 50
+        
+        self.notificationObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil)
+        { [unowned `self`] n in
+            self.quickReloadSection(3)
+        }
+    }
+    
+    func quickReloadSection(_ section: Int)
+    {
+        for indexPath in self.tableView.indexPathsForVisibleRows ?? []
+        {
+            if indexPath.section == section, let cell = self.tableView.cellForRow(at: indexPath)
+            {
+                // AB: a bit clunky, but this way we don't have to go through the laborious section reload process
+                tableView(self.tableView, willDisplay: cell, forRowAt: indexPath)
+            }
         }
     }
     
@@ -163,27 +201,22 @@ class StartupViewController: UITableViewController
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView?
     {
-//        guard let view = super.tableView(tableView, viewForFooterInSection: section) as? UITableViewHeaderFooterView else
-//        {
-//            return nil
-//        }
-        
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "Footer") else
         {
             return nil
         }
         
         view.textLabel?.numberOfLines = 1000
-        view.textLabel?.text = asdf(tableView, titleForFooterInSection: section)
+        view.textLabel?.text = titleForFooterInSection(section)
         
         return view
     }
     
-    func asdf(_ tableView: UITableView, titleForFooterInSection section: Int) -> String?
+    func titleForFooterInSection(_ section: Int) -> String?
     {
         if section == 0
         {
-            var copy = "Welcome to $name$! In order to use this drink tracker, you need to set your daily and weekly drinking limits.\n\nRecent studies tend to agree that there is no safe level of alcohol consumption. However, many countries have published recommendations for what constitutes \"low-risk\" drinking. This concept isn't very well-defined, but in general, the less you drink, the less susceptible you are to alcohol-related cancers and other diseases.\n\nBased on my own research, I would suggest starting with the common European weekly limit of $default-men$ standard US drinks for men or $default-women$ standard US drinks for women, then working your way down from there. A standard drink tends to be smaller than you might be used to, e.g. 12 ounces of 5% beer or 4 ounces of 15% wine."
+            var copy = "Welcome to $name$! In order to use this drink tracker, we need to set your daily and weekly drinking limits.\n\nRecent studies tend to agree that there is no safe level of alcohol consumption. However, many countries have published recommendations for what constitutes \"low-risk\" drinking. This concept isn't very well-defined, but in general, the less you drink, the less susceptible you are to alcohol-related cancers and other diseases.\n\nBased on my own research, I would suggest starting with the common European weekly limit of $default-men$ standard US drinks for men or $default-women$ standard US drinks for women, then working your way down from there. A standard drink tends to be smaller than you might be used to, e.g. 12 ounces of 5% beer or 4 ounces of 15% wine."
             
             func replaceText<T: CustomStringConvertible>(_ anchor: String, value: T)
             {
@@ -209,7 +242,7 @@ class StartupViewController: UITableViewController
         }
         else if section == 2
         {
-            return "These numbers were pulled from iard.org and come from the respective Ministries of Health, Departments of Public Health, Health Institutes, etc. of each country. Don't feel obliged to pick your own country! Some countries, such as the UK and Netherlands, have more recent and healthier recommendations than the others."
+            return "These numbers were taken from iard.org and come from the respective Ministries of Health, Departments of Public Health, Health Institutes, and so forth of each country. Don't feel obliged to pick your own country! Some countries, such as the UK and Netherlands, have more recent and healthier recommendations than others."
         }
         else if section == 3
         {
@@ -219,28 +252,49 @@ class StartupViewController: UITableViewController
         return nil
     }
     
-    override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int)
+    override func tableView(_ tableView: UITableView, willDisplayFooterView aView: UIView, forSection section: Int)
     {
-        if section == 0, let footer = view as? UITableViewHeaderFooterView
+        if let footer = aView as? UITableViewHeaderFooterView
         {
-            footer.textLabel?.textColor = UIColor.black
+            // AB: doing this here breaks auto-sizing... hope there aren't any caching problems
+            //footer.textLabel?.text = titleForFooterInSection(section)
+            
+            //if section == 0
+            //{
+                footer.textLabel?.textColor = UIColor.black
+            //}
+            //else
+            //{
+            //    footer.textLabel?.textColor = nil
+            //}
         }
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    override func tableView(_ tableView: UITableView, willDisplay aCell: UITableViewCell, forRowAt indexPath: IndexPath)
     {
-        //let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        let cell: UITableViewCell
-        
-        //cell.backgroundColor = Appearance.themeColor.withAlphaComponent(0.75)
-        //cell.textLabel?.textColor = UIColor.white
-        //cell.textLabel?.backgroundColor = nil
-        
+        func fmt(_ t: Double, _ i: Int = 1) -> String
+        {
+            let rounded = round(t * 1000) / 1000
+            
+            if floor(rounded) == rounded
+            {
+                return String.init(format: "%.0f", t)
+            }
+            else
+            {
+                return String.init(format: "%.\(i)f", t)
+            }
+        }
+
         let section = indexPath.section
         
         if section == 1
         {
-            cell = tableView.dequeueReusableCell(withIdentifier: "SelectionCell") as! SelectionCell
+            guard let cell = aCell as? SelectionCell else
+            {
+                appError("wrong cell")
+                return
+            }
             
             if indexPath.row == 0
             {
@@ -273,7 +327,11 @@ class StartupViewController: UITableViewController
         }
         else if section == 2
         {
-            cell = tableView.dequeueReusableCell(withIdentifier: "SelectionCell") as! SelectionCell
+            guard let cell = aCell as? SelectionCell else
+            {
+                appError("wrong cell")
+                return
+            }
             
             let row = indexPath.row
             
@@ -299,7 +357,7 @@ class StartupViewController: UITableViewController
                 let drinks = weeklyLimit.value / Limit.init(withCountryCode: "US").standardDrink.value
                 
                 cell.textLabel?.text = limit.countryName
-                cell.detailTextLabel?.text = String.init(format: (drinks == floor(drinks) ? "%.0f US drinks" : "%.1f US drinks"), drinks)
+                cell.detailTextLabel?.text = "\(fmt(drinks)) US drinks"
                 
                 if row == self.country
                 {
@@ -313,41 +371,32 @@ class StartupViewController: UITableViewController
         }
         else if section == 3
         {
-            func fmt(_ t: Double, _ i: Int = 1) -> String
+            guard let cell = aCell as? TextEntryCell else
             {
-                if floor(t) == t
-                {
-                    return String.init(format: "%.0f", t)
-                }
-                else
-                {
-                    return String.init(format: "%.\(i)f", t)
-                }
+                appError("wrong cell")
+                return
             }
             
-            let aCell = tableView.dequeueReusableCell(withIdentifier: "TextEntryCell") as! TextEntryCell
-            cell = aCell
-            
-            aCell.inputLabel?.delegate = self
-            aCell.inputLabel?.placeholder = nil
-            aCell.inputLabel?.tag = 0
+            cell.inputLabel?.delegate = self
+            cell.inputLabel?.placeholder = nil
+            cell.inputLabel?.tag = 0
             
             if indexPath.row == 0
             {
-                aCell.inputLabel?.tag = 1
-                aCell.inputLabel?.clearButtonMode = .never
+                cell.inputLabel?.tag = 1
+                cell.inputLabel?.clearButtonMode = .never
                 cell.textLabel?.text = "Alcohol (g) in Standard Drink"
-                aCell.inputLabel?.text = fmt(Defaults.standardDrinkSize)
-                aCell.inputLabel?.keyboardType = .numbersAndPunctuation
+                cell.inputLabel?.text = fmt(Defaults.standardDrinkSize)
+                cell.inputLabel?.keyboardType = .numbersAndPunctuation
             }
             else if indexPath.row == 1
             {
-                aCell.inputLabel?.tag = 2
-                aCell.inputLabel?.clearButtonMode = .whileEditing
+                cell.inputLabel?.tag = 2
+                cell.inputLabel?.clearButtonMode = .whileEditing
                 cell.textLabel?.text = "Max Drinks per Week"
-                aCell.inputLabel?.text = Defaults.weeklyLimit != nil ? fmt(Defaults.weeklyLimit! / Defaults.standardDrinkSize) : nil
-                aCell.inputLabel?.placeholder = "0.0"
-                aCell.inputLabel?.keyboardType = .numbersAndPunctuation
+                cell.inputLabel?.text = Defaults.weeklyLimit != nil ? fmt(Defaults.weeklyLimit! / Defaults.standardDrinkSize) : nil
+                cell.inputLabel?.placeholder = "0.0"
+                cell.inputLabel?.keyboardType = .numbersAndPunctuation
             }
             //else if indexPath.row == 2
             //{
@@ -368,13 +417,29 @@ class StartupViewController: UITableViewController
             //    aCell.inputLabel?.keyboardType = .numberPad
             //}
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
+        let section = indexPath.section
+        
+        if section == 1
+        {
+            return tableView.dequeueReusableCell(withIdentifier: "SelectionCell")!
+        }
+        else if section == 2
+        {
+            return tableView.dequeueReusableCell(withIdentifier: "SelectionCell")!
+        }
+        else if section == 3
+        {
+            return tableView.dequeueReusableCell(withIdentifier: "TextEntryCell")!
+        }
         else
         {
             appError("incorrect section")
-            cell = UITableViewCell()
+            return UITableViewCell()
         }
-        
-        return cell
     }
     
     func commitInput(forTextEntryField textField: UITextField)
@@ -414,13 +479,8 @@ class StartupViewController: UITableViewController
         //}
         
         // AB: in case defaults weren't changed
-        self.tableView.reloadSections(IndexSet.init(integer: 3), with: UITableViewRowAnimation.none)
+        quickReloadSection(3)
     }
-    
-    // NEXT: fix US 14.0 drinks and grams
-    // NEXT: hook up done button via viewWithTag
-    // NEXT: open on startup
-    // NEXT: sizing for devices
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath?
     {
@@ -452,13 +512,16 @@ class StartupViewController: UITableViewController
         else if indexPath.section == 2
         {
             self.country = (indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 ? nil : indexPath.row)
+            self.choiceMade = true
         }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
 extension StartupViewController: UITextFieldDelegate
 {
-    // PERF:
+    // PERF: string parsing with every character
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool
     {
         let text = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
@@ -495,8 +558,9 @@ extension StartupViewController: UITextFieldDelegate
     
     func textFieldDidEndEditing(_ textField: UITextField)
     {
-        self.country = nil
         commitInput(forTextEntryField: textField)
+        self.country = nil
+        self.choiceMade = true
     }
 }
 
