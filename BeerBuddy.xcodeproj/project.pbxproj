@@ -450,13 +450,10 @@
 		4E70D5CC2113D4B80089BBB1 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				4E7FB9ED212E3ED500052BFC /* Primary */,
 				4E70D5CB2113D4810089BBB1 /* Check-Ins List */,
 				4E8F049021124CCA00038F09 /* Check-In */,
 				4E70D5CD2113D4EE0089BBB1 /* Popups */,
-				4E7FB9EB212E3B1400052BFC /* RootViewController.swift */,
-				4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */,
-				4EA2F18420FEE7C700CE30E1 /* SecondViewController.swift */,
-				4E900B9B20FFF8180095A71A /* StubViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -494,6 +491,36 @@
 				4E7235EC2128E54400EEEAFE /* DeepDiff_watchOS.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4E7FB9ED212E3ED500052BFC /* Primary */ = {
+			isa = PBXGroup;
+			children = (
+				4E7FB9EB212E3B1400052BFC /* RootViewController.swift */,
+				4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */,
+				4EA2F18420FEE7C700CE30E1 /* SecondViewController.swift */,
+				4E900B9B20FFF8180095A71A /* StubViewController.swift */,
+			);
+			path = Primary;
+			sourceTree = "<group>";
+		};
+		4E7FB9EE212E3EFC00052BFC /* Globals */ = {
+			isa = PBXGroup;
+			children = (
+				4E8F048E21114DBB00038F09 /* Formatting.swift */,
+				4EB437F3212CF7D4001D5734 /* Appearance.swift */,
+				4E93F00621015B7800B51709 /* Defaults.swift */,
+			);
+			path = Globals;
+			sourceTree = "<group>";
+		};
+		4E7FB9EF212E3F0500052BFC /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				4EA2F1A020FF347D00CE30E1 /* Util.swift */,
+				4E9C8554210D68F900DA959D /* ColorUtil.swift */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 		4E8F049021124CCA00038F09 /* Check-In */ = {
@@ -540,11 +567,8 @@
 				4E70D5CC2113D4B80089BBB1 /* View Controllers */,
 				4E70D5C82113D4480089BBB1 /* Model */,
 				4E70D5CA2113D46A0089BBB1 /* Untappd */,
-				4E8F048E21114DBB00038F09 /* Formatting.swift */,
-				4EB437F3212CF7D4001D5734 /* Appearance.swift */,
-				4E93F00621015B7800B51709 /* Defaults.swift */,
-				4EA2F1A020FF347D00CE30E1 /* Util.swift */,
-				4E9C8554210D68F900DA959D /* ColorUtil.swift */,
+				4E7FB9EE212E3EFC00052BFC /* Globals */,
+				4E7FB9EF212E3F0500052BFC /* Util */,
 				4EA2F18920FEE7CB00CE30E1 /* Assets.xcassets */,
 				4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */,
 				4EA2F18620FEE7C700CE30E1 /* Main.storyboard */,
