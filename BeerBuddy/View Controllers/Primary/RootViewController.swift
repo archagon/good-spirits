@@ -54,7 +54,7 @@ class RootViewController: UITabBarController
         let popup = PopupDialog.init(viewController: controller, buttonAlignment: .vertical, transitionStyle: .bounceUp, preferredWidth: 100, tapGestureDismissal: false, panGestureDismissal: false, hideStatusBar: false, completion: nil)
         
         // AB: the rest of this is done from the controller itself
-        let doneButton = DynamicPopupButton.init(title: "Accept", height: 45, dismissOnTap: false)
+        let doneButton = DynamicPopupButton.init(title: "Accept", height: 50, dismissOnTap: false)
         { [unowned popup] in
             guard let button = popup.view.viewWithTag(1) as? DynamicPopupButton else
             {
@@ -93,7 +93,7 @@ class RootViewController: UITabBarController
         let popup = PopupDialog.init(viewController: controller, buttonAlignment: .vertical, transitionStyle: .bounceUp, preferredWidth: 100, tapGestureDismissal: true, panGestureDismissal: true, hideStatusBar: false, completion: nil)
         
         // AB: the rest of this is done from the controller itself
-        let doneButton = DefaultButton.init(title: "Done", height: 45, dismissOnTap: true, action: nil)
+        let doneButton = DefaultButton.init(title: "Close", height: 50, dismissOnTap: true, action: nil)
         
         doneButton.backgroundColor = Appearance.themeColor.withAlphaComponent(0.6)
         doneButton.titleColor = UIColor.init(white: 1, alpha: 1)
