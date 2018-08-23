@@ -32,3 +32,4 @@ class ListPopupViewController<T: UIViewController>: UINavigationController
 
 // AB: kludge to work with interface builder, which does not support generics
 class StartupListPopupViewController: ListPopupViewController<StartupViewController> {}
+class SettingsPopupViewController: ListPopupViewController<SettingsViewController> {}

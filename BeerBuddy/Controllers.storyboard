@@ -30,6 +30,41 @@
             </objects>
             <point key="canvasLocation" x="405.60000000000002" y="730.88455772113946"/>
         </scene>
+        <!--Settings-->
+        <scene sceneID="CiP-7w-5p9">
+            <objects>
+                <tableViewController id="lRb-CM-w8a" customClass="SettingsViewController" customModule="BeerBuddy" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="cOh-Sn-gPR">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <connections>
+                            <outlet property="dataSource" destination="lRb-CM-w8a" id="MRG-Be-o4s"/>
+                            <outlet property="delegate" destination="lRb-CM-w8a" id="Sun-RL-Hgo"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Settings" id="xeD-Lt-C5b"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KIh-df-WXA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1922" y="858"/>
+        </scene>
+        <!--Settings Popup View Controller-->
+        <scene sceneID="22e-u1-uTe">
+            <objects>
+                <navigationController storyboardIdentifier="Settings" id="3ad-Hb-kIX" customClass="SettingsPopupViewController" customModule="BeerBuddy" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="w79-oo-keg">
+                        <rect key="frame" x="0.0" y="20" width="375" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="lRb-CM-w8a" kind="relationship" relationship="rootViewController" id="1sp-tp-x5c"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="r6e-kD-09w" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1198" y="858"/>
+        </scene>
         <!--Startup List Popup View Controller-->
         <scene sceneID="qE8-PJ-W3q">
             <objects>

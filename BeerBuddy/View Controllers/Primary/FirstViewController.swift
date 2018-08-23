@@ -69,6 +69,12 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
     {
         if viewController is StubViewController
         {
+            settingsTest: do
+            {
+                (self.tabBarController as? RootViewController)?.showSettingsPopup()
+                return false
+            }
+            
             pulleyTest: do
             {
                 break pulleyTest
@@ -108,8 +114,14 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
             
             testABV: do
             {
+                break testABV
                 (self.tabBarController as? RootViewController)?.showLimitPopup()
-                
+                return false
+            }
+            
+            testProgressView: do
+            {
+                testAnimateProgressView()
                 return false
             }
             
@@ -187,9 +199,7 @@ extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewCon
         }
         else
         {
-            testAnimateProgressView()
-            return false
-            //return true
+            return true
         }
     }
     

@@ -23,6 +23,7 @@
 		4E7E45592127F3F800ACDDB8 /* GRDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */; };
 		4E7FB9EC212E3B1400052BFC /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9EB212E3B1400052BFC /* RootViewController.swift */; };
+		4E7FB9F1212E3F2A00052BFC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */; };
 		4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F048E21114DBB00038F09 /* Formatting.swift */; };
 		4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */; };
 		4E8F049421124FDD00038F09 /* VolumePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */; };
@@ -272,6 +273,7 @@
 		4E7E45572127F3F800ACDDB8 /* GRDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GRDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicPopupButton.swift; sourceTree = "<group>"; };
 		4E7FB9EB212E3B1400052BFC /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		4E8F048E21114DBB00038F09 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
 		4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInDrawerViewController.swift; sourceTree = "<group>"; };
 		4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumePickerViewController.swift; sourceTree = "<group>"; };
@@ -461,10 +463,11 @@
 		4E70D5CD2113D4EE0089BBB1 /* Popups */ = {
 			isa = PBXGroup;
 			children = (
+				4EB437EF212CF6C7001D5734 /* ListPopupViewController.swift */,
 				4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */,
 				4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */,
-				4EB437EF212CF6C7001D5734 /* ListPopupViewController.swift */,
 				4EB437F1212CF77B001D5734 /* StartupViewController.swift */,
+				4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */,
 			);
 			path = Popups;
 			sourceTree = "<group>";
@@ -886,6 +889,7 @@
 				4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */,
 				4EB437E8212CE311001D5734 /* TransitionAnimator.swift in Sources */,
 				4EB437F6212D0EB1001D5734 /* Limit.swift in Sources */,
+				4E7FB9F1212E3F2A00052BFC /* SettingsViewController.swift in Sources */,
 				4EA2F18520FEE7C700CE30E1 /* SecondViewController.swift in Sources */,
 				4EB437D9212CE311001D5734 /* CGContext+CGImage.swift in Sources */,
 				4EB437E9212CE311001D5734 /* PopupDialog+Keyboard.swift in Sources */,
