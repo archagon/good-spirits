@@ -132,6 +132,8 @@ public class CheckInCell: UITableViewCell
         self.stats.delegate = self
         self.stats.isScrollEnabled = false
         
+        let untappdSize: CGFloat = 16
+        
         styling: do
         {
             let inset: CGFloat = 2
@@ -149,7 +151,7 @@ public class CheckInCell: UITableViewCell
             
             self.untappd.image = UIImage.init(named: "untappd")
             self.untappd.clipsToBounds = true
-            self.untappd.layer.cornerRadius = 2
+            self.untappd.layer.cornerRadius = untappdSize / 2
         }
         
         layout: do
@@ -188,12 +190,12 @@ public class CheckInCell: UITableViewCell
             self.contentView.addLayoutGuide(containerSpacer4)
             
             let views = [ "content":contentStack, "prose":prose, "name":name, "caption":caption, "container":container, "untappd":untappd, "cs1":containerSpacer1, "cs2":containerSpacer2, "cs3":containerSpacer3, "cs4":containerSpacer4 ]
-            let metrics = [ "contentMargin":contentMargin, "sideMargin":4, "imageLabelGapContentMargin":6+contentMargin, "imageLabelGapSideMargin":4+contentMargin, "sumMargin":contentMargin+4, "leftMargin":12, "imageLabelGap":6, "gap":4, "imageHeight":30, "untappdHeight":14 ]
+            let metrics = [ "contentMargin":contentMargin, "sideMargin":4, "imageLabelGapContentMargin":6+contentMargin, "imageLabelGapSideMargin":4+contentMargin, "sumMargin":contentMargin+4, "leftMargin":12, "imageLabelGap":6, "gap":4, "imageHeight":30 ]
             
             dataConstraints: do
             {
                 let hConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(leftMargin)-[container(imageHeight)]-(imageLabelGapContentMargin)-[content]-(imageLabelGapSideMargin)-|", options: .alignAllCenterY, metrics: metrics, views: views)
-                let hConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "H:[name][untappd(untappdHeight)]-(>=sideMargin)-|", options: .alignAllCenterY, metrics: metrics, views: views)
+                let hConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "H:[name]-(>=sideMargin)-|", options: .alignAllCenterY, metrics: metrics, views: views)
 //                let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|[cs1][container(imageHeight)][cs2(cs1)]|", options: [], metrics: metrics, views: views)
                 let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=sideMargin)-[container(imageHeight)]-(>=sideMargin)-|", options: [], metrics: metrics, views: views)
                 let vConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=imageLabelGapSideMargin)-[content]-(>=imageLabelGapSideMargin)-|", options: [], metrics: metrics, views: views)
@@ -205,8 +207,11 @@ public class CheckInCell: UITableViewCell
                 let contentBackgroundConstraints = [contentLeft, contentRight, contentTop, contentBottom]
                 
                 let untappdAspect = untappd.widthAnchor.constraint(equalTo: untappd.heightAnchor)
+                let untappdWidth = untappd.widthAnchor.constraint(equalToConstant: untappdSize)
+                let untappdCenterX = untappd.centerXAnchor.constraint(equalTo: container.rightAnchor, constant: -3)
+                let untappdCenterY = untappd.centerYAnchor.constraint(equalTo: container.bottomAnchor, constant: -4)
                 
-                let dataConstraints: [NSLayoutConstraint] = hConstraints1 + hConstraints2 + vConstraints1 + vConstraints2 + contentBackgroundConstraints + [untappdAspect]
+                let dataConstraints: [NSLayoutConstraint] = hConstraints1 + hConstraints2 + vConstraints1 + vConstraints2 + contentBackgroundConstraints + [untappdAspect, untappdWidth, untappdCenterX, untappdCenterY]
                 
                 self.dataConstraints = dataConstraints
             }
