@@ -27,21 +27,21 @@
                                 </connections>
                             </tableView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gb0-xP-mUH">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="220"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="tOj-6M-TIM">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="220"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                                 <blurEffect style="light"/>
                             </visualEffectView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wbp-OH-9z9" customClass="FSCalendar">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="220"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="220" id="pt5-KE-uCJ"/>
+                                    <constraint firstAttribute="height" constant="200" id="pt5-KE-uCJ"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showsScopeHandle" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showsScopeHandle" value="NO"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="allowsMultipleSelection" value="NO"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="headerHeight">
                                         <real key="value" value="0.0"/>
@@ -57,7 +57,7 @@
                                 </connections>
                             </view>
                             <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6st-ly-ZMQ">
-                                <rect key="frame" x="0.0" y="220" width="375" height="1"/>
+                                <rect key="frame" x="0.0" y="200" width="375" height="1"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="O2g-Sw-VMX"/>
@@ -83,7 +83,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="PQr-Ze-W5v"/>
                     </view>
-                    <tabBarItem key="tabBarItem" badgeValue="3" systemItem="history" id="acW-dT-cKf"/>
+                    <tabBarItem key="tabBarItem" title="Log" image="list" badgeValue="3" id="acW-dT-cKf"/>
                     <navigationItem key="navigationItem" title="August 2018" id="CZz-nO-VV4">
                         <barButtonItem key="leftBarButtonItem" image="gear" id="bv1-O2-TuQ">
                             <connections>
@@ -167,7 +167,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="82h-dL-H5I"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Stats" image="second" id="jDb-r8-6sp"/>
+                    <tabBarItem key="tabBarItem" title="Stats" image="bar_chart" id="jDb-r8-6sp"/>
                     <navigationItem key="navigationItem" title="Stats" id="oRL-iw-YIz">
                         <barButtonItem key="leftBarButtonItem" image="gear" id="z6g-WQ-Xi5">
                             <connections>
@@ -198,7 +198,7 @@
             </objects>
             <point key="canvasLocation" x="319" y="1012"/>
         </scene>
-        <!--Stub View Controller-->
+        <!--Check In-->
         <scene sceneID="Yf5-bb-ovv">
             <objects>
                 <viewController id="cKQ-VL-Slj" customClass="StubViewController" customModule="BeerBuddy" customModuleProvider="target" sceneMemberID="viewController">
@@ -208,8 +208,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="OXR-e0-iZR"/>
                     </view>
-                    <tabBarItem key="tabBarItem" tag="1" title="" image="checkin" id="eG5-QO-wsY">
-                        <inset key="imageInsets" minX="0.0" minY="-5" maxX="0.0" maxY="0.0"/>
+                    <tabBarItem key="tabBarItem" tag="1" title="Check In" image="checkin" id="eG5-QO-wsY">
+                        <inset key="imageInsets" minX="0.0" minY="-22" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OKL-il-wL6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -220,7 +220,7 @@
         <scene sceneID="yl2-sM-qoP">
             <objects>
                 <tabBarController id="49e-Tb-3d3" customClass="RootViewController" customModule="BeerBuddy" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
+                    <tabBar key="tabBar" contentMode="scaleToFill" itemPositioning="centered" itemSpacing="10" id="W28-zg-YXA">
                         <rect key="frame" x="0.0" y="975" width="768" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
@@ -237,11 +237,12 @@
         </scene>
     </scenes>
     <resources>
+        <image name="bar_chart" width="30" height="30"/>
         <image name="checkin" width="50" height="50"/>
         <image name="clear" width="1" height="1"/>
         <image name="first" width="30" height="30"/>
         <image name="gear" width="22" height="22"/>
-        <image name="second" width="30" height="30"/>
+        <image name="list" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="SXH-ke-j1X"/>

@@ -12,7 +12,205 @@ public enum DrinkStyle: String, RawRepresentable
 {
     case beer
     case wine
+    case fortifiedWine
+    case mead
+    case cider
     case sake
+    case vodka
+    case gin
+    case tequilla
+    case rum
+    case whisky
+    case brandy
+    case liqueur
+    case other
+    case placeholder
+    case overflow
+    
+    public var fermented: Bool
+    {
+        switch self
+        {
+        case .beer:
+            fallthrough
+        case .wine:
+            fallthrough
+        case .fortifiedWine:
+            fallthrough
+        case .mead:
+            fallthrough
+        case .cider:
+            fallthrough
+        case .sake:
+            return true
+            
+        case .vodka:
+            fallthrough
+        case .gin:
+            fallthrough
+        case .tequilla:
+            fallthrough
+        case .rum:
+            fallthrough
+        case .whisky:
+            fallthrough
+        case .brandy:
+            fallthrough
+        case .liqueur:
+            return false
+            
+        case .other:
+            fallthrough
+        case .placeholder:
+            fallthrough
+        case .overflow:
+            return false
+        }
+    }
+    
+    public var distilled: Bool
+    {
+        switch self
+        {
+        case .beer:
+            fallthrough
+        case .wine:
+            fallthrough
+        case .fortifiedWine:
+            fallthrough
+        case .mead:
+            fallthrough
+        case .cider:
+            fallthrough
+        case .sake:
+            return false
+            
+        case .vodka:
+            fallthrough
+        case .gin:
+            fallthrough
+        case .tequilla:
+            fallthrough
+        case .rum:
+            fallthrough
+        case .whisky:
+            fallthrough
+        case .brandy:
+            fallthrough
+        case .liqueur:
+            return true
+            
+        case .other:
+            fallthrough
+        case .placeholder:
+            fallthrough
+        case .overflow:
+            return false
+        }
+    }
+    
+    public var displayable: Bool
+    {
+        switch self
+        {
+        case .beer:
+            fallthrough
+        case .wine:
+            fallthrough
+        case .fortifiedWine:
+            fallthrough
+        case .mead:
+            fallthrough
+        case .cider:
+            fallthrough
+        case .sake:
+            fallthrough
+        case .vodka:
+            fallthrough
+        case .gin:
+            fallthrough
+        case .tequilla:
+            fallthrough
+        case .rum:
+            fallthrough
+        case .whisky:
+            fallthrough
+        case .brandy:
+            fallthrough
+        case .liqueur:
+            fallthrough
+        case .other:
+            return true
+            
+        case .placeholder:
+            fallthrough
+        case .overflow:
+            return false
+        }
+    }
+    
+    public static var allStyles: [DrinkStyle]
+    {
+        var styles: [DrinkStyle] = []
+        
+        switch DrinkStyle.beer
+        {
+        case .beer:
+            styles.append(.beer)
+            fallthrough
+        case .wine:
+            styles.append(.wine)
+            fallthrough
+        case .fortifiedWine:
+            styles.append(.fortifiedWine)
+            fallthrough
+        case .mead:
+            styles.append(.mead)
+            fallthrough
+        case .cider:
+            styles.append(.cider)
+            fallthrough
+        case .sake:
+            styles.append(.sake)
+            fallthrough
+        case .vodka:
+            styles.append(.vodka)
+            fallthrough
+        case .gin:
+            styles.append(.gin)
+            fallthrough
+        case .tequilla:
+            styles.append(.tequilla)
+            fallthrough
+        case .rum:
+            styles.append(.rum)
+            fallthrough
+        case .whisky:
+            styles.append(.whisky)
+            fallthrough
+        case .brandy:
+            styles.append(.brandy)
+            fallthrough
+        case .liqueur:
+            styles.append(.liqueur)
+            fallthrough
+        case .other:
+            styles.append(.other)
+            fallthrough
+        case .placeholder:
+            styles.append(.placeholder)
+            fallthrough
+        case .overflow:
+            styles.append(.overflow)
+        }
+        
+        return styles
+    }
+    
+    public static var displayableStyles: [DrinkStyle]
+    {
+        return allStyles.filter { $0.displayable }
+    }
 }
 
 public struct Model: Hashable, Equatable

@@ -50,13 +50,8 @@ public class VolumePickerViewController: CheckInDrawerViewController
     private static func drinkTuple(_ type: DrinkStyle, _ flozVal: Double) -> (Measurement<UnitVolume>, String)
     {
         let measure = floz(flozVal)
-        return (measure, Model.assetNameForDrink(Model.Drink.init(name: nil, style: .beer, abv: 0, price: nil, volume: measure)))
+        return (measure, Model.assetNameForDrink(Model.Drink.init(name: nil, style: type, abv: 0, price: nil, volume: measure)))
     }
-    private static let drinkTypes: [DrinkStyle:[(volume: Measurement<UnitVolume>, image: String)]] = [
-        .beer : [ drinkTuple(.beer, 1.5), drinkTuple(.beer, 6), drinkTuple(.beer, 12), drinkTuple(.beer, 16), drinkTuple(.beer, 32) ],
-        .wine : [ drinkTuple(.wine, 5), drinkTuple(.wine, 6) ],
-        .sake : [ drinkTuple(.sake, 1.5), drinkTuple(.sake, 5) ]
-    ]
     
     public override func viewDidLoad()
     {
@@ -196,7 +191,7 @@ extension VolumePickerViewController: UICollectionViewDelegate, UICollectionView
     
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
-        return VolumePickerViewController.drinkTypes[self.style]!.count
+        return self.style.assortedVolumes.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
@@ -212,10 +207,13 @@ extension VolumePickerViewController: UICollectionViewDelegate, UICollectionView
 //        cell.label.backgroundColor = UIColor.yellow
 //        cell.backgroundColor = UIColor.purple
         
-        let tuple = VolumePickerViewController.drinkTypes[self.style]![indexPath.row]
+        let volumeObj = self.style.assortedVolumes[indexPath.row]
+        let volume = volumeObj.converted(to: UnitVolume.fluidOunces).value
         
-        cell.image = UIImage.init(named: tuple.image)
-        cell.text = Format.format(volume: tuple.volume)
+        let tuple = VolumePickerViewController.drinkTuple(self.style, volume)
+        
+        cell.image = UIImage.init(named: tuple.1)
+        cell.text = Format.format(volume: tuple.0)
         
         return cell
     }
