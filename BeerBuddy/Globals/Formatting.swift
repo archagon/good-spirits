@@ -46,6 +46,6 @@ public struct Format
     
     public static func format(style: DrinkStyle) -> String
     {
-        return style.rawValue
+        return style.description
     }
 }

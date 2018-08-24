@@ -16,6 +16,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
     // TODO: technically, this probably ought to go in the app delegate
     var data: DataLayer
     
+    // TODO: this is sort of a memory leak until the next controller shows up
     public var drawerDisplayController: DrawerDisplayController?
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
@@ -153,20 +154,8 @@ class RootViewController: UITabBarController, DrawerCoordinating
         
         controller.delegate = self
         
-        var configuration = DrawerConfiguration.init()
-        configuration.fullExpansionBehaviour = .leavesCustomGap(gap: 100)
-        configuration.timingCurveProvider = UISpringTimingParameters(dampingRatio: 0.8)
-        configuration.cornerAnimationOption = .alwaysShowBelowStatusBar
-        
-        var handleViewConfiguration = HandleViewConfiguration()
-        handleViewConfiguration.autoAnimatesDimming = false
-        configuration.handleViewConfiguration = handleViewConfiguration
-        
-        let drawerShadowConfiguration = DrawerShadowConfiguration(shadowOpacity: 0.25,
-                                                                  shadowRadius: 4,
-                                                                  shadowOffset: .zero,
-                                                                  shadowColor: .black)
-        configuration.drawerShadowConfiguration = drawerShadowConfiguration
+        var configuration = controller.standardConfiguration
+        configuration.fullExpansionBehaviour = .leavesCustomGap(gap: self.view.bounds.size.height - controller.heightOfPartiallyExpandedDrawer - 32)
         
         let pulley = DrawerDisplayController.init(presentingViewController: self, presentedViewController: controller, configuration: configuration, inDebugMode: false)
         self.drawerDisplayController = pulley
@@ -203,7 +192,7 @@ extension RootViewController: CheckInViewControllerDelegate
         }
         catch
         {
-            appError("\(error)")
+            appError("could not get last added model (\(error))")
             return defaultDrink
         }
     }
@@ -213,25 +202,64 @@ extension RootViewController: CheckInViewControllerDelegate
         return DataLayer.calendar
     }
     
+    // TODO: check in for arbitrary date
     public func committed(drink: Model.Drink, for: CheckInViewController)
     {
-        let range = Time.currentWeek()
-        
-        let randomTime = range.0.timeIntervalSince1970 + TimeInterval.random(in: 0..<(range.1.timeIntervalSince1970 - range.0.timeIntervalSince1970))
-        let randomDate = Date.init(timeIntervalSince1970: randomTime)
-        
-        let model = Model.init(metadata: Model.Metadata.init(id: GlobalID.init(siteID: self.data.owner, operationIndex: DataLayer.wildcardIndex), creationTime: Date()), checkIn: Model.CheckIn.init(untappdId: nil, time: randomDate, drink: drink))
+        let model = Model.init(metadata: Model.Metadata.init(id: GlobalID.init(siteID: self.data.owner, operationIndex: DataLayer.wildcardIndex), creationTime: Date()), checkIn: Model.CheckIn.init(untappdId: nil, time: Date(), drink: drink))
         
         self.data.save(model: model)
         {
             switch $0
             {
             case .error(let e):
-                appError("\(e)")
-            case .value(let v):
+                appError("could not commit check-in (\(e))")
+            case .value(let _):
                 break
             }
         }
+    }
+}
+
+// KLUDGE: enables background color animation
+extension RootViewController: DrawerAnimationParticipant
+{
+    var drawerAnimationActions: DrawerAnimationActions
+    {
+        let actions = DrawerAnimationActions.init(prepare:
+        { [weak `self`] info in
+        }, animateAlong:
+        { [weak `self`] info in
+            guard let container = self?.presentedViewController?.presentationController?.containerView else
+            {
+                return
+            }
+            
+            if info.targetDrawerState == .collapsed
+            {
+                container.backgroundColor = UIColor.black.withAlphaComponent(0.0)
+            }
+            else
+            {
+                container.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+            }
+        })
+        { [weak `self`] info in
+            guard let container = self?.presentedViewController?.presentationController?.containerView else
+            {
+                return
+            }
+            
+            if info.endDrawerState == .collapsed
+            {
+                container.backgroundColor = UIColor.black.withAlphaComponent(0.0)
+            }
+            else
+            {
+                container.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+            }
+        }
+        
+        return actions
     }
 }
 

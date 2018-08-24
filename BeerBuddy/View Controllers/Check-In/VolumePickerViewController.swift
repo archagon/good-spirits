@@ -10,11 +10,6 @@ import UIKit
 import DrawerKit
 import DataLayer
 
-// 2. incorrect pint/floz conversion towards end of ticker
-// 3. correct rounding (not just floor) + avoid overshoot
-// 4. wrong constraints + auto-sizing
-// 5. collection selection
-
 public protocol VolumePickerViewControllerDelegate: class
 {
     func drawerHeight(for: VolumePickerViewController) -> CGFloat
@@ -59,12 +54,14 @@ public class VolumePickerViewController: CheckInDrawerViewController
         
         self.glasses.register(DrinkCell.self, forCellWithReuseIdentifier: "Drink")
         self.glasses.isScrollEnabled = false
-        self.glasesHeight.constant = 75
+        //self.glasses.backgroundColor = UIColor.green
+        self.glasses.allowsSelection = true
+        self.glasesHeight.constant = 70 //KLUDGE: I don't think UICV can autosize height
         
         if let layout = self.glasses.collectionViewLayout as? UICollectionViewFlowLayout
         {
             layout.estimatedItemSize = CGSize.init(width: 44, height: 60)
-            layout.minimumInteritemSpacing = 12
+            layout.minimumInteritemSpacing = 8
         }
         
         self.currentMeasurement = self.delegate.startingVolume(for: self)
@@ -83,15 +80,26 @@ public class VolumePickerViewController: CheckInDrawerViewController
             return
         }
         
-        let units = Int(floor(measure.value))
-        let decimals = Int(floor(measure.value.truncatingRemainder(dividingBy: 1) * 10))
+        // AB: avoids floating point rounding shenanigans
+        let value = round(measure.value * 10)
+        let decimals = Int(value - (floor(value / 10) * 10))
+        let units = Int(floor(value / 10))
+        
+        self.measurePicker.selectRow(row, inComponent: 0, animated: animated)
         
         self.unitPicker.reloadAllComponents()
-        self.measurePicker.reloadAllComponents()
+        //self.measurePicker.reloadAllComponents()
         
-        self.unitPicker.selectRow(units, inComponent: 0, animated: animated)
-        self.decimalPicker.selectRow(decimals, inComponent: 0, animated: animated)
-        self.measurePicker.selectRow(row, inComponent: 0, animated: animated)
+        if units >= self.unitPicker.numberOfRows(inComponent: 0)
+        {
+            self.unitPicker.selectRow(self.unitPicker.numberOfRows(inComponent: 0) - 1, inComponent: 0, animated: animated)
+            self.decimalPicker.selectRow(self.decimalPicker.numberOfRows(inComponent: 0) - 1, inComponent: 0, animated: animated)
+        }
+        else
+        {
+            self.unitPicker.selectRow(units, inComponent: 0, animated: animated)
+            self.decimalPicker.selectRow(decimals, inComponent: 0, animated: animated)
+        }
     }
     
     public var selectedVolume: Measurement<UnitVolume>
@@ -169,6 +177,14 @@ extension VolumePickerViewController: UIPickerViewDelegate, UIPickerViewDataSour
 
 extension VolumePickerViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
+    {
+        let measurement = self.style.assortedVolumes[indexPath.row].converted(to: UnitVolume.fluidOunces)
+        self.currentMeasurement = measurement
+        
+        self.refreshPickers(animated: true)
+    }
+    
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets
     {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else
@@ -176,7 +192,7 @@ extension VolumePickerViewController: UICollectionViewDelegate, UICollectionView
             return UIEdgeInsets.zero
         }
 
-        let CellWidth = 50
+        let CellWidth = 50 //TODO: make this a constant
         let CellCount = collectionView.numberOfItems(inSection: section)
         let CellSpacing = layout.minimumInteritemSpacing
 
@@ -201,11 +217,6 @@ extension VolumePickerViewController: UICollectionViewDelegate, UICollectionView
             appError("could not dequeue drink cell")
             return DrinkCell.init(frame: CGRect.zero)
         }
-        
-//        self.glasses.backgroundColor = .green
-//        cell.image.backgroundColor = UIColor.red
-//        cell.label.backgroundColor = UIColor.yellow
-//        cell.backgroundColor = UIColor.purple
         
         let volumeObj = self.style.assortedVolumes[indexPath.row]
         let volume = volumeObj.converted(to: UnitVolume.fluidOunces).value
@@ -249,7 +260,7 @@ extension VolumePickerViewController
         private var label: UILabel
         private var imageContainer: UIView
         
-        private let imageScale: CGFloat = 0.7
+        private let imageScale: CGFloat = 0.6
         private var imageWidth: NSLayoutConstraint
         private var imageHeight: NSLayoutConstraint
         
@@ -263,34 +274,81 @@ extension VolumePickerViewController
             
             super.init(frame: CGRect.init(x: 0, y: 0, width: 100, height: 100))
             
+            // BUGFIX: this appears to be necessary to prevent autolayout errors
+            self.contentView.translatesAutoresizingMaskIntoConstraints = false
+            let cvh = NSLayoutConstraint.constraints(withVisualFormat: "H:|[cv]|", options: [], metrics: nil, views: ["cv":self.contentView])
+            let cvv = NSLayoutConstraint.constraints(withVisualFormat: "V:|[cv]|", options: [], metrics: nil, views: ["cv":self.contentView])
+            NSLayoutConstraint.activate(cvh + cvv)
+            
             self.imageContainer.translatesAutoresizingMaskIntoConstraints = false
             self.imageView.translatesAutoresizingMaskIntoConstraints = false
             self.label.translatesAutoresizingMaskIntoConstraints = false
-            
+
             self.contentView.addSubview(self.imageContainer)
             self.imageContainer.addSubview(self.imageView)
             self.contentView.addSubview(self.label)
-            
+
+            //let highlightView = UIView()
+            //highlightView.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+            //highlightView.layer.cornerRadius = 8
+            //self.selectedBackgroundView = highlightView
+
             appearance: do
             {
                 self.label.textAlignment = .center
-                self.label.font = UIFont.systemFont(ofSize: 14)
+                self.label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+                self.label.textColor = UIColor.darkText
+                
+                imageContainer.backgroundColor = Appearance.themeColor.withAlphaComponent(0.7)
+                imageContainer.layer.cornerRadius = 8
+                
+                imageView.tintColor = .white
             }
-            
+
             constraints: do
             {
                 let metrics: [String:Any] = ["imageSize":50]
                 let views: [String:UIView] = ["imageContainer":self.imageContainer, "image":self.imageView, "label":self.label]
-                
+
                 let hConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|[imageContainer(imageSize)]|", options: [], metrics: metrics, views: views)
                 let hConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|[label]|", options: [], metrics: metrics, views: views)
-                let vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageContainer]-(8)-[label]|", options: [], metrics: metrics, views: views)
-                
-                let imageContainerAspect = self.imageContainer.widthAnchor.constraint(equalTo: self.imageContainer.heightAnchor)
-                let imageBottom = self.imageView.bottomAnchor.constraint(equalTo: self.imageView.superview!.bottomAnchor)
-                let imageCenter = self.imageView.centerXAnchor.constraint(equalTo: self.imageView.superview!.centerXAnchor)
-                
-                NSLayoutConstraint.activate(hConstraints1 + hConstraints2 + vConstraints + [imageContainerAspect, imageBottom, imageCenter, self.imageWidth, self.imageHeight])
+                let vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageContainer(imageSize)]-(2)-[label]|", options: [], metrics: metrics, views: views)
+
+                let imageCenter1 = self.imageView.centerXAnchor.constraint(equalTo: self.imageView.superview!.centerXAnchor)
+                let imageCenter2 = self.imageView.centerYAnchor.constraint(equalTo: self.imageView.superview!.centerYAnchor)
+
+                NSLayoutConstraint.activate(hConstraints1 + hConstraints2 + vConstraints)
+                NSLayoutConstraint.activate([imageCenter1, imageCenter2, imageWidth, imageHeight])
+            }
+        }
+        
+        override var isHighlighted: Bool
+        {
+            didSet
+            {
+                if isHighlighted
+                {
+                    imageContainer.backgroundColor = Appearance.themeColor.withAlphaComponent(0.9)
+                }
+                else
+                {
+                    imageContainer.backgroundColor = Appearance.themeColor.withAlphaComponent(0.7)
+                }
+            }
+        }
+        
+        override var isSelected: Bool
+        {
+            didSet
+            {
+                if isHighlighted
+                {
+                    imageContainer.backgroundColor = Appearance.themeColor.withAlphaComponent(0.9)
+                }
+                else
+                {
+                    imageContainer.backgroundColor = Appearance.themeColor.withAlphaComponent(0.7)
+                }
             }
         }
         

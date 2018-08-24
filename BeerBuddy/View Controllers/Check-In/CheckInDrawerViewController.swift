@@ -17,19 +17,37 @@ public class CheckInDrawerViewController: UIViewController, DrawerPresentable, D
     
     public var drawerDisplayController: DrawerDisplayController?
     
+    public var standardConfiguration: DrawerConfiguration
+    {
+        var configuration = DrawerConfiguration.init()
+        configuration.isFullyPresentableByDrawerTaps = false
+        configuration.flickSpeedThreshold = 0
+        configuration.timingCurveProvider = UISpringTimingParameters(dampingRatio: 0.8)
+        configuration.cornerAnimationOption = .alwaysShowBelowStatusBar
+        
+        // KLUDGE: prevents full-sreen mode
+        configuration.upperMarkGap = 100000
+        
+        var handleViewConfiguration = HandleViewConfiguration()
+        handleViewConfiguration.autoAnimatesDimming = false
+        configuration.handleViewConfiguration = handleViewConfiguration
+        
+        let drawerShadowConfiguration = DrawerShadowConfiguration(shadowOpacity: 0.25,
+                                                                  shadowRadius: 5,
+                                                                  shadowOffset: .zero,
+                                                                  shadowColor: .black)
+        configuration.drawerShadowConfiguration = drawerShadowConfiguration
+        
+        return configuration
+    }
+    
     public override func viewDidLoad()
     {
         super.viewDidLoad()
         
         if let closeButton = self.closeButton
-        {
-            //let translation = CGAffineTransform.init(translationX: -closeButton.bounds.width/2, y: -closeButton.bounds.height/2)
-            let rotation = CGAffineTransform.init(rotationAngle: 0.125 * (2*CGFloat.pi))
-            let transform = rotation
-            
-            closeButton.transform = transform
-            
-            confirmButton?.setTitle("Done", for: .normal)
+        {            
+            confirmButton?.setTitle("Accept", for: .normal)
         }
         
         self.confirmButton?.addTarget(self, action: #selector(confirmTapped), for: .touchUpInside)
@@ -52,9 +70,23 @@ public class CheckInDrawerViewController: UIViewController, DrawerPresentable, D
     
     public var heightOfPartiallyExpandedDrawer: CGFloat
     {
-        guard let view = self.viewIfLoaded else { return 20 }
+        let view = self.view!
+        view.layoutIfNeeded() // AB: ensures autolayout is done
         
-        // TODO: accommodate safe area
-        return view.convert(CGPoint.init(x: 0, y: self.stackView.bounds.maxY), from: self.stackView).y + 40
+        let safeArea: CGFloat
+        
+        // KLUDGE: should pull this from parent VC, but we need this to work as soon as the view is loaded
+        if #available(iOS 11.0, *)
+        {
+            let window = UIApplication.shared.keyWindow
+            let bottomPadding = window?.safeAreaInsets.bottom
+            safeArea = bottomPadding ?? 0
+        }
+        else
+        {
+            safeArea = 0
+        }
+        
+        return view.convert(CGPoint.init(x: 0, y: self.stackView.bounds.maxY), from: self.stackView).y + safeArea + 16
     }
 }

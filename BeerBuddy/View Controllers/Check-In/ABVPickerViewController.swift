@@ -40,7 +40,7 @@ public class ABVPickerViewController: CheckInDrawerViewController
         let units = Double(self.unitPicker.selectedRow(inComponent: 0))
         let decimals = Double(self.decimalPicker.selectedRow(inComponent: 0))
         
-        return (units + decimals / 100) / 100
+        return (units + decimals / 10) / 100
     }
     
     public override func confirmCallback()

@@ -25,7 +25,7 @@ public class StylePickerViewController: CheckInDrawerViewController
     @IBOutlet private var stylePicker: UIPickerView!
     @IBOutlet private var name: UITextField!
     
-    private static let validStyles = DrinkStyle.allStyles
+    private static let validStyles = DrinkStyle.displayableStyles
     
     public override func viewDidLoad()
     {

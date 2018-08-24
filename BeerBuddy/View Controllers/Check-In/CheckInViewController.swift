@@ -51,14 +51,32 @@ public class CheckInViewController: CheckInDrawerViewController
         
         self.text.textContainerInset = .zero
         self.text.delegate = self
+        self.text.isSelectable = false
         if #available(iOS 11.0, *)
         {
             self.text.textDragInteraction?.isEnabled = false
         }
         
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tappedTextView))
+        text.addGestureRecognizer(tapRecognizer)
+        
         self.confirmButton?.setTitle("Check In", for: .normal)
         
         setupText()
+    }
+    
+    @objc func tappedTextView(tapGesture: UIGestureRecognizer) {
+        
+        let textView = tapGesture.view as! UITextView
+        let tapLocation = tapGesture.location(in: textView)
+        let textPosition = textView.closestPosition(to: tapLocation)
+        let attr = textView.textStyling(at: textPosition!, in: UITextStorageDirection.forward)!
+        
+        if let url: NSURL = attr[NSAttributedStringKey.link.rawValue] as? NSURL {
+            self.textView(textView, shouldInteractWith: url as URL, in: NSRange.init(location: 0, length: 0), interaction: UITextItemInteraction.invokeDefaultAction)
+            print("tapped link")
+        }
+        
     }
     
     private func setupText()
@@ -181,7 +199,7 @@ extension CheckInViewController: UITextViewDelegate
         {
             let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
             
-            let controller: UIViewController & DrawerPresentable
+            let controller: CheckInDrawerViewController
             if id == "abv"
             {
                 let aController = storyboard.instantiateViewController(withIdentifier: "ABVPicker") as! ABVPickerViewController
@@ -207,20 +225,8 @@ extension CheckInViewController: UITextViewDelegate
                 controller = aController
             }
             
-            var configuration = DrawerConfiguration.init()
-            configuration.fullExpansionBehaviour = .leavesCustomGap(gap: 100)
-            configuration.timingCurveProvider = UISpringTimingParameters(dampingRatio: 0.8)
-            configuration.cornerAnimationOption = .alwaysShowBelowStatusBar
-            
-            var handleViewConfiguration = HandleViewConfiguration()
-            handleViewConfiguration.autoAnimatesDimming = false
-            configuration.handleViewConfiguration = handleViewConfiguration
-            
-            let drawerShadowConfiguration = DrawerShadowConfiguration(shadowOpacity: 0.25,
-                                                                      shadowRadius: 4,
-                                                                      shadowOffset: .zero,
-                                                                      shadowColor: .black)
-            configuration.drawerShadowConfiguration = drawerShadowConfiguration
+            var configuration = controller.standardConfiguration
+            configuration.fullExpansionBehaviour = .leavesCustomGap(gap: self.view.bounds.size.height - controller.heightOfPartiallyExpandedDrawer - 32)
             
             let pulley = DrawerDisplayController.init(presentingViewController: self, presentedViewController: controller, configuration: configuration, inDebugMode: false)
             self.drawerDisplayController = pulley

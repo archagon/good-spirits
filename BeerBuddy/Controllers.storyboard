@@ -151,13 +151,15 @@
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="100" verticalHuggingPriority="251" text="Select ABV" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yjZ-2j-3JN">
-                                                <rect key="frame" x="0.0" y="0.0" width="318" height="50"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="310" height="50"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="27"/>
                                                 <color key="textColor" red="0.4198910039" green="0.62013102720000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yC1-D7-0Vl">
-                                                <rect key="frame" x="318" y="0.0" width="22" height="50"/>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yC1-D7-0Vl">
+                                                <rect key="frame" x="310" y="0.0" width="30" height="50"/>
+                                                <color key="tintColor" white="0.78231292517006801" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="cancel"/>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="msk-ux-5sf">
                                                 <rect key="frame" x="340" y="0.0" width="3" height="50"/>
@@ -248,14 +250,16 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F1z-jZ-7cj">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="100" verticalHuggingPriority="251" text="Select Price per Drink" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yd1-rX-AxY">
-                                                <rect key="frame" x="0.0" y="0.0" width="318" height="50"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="100" verticalHuggingPriority="251" text="Select Price" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yd1-rX-AxY">
+                                                <rect key="frame" x="0.0" y="0.0" width="310" height="50"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="27"/>
                                                 <color key="textColor" red="0.4198910039" green="0.62013102720000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ev2-dD-Ijv">
-                                                <rect key="frame" x="318" y="0.0" width="22" height="50"/>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ev2-dD-Ijv">
+                                                <rect key="frame" x="310" y="0.0" width="30" height="50"/>
+                                                <color key="tintColor" white="0.78231292519999995" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="cancel"/>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kqj-RK-oIH">
                                                 <rect key="frame" x="340" y="0.0" width="3" height="50"/>
@@ -347,13 +351,15 @@
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="128"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="100" verticalHuggingPriority="251" text="Select Volume" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nLc-y6-ppr">
-                                                <rect key="frame" x="0.0" y="0.0" width="318" height="128"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="310" height="128"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="27"/>
                                                 <color key="textColor" red="0.4198910039" green="0.62013102720000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cS1-ZH-90m">
-                                                <rect key="frame" x="318" y="0.0" width="22" height="128"/>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cS1-ZH-90m">
+                                                <rect key="frame" x="310" y="0.0" width="30" height="128"/>
+                                                <color key="tintColor" white="0.78231292519999995" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="cancel"/>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k1K-Oi-3zF">
                                                 <rect key="frame" x="340" y="0.0" width="3" height="128"/>
@@ -476,13 +482,15 @@
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="128"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="100" verticalHuggingPriority="251" text="Set Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XZt-vL-vBI">
-                                                <rect key="frame" x="0.0" y="0.0" width="318" height="128"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="310" height="128"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="27"/>
                                                 <color key="textColor" red="0.4198910039" green="0.62013102720000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x7e-BE-G0K">
-                                                <rect key="frame" x="318" y="0.0" width="22" height="128"/>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x7e-BE-G0K">
+                                                <rect key="frame" x="310" y="0.0" width="30" height="128"/>
+                                                <color key="tintColor" white="0.78231292519999995" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="cancel"/>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="785-Ce-GW5">
                                                 <rect key="frame" x="340" y="0.0" width="3" height="128"/>
@@ -566,4 +574,7 @@
             <point key="canvasLocation" x="2561" y="54"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="cancel" width="30" height="30"/>
+    </resources>
 </document>
