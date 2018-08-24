@@ -17,6 +17,7 @@
 		4E74CF8A2117AFBB009C948A /* GRDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E74CF622117AF80009C948A /* GRDB.framework */; };
 		4E74CF8B2117AFBB009C948A /* GRDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E74CF622117AF80009C948A /* GRDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E8948BF2125442B00F3431C /* Data_Observation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8948B52125415300F3431C /* Data_Observation.swift */; };
+		4EB26066212F98680089B164 /* Data_Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB26065212F98680089B164 /* Data_Null.swift */; };
 		4EC0E8FF2124B2DE004FB000 /* DataLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EC0E8EF2124B2DD004FB000 /* DataLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4EC0E9022124B2DE004FB000 /* DataLayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EC0E8ED2124B2DD004FB000 /* DataLayer.framework */; };
 		4EC0E9032124B2DE004FB000 /* DataLayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EC0E8ED2124B2DD004FB000 /* DataLayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -153,6 +154,7 @@
 		4E8948B52125415300F3431C /* Data_Observation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Observation.swift; sourceTree = "<group>"; };
 		4EAEC2A3211C077800C1ED0E /* Data_GRDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_GRDB.swift; sourceTree = "<group>"; };
 		4EAEC2A9211C182900C1ED0E /* Data_Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Default.swift; sourceTree = "<group>"; };
+		4EB26065212F98680089B164 /* Data_Null.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Null.swift; sourceTree = "<group>"; };
 		4EC0E89A2123FF26004FB000 /* Data_GRDB_Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_GRDB_Container.swift; sourceTree = "<group>"; };
 		4EC0E89E2123FFD9004FB000 /* Data_GRDB_Database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data_GRDB_Database.swift; sourceTree = "<group>"; };
 		4EC0E8D32124AB5B004FB000 /* Model_Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model_Data.swift; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 				4E8948B52125415300F3431C /* Data_Observation.swift */,
 				4E74CFA621192711009C948A /* Data_Debug.swift */,
 				4EAEC2A9211C182900C1ED0E /* Data_Default.swift */,
+				4EB26065212F98680089B164 /* Data_Null.swift */,
 				4E74CF9E2118E3DF009C948A /* Data_Memory.swift */,
 				4EAEC2A3211C077800C1ED0E /* Data_GRDB.swift */,
 				4EC0E89E2123FFD9004FB000 /* Data_GRDB_Database.swift */,
@@ -512,6 +515,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EB26066212F98680089B164 /* Data_Null.swift in Sources */,
 				4EC0E90D2124B31E004FB000 /* Format.swift in Sources */,
 				4EC0E90A2124B31E004FB000 /* Util.swift in Sources */,
 				4EC0E9102124B31E004FB000 /* Model_GRDB.swift in Sources */,

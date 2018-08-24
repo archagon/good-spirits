@@ -20,7 +20,6 @@
 		4E721EB5212522770001BBB9 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E721EB4212522770001BBB9 /* SampleData.swift */; };
 		4E7235ED2128E55100EEEAFE /* DeepDiff.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7235E02128E54400EEEAFE /* DeepDiff.framework */; };
 		4E7235EE2128E55100EEEAFE /* DeepDiff.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7235E02128E54400EEEAFE /* DeepDiff.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */; };
 		4E7E45582127F3F800ACDDB8 /* GRDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; };
 		4E7E45592127F3F800ACDDB8 /* GRDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */; };
@@ -277,7 +276,6 @@
 		4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DBComparison.xcodeproj; path = Modules/DBComparison/DBComparison.xcodeproj; sourceTree = "<group>"; };
 		4E721EB4212522770001BBB9 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		4E7235D52128E54300EEEAFE /* DeepDiff.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DeepDiff.xcodeproj; path = "External/DeepDiff-master/DeepDiff.xcodeproj"; sourceTree = "<group>"; };
-		4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingPopupViewController.swift; sourceTree = "<group>"; };
 		4E7E45572127F3F800ACDDB8 /* GRDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GRDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicPopupButton.swift; sourceTree = "<group>"; };
 		4E7FB9EB212E3B1400052BFC /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
@@ -478,7 +476,6 @@
 			isa = PBXGroup;
 			children = (
 				4EB437EF212CF6C7001D5734 /* ListPopupViewController.swift */,
-				4E76B689210653CC00875263 /* ScrollingPopupViewController.swift */,
 				4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */,
 				4EB437F1212CF77B001D5734 /* StartupViewController.swift */,
 				4EC26CCD212E5E84006E156B /* TextDisplayController.swift */,
@@ -977,7 +974,6 @@
 				4EB437E4212CE311001D5734 /* PopupDialog.swift in Sources */,
 				4EB437E6212CE311001D5734 /* PopupDialogButton.swift in Sources */,
 				4E7FB9F5212E58E200052BFC /* PopupCells.swift in Sources */,
-				4E76B68A210653CC00875263 /* ScrollingPopupViewController.swift in Sources */,
 				4EA2F19720FEF8B900CE30E1 /* Data.swift in Sources */,
 				4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */,
 			);

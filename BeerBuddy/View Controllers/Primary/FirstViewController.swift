@@ -11,247 +11,8 @@ import DrawerKit
 import DataLayer
 import DeepDiff
 
-extension FirstViewController: CheckInViewControllerDelegate
+class FirstViewController: UIViewController
 {
-    public func defaultCheckIn(for: CheckInViewController) -> Model.Drink
-    {
-        let defaultPrice: Double = 5
-        let defaultDrink = Model.Drink.init(name: nil, style: DrinkStyle.defaultStyle, abv: DrinkStyle.defaultStyle.defaultABV, price: defaultPrice, volume: DrinkStyle.defaultStyle.defaultVolume)
-        
-        do
-        {
-            if let model = try self.data.getLastAddedModel()
-            {
-                return model.checkIn.drink
-            }
-            else
-            {
-                return defaultDrink
-            }
-        }
-        catch
-        {
-            appError("\(error)")
-            return defaultDrink
-        }
-    }
-    
-    public func calendar(for: CheckInViewController) -> Calendar
-    {
-        return self.cache.calendar
-    }
-    
-    public func committed(drink: Model.Drink, for: CheckInViewController)
-    {
-        let range = Time.currentWeek()
-        
-        let randomTime = range.0.timeIntervalSince1970 + TimeInterval.random(in: 0..<(range.1.timeIntervalSince1970 - range.0.timeIntervalSince1970))
-        let randomDate = Date.init(timeIntervalSince1970: randomTime)
-        
-        let model = Model.init(metadata: Model.Metadata.init(id: GlobalID.init(siteID: self.data!.owner, operationIndex: DataLayer.wildcardIndex), creationTime: Date()), checkIn: Model.CheckIn.init(untappdId: nil, time: randomDate, drink: drink))
-        
-        self.data.save(model: model)
-        {
-            switch $0
-            {
-            case .error(let e):
-                appError("\(e)")
-            case .value(let v):
-                break
-            }
-        }
-    }
-}
-
-extension FirstViewController: UITabBarControllerDelegate, ScrollingPopupViewControllerDelegate
-{
-    public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool
-    {
-        if viewController is StubViewController
-        {
-            pulleyTest: do
-            {
-                //break pulleyTest
-                let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
-                let controller = storyboard.instantiateViewController(withIdentifier: "CheckIn") as! CheckInViewController
-                controller.delegate = self
-                let vc = UIViewController()
-                
-//                let pulley = PulleyViewController.init(contentViewController: vc, drawerViewController: controller)
-                
-//                let pulley = ISHPullUpViewController.init()
-//                pulley.contentViewController = vc
-//                pulley.bottomViewController = controller
-
-                var configuration = DrawerConfiguration.init()
-                configuration.fullExpansionBehaviour = .leavesCustomGap(gap: 100)
-                configuration.timingCurveProvider = UISpringTimingParameters(dampingRatio: 0.8)
-                configuration.cornerAnimationOption = .alwaysShowBelowStatusBar
-                
-                var handleViewConfiguration = HandleViewConfiguration()
-                handleViewConfiguration.autoAnimatesDimming = false
-                configuration.handleViewConfiguration = handleViewConfiguration
-                
-                let drawerShadowConfiguration = DrawerShadowConfiguration(shadowOpacity: 0.25,
-                                                                          shadowRadius: 4,
-                                                                          shadowOffset: .zero,
-                                                                          shadowColor: .black)
-                configuration.drawerShadowConfiguration = drawerShadowConfiguration
-                
-                let pulley = DrawerDisplayController.init(presentingViewController: self, presentedViewController: controller, configuration: configuration, inDebugMode: false)
-                self.drawerDisplayController = pulley
-                
-                self.present(controller, animated: true, completion: nil)
-                
-                return false
-            }
-            
-            testABV: do
-            {
-                break testABV
-                (self.tabBarController as? RootViewController)?.showLimitPopup()
-                return false
-            }
-            
-            testProgressView: do
-            {
-                break testProgressView
-                testAnimateProgressView()
-                return false
-            }
-            
-            if let token = Defaults.untappdToken
-            {
-                Untappd.UserCheckIns(token)
-                { (checkIns, error) in
-                }
-                return false
-            }
-            
-            if qqqPopup == nil
-            {
-                untappd: do
-                {
-                    let untappdVC = UntappdLoginViewController.init
-                    { (token, e) in
-                        if let e = e
-                        {
-                            print("token error: \(e)")
-                        }
-                        else
-                        {
-                            print("found token: \(token)")
-                            Defaults.untappdToken = token
-                            //self.dismiss(animated: true, completion: nil)
-                            self.qqqPopup?.dismiss(animated: true, completion: nil)
-                            self.qqqPopup = nil
-                        }
-                    }
-                    untappdVC.modalPresentationStyle = .popover
-                    self.present(untappdVC, animated: true, completion: nil)
-                    untappdVC.load()
-                    self.qqqPopup = untappdVC
-                }
-                
-                popup: do
-                {
-                    break popup
-                    
-                    let vc = UIViewController()
-                    vc.view.backgroundColor = UIColor.red
-                    let label = UITextView.init()
-                    label.text = "This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah."
-                    label.font = UIFont.systemFont(ofSize: 12)
-                    label.isEditable = false
-                    label.isSelectable = false
-                    label.isScrollEnabled = false
-                    label.textContainerInset = UIEdgeInsets.zero
-                    label.translatesAutoresizingMaskIntoConstraints = false
-                    vc.view.addSubview(label)
-                    let labelHConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(32)-[label]-(32)-|", options: [], metrics: nil, views: ["label":label])
-                    let labelVConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(64)-[label]-(64)-|", options: [], metrics: nil, views: ["label":label])
-                    NSLayoutConstraint.activate(labelHConstraints + labelVConstraints)
-                    
-                    vc.preferredContentSize = CGSize.init(width: 400, height: 0)
-
-                    let popup = ScrollingPopupViewController.init()
-                    popup.viewController = vc
-                    popup.delegate = self
-
-                    //.custom? A custom view presentation style that is managed by a custom presentation controller and one or more custom animator objects.
-                    popup.modalPresentationStyle = .overFullScreen
-
-                    
-                    self.qqqPopup = popup
-                    
-                    self.present(popup, animated: false)
-                    {
-                    }
-                }
-            }
-            
-            return false
-        }
-        else
-        {
-            return true
-        }
-    }
-    
-    public func scrollingPopupDidTapToDismiss(_ vc: ScrollingPopupViewController)
-    {
-        if qqqPopup != nil && self.presentedViewController == qqqPopup
-        {
-            dismiss(animated: false, completion: nil)
-            qqqPopup = nil
-        }
-    }
-}
-
-extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalendarDelegateAppearance
-{
-    func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool)
-    {
-        self.calendarHeight.constant = bounds.size.height
-        print("Calendar bounds did change: \(calendar.scope.rawValue)")
-    }
-    
-    func calendarCurrentPageDidChange(_ calendar: FSCalendar)
-    {
-        let components = DataLayer.calendar.dateComponents([.month, .year], from: calendar.currentPage)
-        
-        let monthFormat = DateFormatter()
-        monthFormat.dateFormat = "MM"
-        let month = monthFormat.monthSymbols[components.month! - 1]
-        
-        self.navigationItem.title = "\(month) \(components.year!)"
-        
-        reloadData(animated: false, fromScratch: true)
-    }
-    
-    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int
-    {
-        do
-        {
-            let data = try self.data.getModels(fromIncludingDate: date, toExcludingDate: date.addingTimeInterval(24 * 60 * 60)).0
-            return data.count
-        }
-        catch
-        {
-            fatalError("\(error)")
-        }
-    }
-}
-
-class FirstViewController: UIViewController, DrawerCoordinating
-{
-    public var drawerDisplayController: DrawerDisplayController?
-    
-    public var qqqPopup: UIViewController?
-    
-    //let debugPast: TimeInterval = -60 * 60 * 24 * 7
-    let debugPast: TimeInterval = -60 * 60 * 24 * 50 * 10
-    
     @IBOutlet var tableView: UITableView!
     @IBOutlet var calendar: FSCalendar!
     @IBOutlet var calendarHeight: NSLayoutConstraint!
@@ -260,9 +21,15 @@ class FirstViewController: UIViewController, DrawerCoordinating
     var overflowProgressBar: UIView!
     var progressLabel: UILabel!
     
-    var data: DataLayer!
-    
     var notificationObserver: Any?
+    
+    // guaranteed to always be valid
+    var cache: (calendar: Calendar, range: (Date, Date), days: Int, data: [Int:[Model]], token: DataLayer.Token)!
+    
+    var data: DataLayer?
+    {
+        return (self.tabBarController as? RootViewController)?.data
+    }
     
     func testAnimateProgressView()
     {
@@ -310,9 +77,6 @@ class FirstViewController: UIViewController, DrawerCoordinating
         self.navigationController!.navigationBar.isTranslucent = true
         self.navigationController!.navigationBar.setBackgroundImage(UIImage.init(named: "clear"), for: .default)
     }
-    
-    // guaranteed to always be valid
-    var cache: (calendar: Calendar, range: (Date, Date), days: Int, data: [Int:[Model]], token: DataLayer.Token)!
     
     override func viewDidLoad()
     {
@@ -364,13 +128,6 @@ class FirstViewController: UIViewController, DrawerCoordinating
         if let tabBarVC = self.tabBarController
         {
             tabBarVC.delegate = self
-        
-            if let view = tabBarVC.tabBar.viewWithTag(1)
-            {
-                dump(view)
-            }
-        
-            dump(tabBarVC.tabBar.items)
         }
         
         tableSetup: do
@@ -389,37 +146,17 @@ class FirstViewController: UIViewController, DrawerCoordinating
             self.tableView.estimatedRowHeight = 20 //TODO: actual estimate
         }
         
-        let path: String? = (NSTemporaryDirectory() as NSString).appendingPathComponent("\(UUID()).db")
-        guard let dataImpl = Data_GRDB.init(withDatabasePath: path) else
-        {
-            fatalError("database could not be created")
-        }
-        
-        self.data = DataLayer.init(withStore: dataImpl)
-        
-        //do
-        //{
-        //    let checkins = try data.checkins(from: Date.init(timeInterval: debugPast, since: Date()), to: Date.distantFuture)
-        //    dump(checkins)
-        //}
-        //catch
-        //{
-        //    assert(false, "Error: \(error)")
-        //}
-        
-        //reloadData()
-        
         self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
         { [unowned `self`] _ in
             print("Requesting change with token \(self.cache?.token ?? DataLayer.NullToken)...")
             self.reloadData(animated: true, fromScratch: false)
         }
         
-        self.data.populateWithSampleData()
-        //DispatchQueue.main.asyncAfter(deadline:.now() + 3)
-        //{
-        //    self.data.populateWithSampleData()
-        //}
+        self.data?.populateWithSampleData()
+        DispatchQueue.main.asyncAfter(deadline:.now() + 3)
+        {
+            self.data?.populateWithSampleData()
+        }
     }
     
     override func viewDidLayoutSubviews()
@@ -443,7 +180,7 @@ class FirstViewController: UIViewController, DrawerCoordinating
         //self.cache?.token != nil && !fromScratch ? self.cache!.token : DataLayer.NullToken
         let token = DataLayer.NullToken
         
-        self.data.getModels(fromIncludingDate: from, toExcludingDate: to, withToken: token)
+        self.data?.getModels(fromIncludingDate: from, toExcludingDate: to, withToken: token)
         {
             switch $0
             {
@@ -536,14 +273,14 @@ class FirstViewController: UIViewController, DrawerCoordinating
                 
                 progressAdjustment: do
                 {
-                    let progress = Stats(self.data).progress(forModels: v.0, inRange: from..<to)
+                    let progress = Stats(self.data!).progress(forModels: v.0, inRange: from..<to)
                     
                     (self.progressBar as? UIProgressView)?.setProgress(progress.previous + progress.current, animated: true)
                     (self.overflowProgressBar as? UIProgressView)?.setProgress(progress.previous, animated: true)
                     
-                    let drinksDrank = Stats(self.data).percentToDrinks(progress.current + progress.previous, inRange: from..<to)
-                    let drinksPrevious = Stats(self.data).percentToDrinks(progress.previous, inRange: from..<to)
-                    let drinksTotal = Stats(self.data).percentToDrinks(1, inRange: from..<to)
+                    let drinksDrank = Stats(self.data!).percentToDrinks(progress.current + progress.previous, inRange: from..<to)
+                    let drinksPrevious = Stats(self.data!).percentToDrinks(progress.previous, inRange: from..<to)
+                    let drinksTotal = Stats(self.data!).percentToDrinks(1, inRange: from..<to)
                     
                     // TODO: monthly
                     let previousText = String.init(format: "including %.1f drink overflow", drinksPrevious)
@@ -554,15 +291,41 @@ class FirstViewController: UIViewController, DrawerCoordinating
             }
         }
     }
+}
 
-    override func didReceiveMemoryWarning()
+extension FirstViewController: UITabBarControllerDelegate
+{
+    public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool
     {
-        super.didReceiveMemoryWarning()
-    }
-    
-    @IBAction func todayTapped(_ sender: UIBarButtonItem)
-    {
-        self.calendar.setCurrentPage(Date(), animated: true)
+        if viewController is StubViewController
+        {
+            pulleyTest: do
+            {
+                //break pulleyTest
+                (self.tabBarController as? RootViewController)?.showCheckInDrawer()
+                return false
+            }
+            
+            testABV: do
+            {
+                break testABV
+                (self.tabBarController as? RootViewController)?.showLimitPopup()
+                return false
+            }
+            
+            testProgressView: do
+            {
+                break testProgressView
+                testAnimateProgressView()
+                return false
+            }
+            
+            return false
+        }
+        else
+        {
+            return true
+        }
     }
 }
 
@@ -706,7 +469,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         { (action, view, handler) in
             print("Attempting delete!")
             model.delete()
-            self.data.save(model: model) { _ in handler(false) }
+            self.data!.save(model: model) { _ in handler(false) }
         }
         
         //let actions = [incrementAction, deleteAction]
@@ -716,3 +479,116 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         return actionsConfig
     }
 }
+
+extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalendarDelegateAppearance
+{
+    func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool)
+    {
+        self.calendarHeight.constant = bounds.size.height
+        print("Calendar bounds did change: \(calendar.scope.rawValue)")
+    }
+    
+    func calendarCurrentPageDidChange(_ calendar: FSCalendar)
+    {
+        let components = DataLayer.calendar.dateComponents([.month, .year], from: calendar.currentPage)
+        
+        let monthFormat = DateFormatter()
+        monthFormat.dateFormat = "MM"
+        let month = monthFormat.monthSymbols[components.month! - 1]
+        
+        self.navigationItem.title = "\(month) \(components.year!)"
+        
+        reloadData(animated: false, fromScratch: true)
+    }
+    
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int
+    {
+        do
+        {
+            let data = try self.data?.getModels(fromIncludingDate: date, toExcludingDate: date.addingTimeInterval(24 * 60 * 60)).0
+            return data?.count ?? 0
+        }
+        catch
+        {
+            fatalError("\(error)")
+        }
+    }
+    
+    @IBAction func todayTapped(_ sender: UIBarButtonItem)
+    {
+        self.calendar.setCurrentPage(Date(), animated: true)
+    }
+}
+
+
+//{
+//    if let token = Defaults.untappdToken
+//    {
+//        Untappd.UserCheckIns(token)
+//        { (checkIns, error) in
+//        }
+//        return false
+//    }
+//
+//    if qqqPopup == nil
+//    {
+//        untappd: do
+//        {
+//            let untappdVC = UntappdLoginViewController.init
+//            { (token, e) in
+//                if let e = e
+//                {
+//                    print("token error: \(e)")
+//                }
+//                else
+//                {
+//                    print("found token: \(token)")
+//                    Defaults.untappdToken = token
+//                    //self.dismiss(animated: true, completion: nil)
+//                    self.qqqPopup?.dismiss(animated: true, completion: nil)
+//                    self.qqqPopup = nil
+//                }
+//            }
+//            untappdVC.modalPresentationStyle = .popover
+//            self.present(untappdVC, animated: true, completion: nil)
+//            untappdVC.load()
+//            self.qqqPopup = untappdVC
+//        }
+//
+//        popup: do
+//        {
+//            break popup
+//
+//            let vc = UIViewController()
+//            vc.view.backgroundColor = UIColor.red
+//            let label = UITextView.init()
+//            label.text = "This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah."
+//            label.font = UIFont.systemFont(ofSize: 12)
+//            label.isEditable = false
+//            label.isSelectable = false
+//            label.isScrollEnabled = false
+//            label.textContainerInset = UIEdgeInsets.zero
+//            label.translatesAutoresizingMaskIntoConstraints = false
+//            vc.view.addSubview(label)
+//            let labelHConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(32)-[label]-(32)-|", options: [], metrics: nil, views: ["label":label])
+//            let labelVConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(64)-[label]-(64)-|", options: [], metrics: nil, views: ["label":label])
+//            NSLayoutConstraint.activate(labelHConstraints + labelVConstraints)
+//
+//            vc.preferredContentSize = CGSize.init(width: 400, height: 0)
+//
+//            let popup = ScrollingPopupViewController.init()
+//            popup.viewController = vc
+//            popup.delegate = self
+//
+//            //.custom? A custom view presentation style that is managed by a custom presentation controller and one or more custom animator objects.
+//            popup.modalPresentationStyle = .overFullScreen
+//
+//
+//            self.qqqPopup = popup
+//
+//            self.present(popup, animated: false)
+//            {
+//            }
+//        }
+//    }
+//}
