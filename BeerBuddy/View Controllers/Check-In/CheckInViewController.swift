@@ -15,6 +15,7 @@ public protocol CheckInViewControllerDelegate: class
     func defaultCheckIn(for: CheckInViewController) -> Model.Drink
     func calendar(for: CheckInViewController) -> Calendar
     func committed(drink: Model.Drink, for: CheckInViewController)
+    func updateDimensions(for: CheckInViewController)
 }
 
 public class CheckInViewController: CheckInDrawerViewController
@@ -65,6 +66,7 @@ public class CheckInViewController: CheckInDrawerViewController
         setupText()
     }
     
+    // https://stackoverflow.com/a/26495954/89812
     @objc func tappedTextView(tapGesture: UIGestureRecognizer) {
         
         let textView = tapGesture.view as! UITextView
@@ -255,6 +257,8 @@ extension CheckInViewController: ABVPickerViewControllerDelegate
     public func didSetABV(_ vc: ABVPickerViewController, to: Double)
     {
         self.abv = to
+        
+        self.delegate?.updateDimensions(for: self)
     }
 }
 
@@ -278,6 +282,8 @@ extension CheckInViewController: VolumePickerViewControllerDelegate
     public func didSetVolume(_ vc: VolumePickerViewController, to: Measurement<UnitVolume>)
     {
         self.volume = to
+        
+        self.delegate?.updateDimensions(for: self)
     }
 }
 
@@ -302,6 +308,8 @@ extension CheckInViewController: StylePickerViewControllerDelegate
     {
         self.style = to
         self.name = withName
+        
+        self.delegate?.updateDimensions(for: self)
     }
 }
 
@@ -320,5 +328,7 @@ extension CheckInViewController: PricePickerViewControllerDelegate
     public func didSetPrice(_ vc: PricePickerViewController, to: Double)
     {
         self.cost = to
+        
+        self.delegate?.updateDimensions(for: self)
     }
 }

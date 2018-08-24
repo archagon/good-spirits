@@ -515,7 +515,7 @@
                                                 <rect key="frame" x="0.0" y="9" width="343" height="20"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                 <connections>
                                                     <outlet property="delegate" destination="t80-cI-ack" id="zMs-Gn-aA2"/>
                                                 </connections>

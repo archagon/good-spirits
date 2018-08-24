@@ -11,6 +11,9 @@ import UIKit
 import DrawerKit
 import DataLayer
 
+// NEXT: tinker with expansion
+// NEXT: ensure gestures work correctly
+
 class RootViewController: UITabBarController, DrawerCoordinating
 {
     // TODO: technically, this probably ought to go in the app delegate
@@ -155,7 +158,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
         controller.delegate = self
         
         var configuration = controller.standardConfiguration
-        configuration.fullExpansionBehaviour = .leavesCustomGap(gap: self.view.bounds.size.height - controller.heightOfPartiallyExpandedDrawer - 32)
+        configuration.fullExpansionBehaviour = .leavesCustomGap(gap: self.view.bounds.size.height - controller.heightOfPartiallyExpandedDrawer - 100)
         
         let pulley = DrawerDisplayController.init(presentingViewController: self, presentedViewController: controller, configuration: configuration, inDebugMode: false)
         self.drawerDisplayController = pulley
@@ -217,6 +220,16 @@ extension RootViewController: CheckInViewControllerDelegate
                 break
             }
         }
+    }
+    
+    func updateDimensions(for vc: CheckInViewController)
+    {
+        if vc != self.presentedViewController
+        {
+            return
+        }
+        
+        vc.presentationController?.perform(Selector("refresh"))
     }
 }
 
