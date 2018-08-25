@@ -56,7 +56,7 @@
                                     <outlet property="delegate" destination="9pv-A4-QxB" id="rxl-HJ-g25"/>
                                 </connections>
                             </view>
-                            <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6st-ly-ZMQ">
+                            <view alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6st-ly-ZMQ">
                                 <rect key="frame" x="0.0" y="220" width="375" height="1"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>

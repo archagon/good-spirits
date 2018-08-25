@@ -82,8 +82,8 @@ public class AddItemCell: UITableViewCell
                 self.container.tintColor = Appearance.themeColor
                 self.caption.textColor = Appearance.themeColor
                 
-                self.caption.alpha = 1
-                self.container.alpha = 0.5
+                self.caption.alpha = 0.9
+                self.container.alpha = 0.6
             }
         }
     }

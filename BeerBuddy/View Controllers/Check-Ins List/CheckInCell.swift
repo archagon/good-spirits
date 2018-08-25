@@ -170,6 +170,7 @@ public class CheckInCell: UITableViewCell
         let beerTint = Appearance.themeColor
         let wineTint = UIColor.init(hue: 0.94, saturation: beerTint.s, brightness: beerTint.l, alpha: beerTint.a)
         let liquorTint = UIColor.init(hue: 0.1, saturation: beerTint.s, brightness: beerTint.l * 0.92, alpha: beerTint.a)
+        let otherTint = UIColor.init(hue: 0.28, saturation: beerTint.s, brightness: beerTint.l * 0.88, alpha: beerTint.a)
         switch data.checkIn.drink.style
         {
         case .beer:
@@ -194,7 +195,7 @@ public class CheckInCell: UITableViewCell
             }
             else
             {
-                tint = beerTint
+                tint = otherTint
             }
         }
         self.container.tintColor = tint

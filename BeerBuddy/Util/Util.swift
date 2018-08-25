@@ -126,3 +126,13 @@ public func floz(_ v: Double) -> Measurement<UnitVolume>
 {
     return Measurement<UnitVolume>.init(value: v, unit: .fluidOunces)
 }
+
+extension Date
+{
+    public func today(_ calendar: Calendar) -> Bool
+    {
+        let todayComp = calendar.dateComponents([.day, .month, .year], from: Date())
+        let startComp = calendar.dateComponents([.day, .month, .year], from: self)
+        return todayComp == startComp
+    }
+}

@@ -185,18 +185,21 @@ class FirstViewController: UIViewController
         }
         self.notificationObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: OperationQueue.main)
         { [unowned `self`] _ in
-            let offset = self.calendar.currentPage.addingTimeInterval(30 * 60 * 60)
+            // KLUDGE: ensures that currentPage is set to the correct value by the time data is reloaded
+            let offset = self.calendar.currentPage.addingTimeInterval(-3.5 * 24 * 60 * 60)
+            let offset2 = self.calendar.currentPage.addingTimeInterval(3.5 * 24 * 60 * 60)
+            
             if Defaults.weekStartsOnMonday && self.calendar.firstWeekday != 2
             {
                 self.calendar.firstWeekday = 2
                 self.calendar.setCurrentPage(offset, animated: false)
-                self.reloadData(animated: false, fromScratch: true)
+                self.calendar.setCurrentPage(offset2, animated: false)
             }
             else if !Defaults.weekStartsOnMonday && self.calendar.firstWeekday != 1
             {
                 self.calendar.firstWeekday = 1
                 self.calendar.setCurrentPage(offset, animated: false)
-                self.reloadData(animated: false, fromScratch: true)
+                self.calendar.setCurrentPage(offset2, animated: false)
             }
         }
         
@@ -219,6 +222,8 @@ class FirstViewController: UIViewController
     // Reloads the current data based on the dates provided by the calendar. (The calendar is not reloaded.)
     func reloadData(animated: Bool, fromScratch: Bool = true)
     {
+        appDebug("reloading data...")
+        
         let calendar = DataLayer.calendar
         //let range = Time.currentWeek()
         
@@ -235,6 +240,8 @@ class FirstViewController: UIViewController
             case .error(let e):
                 appError("could not get model data in reloadData")
             case .value(let v):
+                appDebug("data loaded!")
+                
                 if self.cache?.token != v.1
                 {
                     appDebug("changes received with new token \(v.1)!")
@@ -295,7 +302,21 @@ class FirstViewController: UIViewController
                             allChanges.inserts += indexPaths.inserts
                         }
                         
-                        self.tableView.reload(changesWithIndexPath: allChanges, insertionAnimation: UITableViewRowAnimation.fade, deletionAnimation: UITableViewRowAnimation.fade, replacementAnimation: .automatic, completion: { _ in })
+                        if allChanges.moves.isEmpty && allChanges.deletes.isEmpty && allChanges.replaces.isEmpty && allChanges.inserts.isEmpty
+                        {
+                            // nothing to do
+                        }
+                        else
+                        {
+                            self.tableView.reload(changesWithIndexPath: allChanges, insertionAnimation: UITableViewRowAnimation.fade, deletionAnimation: UITableViewRowAnimation.fade, replacementAnimation: .automatic, completion:
+                            { _ in
+                            })
+                            
+                            if let insert = allChanges.inserts.last
+                            {
+                                self.tableView.scrollToRow(at: insert, at: .middle, animated: true)
+                            }
+                        }
                     }
                     else
                     {
@@ -523,10 +544,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             let lastDate = self.cache.data[section]?.last?.checkIn.time ?? startDay
             let nextDate = self.cache.calendar.date(byAdding: .minute, value: 1, to: lastDate)!
             
-            let todayComp = self.cache.calendar.dateComponents([.day, .month, .year], from: Date())
-            let startComp = self.cache.calendar.dateComponents([.day, .month, .year], from: startDay)
-            
-            if todayComp == startComp
+            if startDay.today(self.cache.calendar)
             {
                 appDebug("it's today!")
                 (self.tabBarController as? RootViewController)?.showCheckInDrawer()
