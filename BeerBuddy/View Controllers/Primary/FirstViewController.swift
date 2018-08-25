@@ -489,8 +489,25 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         
         if indexPath.row == (self.cache.data[indexPath.section]?.count ?? 0)
         {
-            // NEXT: date logic
-            let date = self.cache.range.0.addingTimeInterval(TimeInterval(indexPath.section) * 24 * 60 * 60)
+            let section = indexPath.section
+            
+            let startDay = self.cache.calendar.date(byAdding: .day, value: section, to: self.cache.range.0)!
+            let endDay = self.cache.calendar.date(byAdding: .day, value: section + 1, to: self.cache.range.0)!
+            let lastDate = self.cache.data[section]?.last?.checkIn.time ?? startDay
+            let nextDate = self.cache.calendar.date(byAdding: .minute, value: 1, to: lastDate)!
+            
+            let date: Date
+            
+            if nextDate >= endDay
+            {
+                // AB: exceptional case where we're down to the last minute in a day
+                date = Date.init(timeIntervalSince1970: (lastDate.timeIntervalSince1970 + endDay.timeIntervalSince1970) / 2)
+            }
+            else
+            {
+                date = nextDate
+            }
+            
             (self.tabBarController as? RootViewController)?.showCheckInDrawer(withModel: nil, orDate: date)
         }
         else if let item = self.cache.data[indexPath.section]?[indexPath.row]
