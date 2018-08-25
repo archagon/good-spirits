@@ -13,9 +13,9 @@ public class UntappdLoginViewController: UIViewController
 {
     private let webView: WKWebView
     private let loadingView: UIStackView
-    private let tokenBlock: (String, Error?)->()
+    private var tokenBlock: ((String, Error?)->())! = nil
     
-    public init(withTokenBlock block: @escaping (String, Error?)->())
+    public init()
     {
         self.webView = WKWebView.init()
         
@@ -28,8 +28,6 @@ public class UntappdLoginViewController: UIViewController
         image.setContentCompressionResistancePriority(.required, for: .vertical)
         stack.axis = .vertical
         self.loadingView = stack
-        
-        self.tokenBlock = block
         
         super.init(nibName: nil, bundle: nil)
         
@@ -61,10 +59,11 @@ public class UntappdLoginViewController: UIViewController
         self.loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
     }
     
-    public func load()
+    public func load(withBlock block: @escaping (String, Error?)->())
     {
         let url = "https://untappd.com/oauth/authenticate/?client_id=\(Untappd.clientID)&response_type=token&redirect_url=\(Untappd.redirectURL)"
         let request = URLRequest.init(url: URL.init(string: url)!)
+        self.tokenBlock = block
         self.webView.load(request)
     }
 }
@@ -72,6 +71,11 @@ public class UntappdLoginViewController: UIViewController
 // TODO: timeouts, etc.
 extension UntappdLoginViewController: WKNavigationDelegate
 {
+    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error)
+    {
+        fatalError("failed")
+    }
+    
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Swift.Void)
     {
         if

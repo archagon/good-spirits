@@ -101,6 +101,19 @@ extension Defaults
         }
     }
     
+    public var untappdBaseline: String?
+    {
+        get
+        {
+            let val = self.defaults.string(forKey: Defaults.untappdBaselineKey)
+            return val
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.untappdBaselineKey)
+        }
+    }
+    
     public var limitCountry: String?
     {
         get
@@ -302,6 +315,19 @@ extension Defaults
         {
             var defaults = Defaults()
             defaults.untappdToken = newValue
+        }
+    }
+    
+    public static var untappdBaseline: String?
+    {
+        get
+        {
+            return Defaults().untappdBaseline
+        }
+        set
+        {
+            var defaults = Defaults()
+            defaults.untappdBaseline = newValue
         }
     }
     

@@ -93,11 +93,11 @@ extension SettingsViewController
         }
         else if sectionCounts[section].0 == .untappd
         {
-            footer.textLabel?.text = "New check-ins will automatically be pulled from your Untappd account. Check-ins will still need to be completed (or cancelled) from the History view. Does not track past check-ins."
+            footer.textLabel?.text = "New check-ins will automatically be pulled from your Untappd account. You can also sync manually by pulling-to-refresh in the log view. Check-ins will still need to be completed (or cancelled) from the History view. Does not track past check-ins."
         }
         else if sectionCounts[section].0 == .healthKit
         {
-            footer.textLabel?.text = "New check-ins will be added as nutrition to your HealthKit measurements, with an estimate for the calories based on the volume and alcohol content of your drinks. Does not track past check-ins."
+            footer.textLabel?.text = "New check-ins will be added as nutrition to your HealthKit measurements, with an estimate for the calories based on the volume and alcohol content of your drinks. Does not track past check-ins, unless updated."
         }
         else if sectionCounts[section].0 == .info
         {
@@ -389,12 +389,30 @@ extension SettingsViewController
     
     @objc func untappdToggled(_ sender: UISwitch)
     {
-        //let controller = UntappdLoginViewController.init
-        //{ (token, error) in
-        //}
-        //
+        switch Untappd.shared.loginStatus
+        {
+        case .unreachable:
+            print("ERROR: unreachable!")
+            return
+        case .disabled:
+            break
+        case .pendingAuthorization:
+            print("ERROR: pending auth!")
+            return
+        case .enabledAndAuthorized:
+            print("ERROR: ready!")
+            return
+        }
+                
+        let controller = UntappdLoginViewController.init()
+        controller.navigationItem.largeTitleDisplayMode = .never
+        
         //controller.navigationItem.title = "Untappd Login"
-        //self.navigationController?.pushViewController(controller, animated: true)
+        self.navigationController?.pushViewController(controller, animated: true)
+        
+        controller.load
+        { (token, error) in
+        }
     }
     
     @objc func healthKitToggled(_ sender: UISwitch)

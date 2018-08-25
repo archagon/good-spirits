@@ -421,6 +421,24 @@
 			path = FSCalendar;
 			sourceTree = "<group>";
 		};
+		4E619FB22131DBBE00DCB204 /* Untappd */ = {
+			isa = PBXGroup;
+			children = (
+				4E6B75762106BEB5009B6C0D /* Untappd.swift */,
+				4EE336962107D6F700D72B7D /* Untappd_Schema.swift */,
+				4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */,
+			);
+			path = Untappd;
+			sourceTree = "<group>";
+		};
+		4E619FB32131DBC400DCB204 /* HealthKit */ = {
+			isa = PBXGroup;
+			children = (
+				4E7FB9F2212E58BD00052BFC /* HealthKit.swift */,
+			);
+			path = HealthKit;
+			sourceTree = "<group>";
+		};
 		4E70D5C82113D4480089BBB1 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -440,15 +458,6 @@
 				4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		4E70D5CA2113D46A0089BBB1 /* Untappd */ = {
-			isa = PBXGroup;
-			children = (
-				4E6B75762106BEB5009B6C0D /* Untappd.swift */,
-				4EE336962107D6F700D72B7D /* Untappd_Schema.swift */,
-			);
-			path = Untappd;
 			sourceTree = "<group>";
 		};
 		4E70D5CB2113D4810089BBB1 /* Check-Ins List */ = {
@@ -476,7 +485,6 @@
 			isa = PBXGroup;
 			children = (
 				4EB437EF212CF6C7001D5734 /* ListPopupViewController.swift */,
-				4E6B75782106BF1A009B6C0D /* UntappdLoginViewController.swift */,
 				4EB437F1212CF77B001D5734 /* StartupViewController.swift */,
 				4EC26CCD212E5E84006E156B /* TextDisplayController.swift */,
 				4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */,
@@ -585,8 +593,8 @@
 				4E70D5C92113D4610089BBB1 /* Views */,
 				4E70D5CC2113D4B80089BBB1 /* View Controllers */,
 				4E70D5C82113D4480089BBB1 /* Model */,
-				4E70D5CA2113D46A0089BBB1 /* Untappd */,
-				4E7FB9F2212E58BD00052BFC /* HealthKit.swift */,
+				4E619FB22131DBBE00DCB204 /* Untappd */,
+				4E619FB32131DBC400DCB204 /* HealthKit */,
 				4E7FB9EE212E3EFC00052BFC /* Globals */,
 				4E7FB9EF212E3F0500052BFC /* Util */,
 				4EA2F18920FEE7CB00CE30E1 /* Assets.xcassets */,

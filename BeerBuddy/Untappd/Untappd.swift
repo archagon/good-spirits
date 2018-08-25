@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SystemConfiguration
 
 class Untappd
 {
@@ -14,11 +15,70 @@ class Untappd
     public static let redirectURL: URL = URL.init(string: "http://archagon.net")!
     public static let redirectHost: String = Untappd.redirectURL.host!
     public static let apiURL: URL = URL.init(string: "https://api.untappd.com")!
+    //https://api.untappd.com/v4/method_name?access_token=ACESSTOKENHERE
     
-//    https://api.untappd.com/v4/method_name?access_token=ACESSTOKENHERE
+    public static let shared = Untappd()
     
-    public static func UserCheckIns(_ token: String, block: ([CheckIn], Error?)->())
+    public enum UntappdError: Error
     {
+        case notReachable
+        case notEnabled
+        case notReady
+    }
+    
+    private var loginPending: Bool = false
+    public enum UntappdLoginStatus
+    {
+        case unreachable
+        case disabled
+        case pendingAuthorization
+        case enabledAndAuthorized
+    }
+    
+    var loginStatus: UntappdLoginStatus
+    {
+        if self.loginPending
+        {
+            return .pendingAuthorization
+        }
+        
+        let reachability = SCNetworkReachabilityCreateWithName(nil, Untappd.apiURL.absoluteString)
+        var flags = SCNetworkReachabilityFlags()
+        SCNetworkReachabilityGetFlags(reachability!, &flags)
+        let isReachable = flags.contains(.reachable)
+        //let needsConnection = flags.contains(.connectionRequired)
+        //let canConnectAutomatically = flags.contains(.connectionOnDemand) || flags.contains(.connectionOnTraffic)
+        //let canConnectWithoutUserInteraction = canConnectAutomatically && !flags.contains(.interventionRequired)
+        
+        if !isReachable
+        {
+            return .unreachable
+        }
+        
+        if Defaults.untappdEnabled && Defaults.untappdToken != nil
+        {
+            return .enabledAndAuthorized
+        }
+        else
+        {
+            return .disabled
+        }
+    }
+    
+    public func UserCheckIns(_ token: String, withBaseline baseline: String? = nil, block: ([CheckIn], UntappdError?)->()) -> UntappdError?
+    {
+        switch self.loginStatus
+        {
+        case .unreachable:
+            return UntappdError.notReachable
+        case .disabled:
+            return UntappdError.notEnabled
+        case .pendingAuthorization:
+            return UntappdError.notReady
+        case .enabledAndAuthorized:
+            break
+        }
+        
         let newUrlString = (Untappd.apiURL.absoluteString as NSString).appendingPathComponent("/v4/user/checkins?access_token=\(token)")
         let url = URL.init(string: newUrlString)!
         var request = URLRequest.init(url: url)
@@ -53,5 +113,7 @@ class Untappd
             }
         }
         task.resume()
+        
+        return nil
     }
 }
