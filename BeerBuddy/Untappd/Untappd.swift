@@ -11,6 +11,8 @@ import SystemConfiguration
 
 class Untappd
 {
+    public static let themeColor: UIColor = UIColor.init(red: 254/255.0, green: 205/255.0, blue: 50/255.0, alpha: 1)
+    
     public static let clientID: String = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     public static let redirectURL: URL = URL.init(string: "http://archagon.net")!
     public static let redirectHost: String = Untappd.redirectURL.host!

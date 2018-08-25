@@ -222,8 +222,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
         
         var configuration = controller.standardConfiguration
         
-        // BUGFIX: KLUDGE: allows controller to resize on content changes, since we can't change the configuration
-        // after the fact
+        // BUGFIX: KLUDGE: allows controller to resize on content changes, since we can't change the configuration after the fact
         configuration.fullExpansionBehaviour = .leavesCustomGap(gap: self.view.bounds.size.height - controller.heightOfPartiallyExpandedDrawer - 120)
         
         let pulley = DrawerDisplayController.init(presentingViewController: self, presentedViewController: controller, configuration: configuration, inDebugMode: false)
@@ -252,6 +251,14 @@ extension RootViewController: UITabBarControllerDelegate
         }
         else
         {
+            if
+                viewController is UINavigationController,
+                tabBarController.selectedViewController == viewController,
+                let vc = ((viewController as? UINavigationController)?.topViewController as? FirstViewController)
+            {
+                vc.showPendingUntappd()
+            }
+            
             return true
         }
     }

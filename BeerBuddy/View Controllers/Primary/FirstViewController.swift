@@ -87,6 +87,8 @@ class FirstViewController: UIViewController
     {
         super.viewDidLoad()
 
+        self.tabBarItem.badgeColor = Untappd.themeColor.darkened(by: 0.05)
+        
         setupCalendar: do
         {
             calendar.setScope(.week, animated: false)
@@ -147,7 +149,7 @@ class FirstViewController: UIViewController
             
             calendar.allowsSelection = false
             
-            bar.progress = 0.5
+            //bar.progress = 0.5
             label.text = "Stats"
             
             self.progressBar = bar
@@ -330,7 +332,7 @@ class FirstViewController: UIViewController
                     
                     if previousRange.0 == self.cache.range.0 && previousRange.1 == self.cache.range.1 && previousDays == self.cache.days
                     {
-                        let unionKeys = Set(previousData.keys).union(Set(outOps.keys))
+                        let unionKeys = Array(Set(previousData.keys).union(Set(outOps.keys))).sorted()
                         var allChanges: ChangeWithIndexPath = ChangeWithIndexPath.init(inserts: [], deletes: [], replaces: [], moves: [])
                         
                         for section in unionKeys
@@ -357,7 +359,7 @@ class FirstViewController: UIViewController
                             { _ in
                             })
                             
-                            if let insert = allChanges.inserts.last
+                            if let insert = allChanges.inserts.last, insert.section != 0
                             {
                                 self.tableView.scrollToRow(at: insert, at: .middle, animated: true)
                             }
@@ -408,6 +410,15 @@ class FirstViewController: UIViewController
                     self.progressLabel.text = text
                 }
             }
+        }
+    }
+    
+    func showPendingUntappd()
+    {
+        if self.cache.data[0]?.count ?? 0 > 0
+        {
+            self.tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: true)
+            //self.tableView.setContentOffset(CGPoint.init(x: 0, y: -self.tableView.contentInset.top), animated: true)
         }
     }
 }
@@ -466,7 +477,21 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
     {
-        return 40
+        if section == 0
+        {
+            if self.cache.data[section]?.count ?? 0 > 0
+            {
+                return 40
+            }
+            else
+            {
+                return 0
+            }
+        }
+        else
+        {
+            return 40
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView?
@@ -526,7 +551,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             }
             
             let checkin = sectionData[indexPath.row]
-            cell.populateWithData(checkin, stats: Stats(data))
+            cell.populateWithData(checkin, stats: Stats(data), isUntappd: (section == 0))
 
             return cell
         }
@@ -558,7 +583,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             }
             
             let checkin = sectionData[indexPath.row]
-            cell.populateWithData(checkin, stats: Stats(data))
+            cell.populateWithData(checkin, stats: Stats(data), isUntappd: (section == 0))
         }
     }
     
@@ -575,30 +600,54 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         
         var model = sectionData[indexPath.row]
         
-        //let incrementAction = UIContextualAction.init(style: .normal, title: "+1")
-        //{ (action, view, handler) in
-        //    print("Incrementing...")
-        //    handler(true)
-        //}
-        let deleteAction = UIContextualAction.init(style: .destructive, title: "Delete")
-        { (action, view, handler) in
-            appDebug("attempting delete")
-            model.delete()
-            if let data = self.data
-            {
-                data.save(model: model) { _ in handler(false) }
+        if section  == 0
+        {
+            let deleteAction = UIContextualAction.init(style: .destructive, title: "Dismiss")
+            { (action, view, handler) in
+                //appDebug("attempting dismiss")
+                //model.delete()
+                //if let data = self.data
+                //{
+                //    data.save(model: model) { _ in handler(false) }
+                //}
+                //else
+                //{
+                //    handler(false)
+                //}
             }
-            else
-            {
-                handler(false)
-            }
+            
+            let actions = [deleteAction]
+            let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
+            
+            return actionsConfig
         }
-        
-        //let actions = [incrementAction, deleteAction]
-        let actions = [deleteAction]
-        let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
-        
-        return actionsConfig
+        else
+        {
+            //let incrementAction = UIContextualAction.init(style: .normal, title: "+1")
+            //{ (action, view, handler) in
+            //    print("Incrementing...")
+            //    handler(true)
+            //}
+            let deleteAction = UIContextualAction.init(style: .destructive, title: "Delete")
+            { (action, view, handler) in
+                appDebug("attempting delete")
+                model.delete()
+                if let data = self.data
+                {
+                    data.save(model: model) { _ in handler(false) }
+                }
+                else
+                {
+                    handler(false)
+                }
+            }
+            
+            //let actions = [incrementAction, deleteAction]
+            let actions = [deleteAction]
+            let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
+            
+            return actionsConfig
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
@@ -611,9 +660,10 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         if section != 0 && indexPath.row == (self.cache.data[section]?.count ?? 0)
         {
             let section = indexPath.section
+            let sectionDay = section - 1
             
-            let startDay = self.cache.calendar.date(byAdding: .day, value: section, to: self.cache.range.0)!
-            let endDay = self.cache.calendar.date(byAdding: .day, value: section + 1, to: self.cache.range.0)!
+            let startDay = self.cache.calendar.date(byAdding: .day, value: sectionDay, to: self.cache.range.0)!
+            let endDay = self.cache.calendar.date(byAdding: .day, value: sectionDay + 1, to: self.cache.range.0)!
             let lastDate = self.cache.data[section]?.last?.checkIn.time ?? startDay
             let nextDate = self.cache.calendar.date(byAdding: .minute, value: 1, to: lastDate)!
             

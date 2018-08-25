@@ -32,6 +32,9 @@ public class CheckInCell: UITableViewCell
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.backgroundColor = nil
+        self.prose.backgroundColor = .clear
+        self.stats.backgroundColor = .clear
+        self.name.backgroundColor = .clear
         
         self.prose.isEditable = false
         self.prose.isSelectable = false
@@ -126,7 +129,7 @@ public class CheckInCell: UITableViewCell
         }
     }
     
-    public func populateWithData(_ data: Model, stats: Stats)
+    public func populateWithData(_ data: Model, stats: Stats, isUntappd: Bool = false)
     {
         let imageName = Model.assetNameForDrink(data.checkIn.drink)
         let image = Appearance.shared.drinkIcon(forImageName: imageName)
@@ -199,6 +202,30 @@ public class CheckInCell: UITableViewCell
             }
         }
         self.container.tintColor = tint
+        
+        if isUntappd
+        {
+            //self.contentView.backgroundColor = Untappd.themeColor.mixed(with: .white, by: 0.5)
+            self.contentStack.removeArrangedSubview(self.stats)
+            self.stats.isHidden = true
+            
+            self.container.setImage(UIImage.init(named: "untappd"), for: .normal)
+            self.container.layer.cornerRadius = 34/2
+            self.container.clipsToBounds = true
+            self.untappd.isHidden = true
+            self.untappdShadow.isHidden = true
+        }
+        else
+        {
+            self.contentView.backgroundColor = nil
+            self.contentStack.addArrangedSubview(self.stats)
+            self.stats.isHidden = false
+            
+            self.container.layer.cornerRadius = 0
+            self.container.clipsToBounds = false
+            self.untappd.isHidden = false
+            self.untappdShadow.isHidden = false
+        }
     }
     
     required public init?(coder aDecoder: NSCoder)

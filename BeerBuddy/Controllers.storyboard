@@ -372,26 +372,8 @@
                                             </view>
                                         </subviews>
                                     </stackView>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="44M-up-lhD">
-                                        <rect key="frame" x="0.0" y="136" width="343" height="103"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="103" id="sg7-yU-HE5"/>
-                                        </constraints>
-                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="NRN-KH-TfR">
-                                            <size key="itemSize" width="102" height="99"/>
-                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                        </collectionViewFlowLayout>
-                                        <cells/>
-                                        <connections>
-                                            <outlet property="dataSource" destination="G0s-gJ-O2h" id="zOh-3d-8Du"/>
-                                            <outlet property="delegate" destination="G0s-gJ-O2h" id="HDR-IP-Y61"/>
-                                        </connections>
-                                    </collectionView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="avU-pA-2GS">
-                                        <rect key="frame" x="0.0" y="247" width="343" height="216"/>
+                                        <rect key="frame" x="0.0" y="136" width="343" height="216"/>
                                         <subviews>
                                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yYE-dM-jDU">
                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="216"/>
@@ -434,6 +416,24 @@
                                             <constraint firstItem="a8p-1e-EkQ" firstAttribute="width" secondItem="yYE-dM-jDU" secondAttribute="width" id="EUc-ge-q73"/>
                                         </constraints>
                                     </stackView>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="44M-up-lhD">
+                                        <rect key="frame" x="0.0" y="360" width="343" height="103"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="103" id="sg7-yU-HE5"/>
+                                        </constraints>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="NRN-KH-TfR">
+                                            <size key="itemSize" width="102" height="99"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells/>
+                                        <connections>
+                                            <outlet property="dataSource" destination="G0s-gJ-O2h" id="zOh-3d-8Du"/>
+                                            <outlet property="delegate" destination="G0s-gJ-O2h" id="HDR-IP-Y61"/>
+                                        </connections>
+                                    </collectionView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F1z-MH-TpP">
                                         <rect key="frame" x="0.0" y="471" width="343" height="34"/>
                                         <subviews>
