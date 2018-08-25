@@ -25,7 +25,7 @@ class FirstViewController: UIViewController
     var defaultsNotificationObserver: Any?
     
     // guaranteed to always be valid
-    var cache: (calendar: Calendar, range: (Date, Date), days: Int, data: [Int:[Model]], token: DataLayer.Token)!
+    var cache: (calendar: Calendar, range: (Date, Date), days: Int, untappd: [Model], data: [Int:[Model]], token: DataLayer.Token)!
     
     var data: DataLayer?
     {
@@ -201,6 +201,15 @@ class FirstViewController: UIViewController
                 self.calendar.setCurrentPage(offset, animated: false)
                 self.calendar.setCurrentPage(offset2, animated: false)
             }
+            
+            if Defaults.untappdEnabled && Defaults.untappdToken != nil
+            {
+                self.setupUntappdPullToRefresh(true)
+            }
+            else
+            {
+                //self.setupUntappdPullToRefresh(false)
+            }
         }
         
         self.data?.populateWithSampleData()
@@ -208,6 +217,39 @@ class FirstViewController: UIViewController
         //{
         //    self.data?.populateWithSampleData()
         //}
+        setupUntappdPullToRefresh(true)
+    }
+    
+    func setupUntappdPullToRefresh(_ enable: Bool)
+    {
+        if enable
+        {
+            if self.tableView.refreshControl == nil
+            {
+                let widget = UIRefreshControl()
+                let attributes: [NSAttributedStringKey:Any] = [
+                    .font:UIFont.systemFont(ofSize: 13, weight: .semibold),
+                    .foregroundColor:Appearance.darkenedThemeColor
+                ]
+                widget.attributedTitle = NSAttributedString.init(string: "Refreshing Untappd data...", attributes: attributes)
+                widget.tintColor = Appearance.darkenedThemeColor
+                widget.addTarget(self, action: #selector(refreshUntappd), for: .valueChanged)
+                
+                self.tableView.refreshControl = widget
+            }
+        }
+        else
+        {
+            self.tableView.refreshControl = nil
+        }
+    }
+    
+    @objc func refreshUntappd(_ sender: UIRefreshControl)
+    {
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false)
+        { _ in
+            sender.endRefreshing()
+        }
     }
     
     override func viewDidLayoutSubviews()
@@ -281,7 +323,7 @@ class FirstViewController: UIViewController
                     let previousData = self.cache?.data ?? [:]
                     let previousDays = self.cache?.days ?? 0
                     let previousRange = self.cache?.range ?? (Date.distantPast, Date.distantFuture)
-                    self.cache = (calendar, (from, to), i, outOps, v.1)
+                    self.cache = (calendar, (from, to), i, [outOps], outOps, v.1) //QQQ:
                     
                     if previousRange.0 == self.cache.range.0 && previousRange.1 == self.cache.range.1 && previousDays == self.cache.days
                     {
@@ -316,6 +358,8 @@ class FirstViewController: UIViewController
                             {
                                 self.tableView.scrollToRow(at: insert, at: .middle, animated: true)
                             }
+                            
+                            self.calendar.reloadData()
                         }
                     }
                     else
@@ -371,14 +415,29 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return 0 }
         
-        return self.cache.days
+        return self.cache.days + (self.cache.untappd.isEmpty ? 0 : 1)
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         if self.cache == nil { return 0 }
         
-        return (self.cache.data[section]?.count ?? 0) + 1
+        if self.cache..untappd.isEmpty
+        {
+            return (self.cache.data[section]?.count ?? 0) + 1
+        }
+        else
+        {
+            if section == 0
+            {
+                return self.cache.untappd.count
+            }
+            else
+            {
+                let section = section - 1
+                return (self.cache.data[section]?.count ?? 0) + 1
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
@@ -395,12 +454,25 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             return
         }
         
+        if !self.cache.untappd.isEmpty && section == 0
+        {
+            headerView.textLabel?.text = "Pending Untappd Check-Ins"
+            return
+        }
+        
+        let section = (self.cache.untappd.isEmpty ? section : section - 1)
+        
         let formatter = DateFormatter.init()
         formatter.dateFormat = "EEEE, MMMM d, yyyy"
-        
         let day = self.cache.calendar.date(byAdding: .day, value: section, to: self.cache.range.0)!
         
-        headerView.textLabel?.text = formatter.string(from: day)
+        if !self.cache.untappd.isEmpty
+        {
+        }
+        else
+        {
+            headerView.textLabel?.text = formatter.string(from: day)
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
@@ -412,7 +484,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return nil }
         
-        if section == self.cache.days - 1
+        if section == (self.cache.untappd.isEmpty ? self.cache.days - 1 : (self.cache.days + 1) - 1)
         {
             guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "FooterCell") else
             {
@@ -438,7 +510,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return 0 }
         
-        if section == self.cache.days - 1
+        if section == (self.cache.untappd.isEmpty ? self.cache.days - 1 : (self.cache.days + 1) - 1)
         {
             return 20
         }
@@ -450,7 +522,26 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let sectionData = self.cache.data[indexPath.section] ?? []
+        if self.cache == nil { return UITableViewCell() }
+        
+        if !self.cache.untappd.isEmpty && indexPath.section == 0
+        {
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: "CheckInCell") as? CheckInCell,
+                let data = self.data
+                else
+            {
+                return CheckInCell()
+            }
+            
+            let checkin = self.cache.untappd[indexPath.row]
+            cell.populateWithData(checkin, stats: Stats(data))
+            
+            return cell
+        }
+        
+        let section = (!self.cache.untappd.isEmpty ? indexPath.section - 1 : indexPath.section)
+        let sectionData = self.cache.data[section] ?? []
         if indexPath.row < sectionData.count
         {
             guard
@@ -479,7 +570,26 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
     {
-        let sectionData = self.cache.data[indexPath.section] ?? []
+        if self.cache == nil { return }
+        
+        if !self.cache.untappd.isEmpty && indexPath.section == 0
+        {
+            guard
+                let cell = cell as? CheckInCell,
+                let data = self.data
+                else
+            {
+                return
+            }
+            
+            let checkin = self.cache.untappd[indexPath.row]
+            cell.populateWithData(checkin, stats: Stats(data))
+            
+            return
+        }
+        
+        let section = (!self.cache.untappd.isEmpty ? indexPath.section - 1 : indexPath.section)
+        let sectionData = self.cache.data[section] ?? []
         if indexPath.row < sectionData.count
         {
             guard
@@ -497,7 +607,15 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
     {
-        let sectionData = self.cache.data[indexPath.section] ?? []
+        if self.cache == nil { return UISwipeActionsConfiguration.init(actions: []) }
+        
+        if !self.cache.untappd.isEmpty && indexPath.section == 0
+        {
+            return UISwipeActionsConfiguration.init(actions: [])
+        }
+        
+        let section = (!self.cache.untappd.isEmpty ? indexPath.section - 1 : indexPath.section)
+        let sectionData = self.cache.data[section] ?? []
         if indexPath.row >= sectionData.count
         {
             return UISwipeActionsConfiguration.init(actions: [])
@@ -535,7 +653,17 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if indexPath.row == (self.cache.data[indexPath.section]?.count ?? 0)
+        if self.cache == nil { return }
+        
+        if !self.cache.untappd.isEmpty && indexPath.section == 0
+        {
+            let item = self.cache.untappd[indexPath.row]
+            (self.tabBarController as? RootViewController)?.showCheckInDrawer(withModel: item)
+            return
+        }
+        
+        let section = (!self.cache.untappd.isEmpty ? indexPath.section - 1 : indexPath.section)
+        if indexPath.row == (self.cache.data[section]?.count ?? 0)
         {
             let section = indexPath.section
             
@@ -565,7 +693,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             
             (self.tabBarController as? RootViewController)?.showCheckInDrawer(withModel: nil, orDate: date)
         }
-        else if let item = self.cache.data[indexPath.section]?[indexPath.row]
+        else if let item = self.cache.data[section]?[indexPath.row]
         {
             (self.tabBarController as? RootViewController)?.showCheckInDrawer(withModel: item)
         }
@@ -577,7 +705,7 @@ extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalen
     func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool)
     {
         self.calendarHeight.constant = bounds.size.height
-        print("Calendar bounds did change: \(calendar.scope.rawValue)")
+        appDebug("calendar bounds did change: \(calendar.scope.rawValue)")
     }
     
     func calendarCurrentPageDidChange(_ calendar: FSCalendar)
@@ -595,14 +723,17 @@ extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalen
     
     func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int
     {
+        let nextDay = DataLayer.calendar.date(byAdding: .day, value: 1, to: date)!
         do
         {
-            let data = try self.data?.getModels(fromIncludingDate: date, toExcludingDate: date.addingTimeInterval(24 * 60 * 60)).0
-            return data?.count ?? 0
+            let data = try self.data?.getModels(fromIncludingDate: date, toExcludingDate: nextDay).0
+            let available = (data ?? []).filter { !$0.metadata.deleted }
+            return available.count
         }
         catch
         {
-            fatalError("\(error)")
+            appError("could not retrieve models for number of events")
+            return 0
         }
     }
     
