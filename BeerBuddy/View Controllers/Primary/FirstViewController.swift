@@ -24,8 +24,8 @@ class FirstViewController: UIViewController
     var notificationObserver: Any?
     var defaultsNotificationObserver: Any?
     
-    // guaranteed to always be valid
-    var cache: (calendar: Calendar, range: (Date, Date), days: Int, untappd: [Model], data: [Int:[Model]], token: DataLayer.Token)!
+    // guaranteed to always be valid; section 0 represents Untappd pending changes
+    var cache: (calendar: Calendar, range: (Date, Date), days: Int, data: [Int:[Model]], token: DataLayer.Token)!
     
     var data: DataLayer?
     {
@@ -310,7 +310,10 @@ class FirstViewController: UIViewController
                     
                     if models.count > 0
                     {
-                        outOps[i] = models
+                        // QQQ:
+                        outOps[i + 1] = models
+                        if outOps[0] == nil { outOps[0] = [] }
+                        outOps[0]! += models
                     }
                     
                     startDay = nextDay
@@ -323,7 +326,7 @@ class FirstViewController: UIViewController
                     let previousData = self.cache?.data ?? [:]
                     let previousDays = self.cache?.days ?? 0
                     let previousRange = self.cache?.range ?? (Date.distantPast, Date.distantFuture)
-                    self.cache = (calendar, (from, to), i, [outOps], outOps, v.1) //QQQ:
+                    self.cache = (calendar, (from, to), i, outOps, v.1)
                     
                     if previousRange.0 == self.cache.range.0 && previousRange.1 == self.cache.range.1 && previousDays == self.cache.days
                     {
@@ -415,28 +418,21 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return 0 }
         
-        return self.cache.days + (self.cache.untappd.isEmpty ? 0 : 1)
+        return self.cache.days + 1
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         if self.cache == nil { return 0 }
         
-        if self.cache..untappd.isEmpty
+        if section == 0
         {
-            return (self.cache.data[section]?.count ?? 0) + 1
+            // AB: no "add item" row for Untappd section
+            return (self.cache.data[section]?.count ?? 0)
         }
         else
         {
-            if section == 0
-            {
-                return self.cache.untappd.count
-            }
-            else
-            {
-                let section = section - 1
-                return (self.cache.data[section]?.count ?? 0) + 1
-            }
+            return (self.cache.data[section]?.count ?? 0) + 1
         }
     }
     
@@ -454,23 +450,16 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             return
         }
         
-        if !self.cache.untappd.isEmpty && section == 0
+        if section == 0
         {
             headerView.textLabel?.text = "Pending Untappd Check-Ins"
-            return
-        }
-        
-        let section = (self.cache.untappd.isEmpty ? section : section - 1)
-        
-        let formatter = DateFormatter.init()
-        formatter.dateFormat = "EEEE, MMMM d, yyyy"
-        let day = self.cache.calendar.date(byAdding: .day, value: section, to: self.cache.range.0)!
-        
-        if !self.cache.untappd.isEmpty
-        {
         }
         else
         {
+            let formatter = DateFormatter.init()
+            formatter.dateFormat = "EEEE, MMMM d, yyyy"
+            let day = self.cache.calendar.date(byAdding: .day, value: section - 1, to: self.cache.range.0)!
+            
             headerView.textLabel?.text = formatter.string(from: day)
         }
     }
@@ -484,7 +473,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return nil }
         
-        if section == (self.cache.untappd.isEmpty ? self.cache.days - 1 : (self.cache.days + 1) - 1)
+        if section == tableView.numberOfSections - 1
         {
             guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "FooterCell") else
             {
@@ -510,7 +499,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return 0 }
         
-        if section == (self.cache.untappd.isEmpty ? self.cache.days - 1 : (self.cache.days + 1) - 1)
+        if section == tableView.numberOfSections - 1
         {
             return 20
         }
@@ -524,25 +513,9 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return UITableViewCell() }
         
-        if !self.cache.untappd.isEmpty && indexPath.section == 0
-        {
-            guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: "CheckInCell") as? CheckInCell,
-                let data = self.data
-                else
-            {
-                return CheckInCell()
-            }
-            
-            let checkin = self.cache.untappd[indexPath.row]
-            cell.populateWithData(checkin, stats: Stats(data))
-            
-            return cell
-        }
-        
-        let section = (!self.cache.untappd.isEmpty ? indexPath.section - 1 : indexPath.section)
+        let section = indexPath.section
         let sectionData = self.cache.data[section] ?? []
-        if indexPath.row < sectionData.count
+        if section == 0 || indexPath.row < sectionData.count
         {
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: "CheckInCell") as? CheckInCell,
@@ -572,25 +545,9 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return }
         
-        if !self.cache.untappd.isEmpty && indexPath.section == 0
-        {
-            guard
-                let cell = cell as? CheckInCell,
-                let data = self.data
-                else
-            {
-                return
-            }
-            
-            let checkin = self.cache.untappd[indexPath.row]
-            cell.populateWithData(checkin, stats: Stats(data))
-            
-            return
-        }
-        
-        let section = (!self.cache.untappd.isEmpty ? indexPath.section - 1 : indexPath.section)
+        let section = indexPath.section
         let sectionData = self.cache.data[section] ?? []
-        if indexPath.row < sectionData.count
+        if section == 0 || indexPath.row < sectionData.count
         {
             guard
                 let cell = cell as? CheckInCell,
@@ -609,14 +566,9 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return UISwipeActionsConfiguration.init(actions: []) }
         
-        if !self.cache.untappd.isEmpty && indexPath.section == 0
-        {
-            return UISwipeActionsConfiguration.init(actions: [])
-        }
-        
-        let section = (!self.cache.untappd.isEmpty ? indexPath.section - 1 : indexPath.section)
+        let section = indexPath.section
         let sectionData = self.cache.data[section] ?? []
-        if indexPath.row >= sectionData.count
+        if section != 0 && indexPath.row >= sectionData.count
         {
             return UISwipeActionsConfiguration.init(actions: [])
         }
@@ -655,15 +607,8 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         
         if self.cache == nil { return }
         
-        if !self.cache.untappd.isEmpty && indexPath.section == 0
-        {
-            let item = self.cache.untappd[indexPath.row]
-            (self.tabBarController as? RootViewController)?.showCheckInDrawer(withModel: item)
-            return
-        }
-        
-        let section = (!self.cache.untappd.isEmpty ? indexPath.section - 1 : indexPath.section)
-        if indexPath.row == (self.cache.data[section]?.count ?? 0)
+        let section = indexPath.section
+        if section != 0 && indexPath.row == (self.cache.data[section]?.count ?? 0)
         {
             let section = indexPath.section
             
