@@ -45,8 +45,6 @@ public class AddItemCell: UITableViewCell
         
         layout: do
         {
-            let contentMargin: CGFloat = 0
-            
             caption.translatesAutoresizingMaskIntoConstraints = false
             container.translatesAutoresizingMaskIntoConstraints = false
             
@@ -54,13 +52,13 @@ public class AddItemCell: UITableViewCell
             self.contentView.addSubview(container)
             
             let views = [ "caption":caption, "container":container ]
-            let metrics = [ "sideMargin":4, "imageLabelGapContentMargin":6+contentMargin, "imageLabelGapSideMargin":4+contentMargin, "leftMargin":12, "imageHeight":30 ]
+            let metrics = [ "sideMargin":4, "imageLabelGapContentMargin":10, "imageLabelGapSideMargin":6, "topMargin":6, "leftMargin":12, "imageHeight":34 ]
             
             stubConstraints: do
             {
                 let hConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(leftMargin)-[container(imageHeight)]-(imageLabelGapContentMargin)-[caption]-(imageLabelGapSideMargin)-|", options: .alignAllCenterY, metrics: metrics, views: views)
-                let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=sideMargin)-[container(imageHeight)]-(>=sideMargin)-|", options: [], metrics: metrics, views: views)
-                let vConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=imageLabelGapSideMargin)-[caption]-(>=imageLabelGapSideMargin)-|", options: [], metrics: metrics, views: views)
+                let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=topMargin)-[container(imageHeight)]-(>=topMargin)-|", options: [], metrics: metrics, views: views)
+                let vConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=topMargin)-[caption]-(>=topMargin)-|", options: [], metrics: metrics, views: views)
                 
                 var stubConstraints: [NSLayoutConstraint] = []
                 stubConstraints += hConstraints1

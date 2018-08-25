@@ -38,6 +38,27 @@ extension UIColor
         return a
     }
     
+    public var h: CGFloat
+    {
+        var h: CGFloat = 0
+        self.getHue(&h, saturation: nil, brightness: nil, alpha: nil)
+        return h
+    }
+    
+    public var s: CGFloat
+    {
+        var s: CGFloat = 0
+        self.getHue(nil, saturation: &s, brightness: nil, alpha: nil)
+        return s
+    }
+    
+    public var l: CGFloat
+    {
+        var l: CGFloat = 0
+        self.getHue(nil, saturation: nil, brightness: &l, alpha: nil)
+        return l
+    }
+    
     public func darkened(by: CGFloat) -> UIColor
     {
         return mixed(with: .black, by: by)

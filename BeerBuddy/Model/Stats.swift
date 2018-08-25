@@ -67,10 +67,7 @@ extension Stats
         
         let totalGramsAlcohol = models.reduce(Float(0))
         { total, model in
-            let alcoholVolume = model.checkIn.drink.abv * model.checkIn.drink.volume.converted(to: .fluidOunces)
-            let standardAlcoholVolume = alcoholVolume.value / 0.6
-            let gramsAlcohol = standardAlcoholVolume * 14
-            
+            let gramsAlcohol = gramsOfAlcohol(model)
             return total + Float(gramsAlcohol)
         }
         
@@ -82,5 +79,22 @@ extension Stats
         let models = try! self.data.getModels(fromIncludingDate: range.lowerBound, toExcludingDate: range.upperBound)
         
         return progress(forModels: models.0, inRange: range)
+    }
+    
+    public func gramsOfAlcohol(_ model: Model) -> Double
+    {
+        let alcoholVolume = model.checkIn.drink.abv * model.checkIn.drink.volume.converted(to: .fluidOunces)
+        let standardAlcoholVolume = alcoholVolume.value / 0.6
+        let gramsAlcohol = standardAlcoholVolume * 14
+        
+        return gramsAlcohol
+    }
+    
+    public func standardDrinks(_ model: Model) -> Double
+    {
+        let gramsAlcohol = gramsOfAlcohol(model)
+        let drinks = gramsAlcohol / Defaults.standardDrinkSize
+        
+        return drinks
     }
 }

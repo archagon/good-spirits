@@ -16,6 +16,7 @@ public class CheckInCell: UITableViewCell
     private let name: UITextView
     private let contentStack: UIStackView
     private let container: UIButton
+    private let untappdShadow: UIView
     private let untappd: UIImageView
     
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?)
@@ -25,6 +26,7 @@ public class CheckInCell: UITableViewCell
         self.name = UITextView()
         self.contentStack = UIStackView()
         self.container = UIButton()
+        self.untappdShadow = UIView()
         self.untappd = UIImageView()
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -50,7 +52,7 @@ public class CheckInCell: UITableViewCell
         self.contentStack.isUserInteractionEnabled = false
         self.container.isUserInteractionEnabled = false
         
-        let untappdSize: CGFloat = 16
+        let untappdSize: CGFloat = 18
         
         styling: do
         {
@@ -63,125 +65,94 @@ public class CheckInCell: UITableViewCell
             self.untappd.image = UIImage.init(named: "untappd")
             self.untappd.clipsToBounds = true
             self.untappd.layer.cornerRadius = untappdSize / 2
+            
+            let bounds = CGRect.init(x: 0, y: 0, width: untappdSize, height: untappdSize)
+            self.untappdShadow.backgroundColor = .white
+            self.untappdShadow.layer.cornerRadius = untappdSize / 2
+            self.untappdShadow.layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: untappdSize / 2).cgPath
+            self.untappdShadow.layer.shadowColor = UIColor.black.cgColor
+            self.untappdShadow.layer.shadowRadius = 1.5
+            self.untappdShadow.layer.shadowOpacity = 0.1
+            self.untappdShadow.layer.shadowOffset = CGSize.init(width: -0.5, height: -0.5)
         }
         
         layout: do
         {
-            let contentMargin: CGFloat = 0
-            
             prose.translatesAutoresizingMaskIntoConstraints = false
             stats.translatesAutoresizingMaskIntoConstraints = false
             name.translatesAutoresizingMaskIntoConstraints = false
             container.translatesAutoresizingMaskIntoConstraints = false
             untappd.translatesAutoresizingMaskIntoConstraints = false
+            untappdShadow.translatesAutoresizingMaskIntoConstraints = false
             contentStack.translatesAutoresizingMaskIntoConstraints = false
             
             self.contentView.addSubview(container)
             
             self.contentStack.axis = .vertical
             self.contentStack.alignment = .leading
+            self.contentStack.spacing = -1
             self.contentStack.addArrangedSubview(name)
             self.contentStack.addArrangedSubview(prose)
             self.contentStack.addArrangedSubview(stats)
             self.contentView.addSubview(self.contentStack)
             
+            self.contentView.addSubview(untappdShadow)
             self.contentView.addSubview(untappd)
             
             let views = [ "content":contentStack, "prose":prose, "name":name, "container":container, "untappd":untappd ]
-            let metrics = [ "sideMargin":4, "imageLabelGapContentMargin":6+contentMargin, "imageLabelGapSideMargin":4+contentMargin, "leftMargin":12, "imageHeight":30 ]
+            let metrics = [ "sideMargin":4, "imageLabelGapContentMargin":10, "imageLabelGapSideMargin":6, "topMargin":6, "leftMargin":12, "imageHeight":34 ]
             
             dataConstraints: do
             {
                 let hConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(leftMargin)-[container(imageHeight)]-(imageLabelGapContentMargin)-[content]-(imageLabelGapSideMargin)-|", options: .alignAllCenterY, metrics: metrics, views: views)
                 let hConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "H:[name]-(>=sideMargin)-|", options: .alignAllCenterY, metrics: metrics, views: views)
-                let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=sideMargin)-[container(imageHeight)]-(>=sideMargin)-|", options: [], metrics: metrics, views: views)
-                let vConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=imageLabelGapSideMargin)-[content]-(>=imageLabelGapSideMargin)-|", options: [], metrics: metrics, views: views)
+                let vConstraints1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=topMargin)-[container(imageHeight)]-(>=topMargin)-|", options: [], metrics: metrics, views: views)
+                let vConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=topMargin)-[content]-(>=topMargin)-|", options: [], metrics: metrics, views: views)
                 
                 let untappdAspect = untappd.widthAnchor.constraint(equalTo: untappd.heightAnchor)
                 let untappdWidth = untappd.widthAnchor.constraint(equalToConstant: untappdSize)
                 let untappdCenterX = untappd.centerXAnchor.constraint(equalTo: container.rightAnchor, constant: -3)
                 let untappdCenterY = untappd.centerYAnchor.constraint(equalTo: container.bottomAnchor, constant: -4)
                 
-                let dataConstraints: [NSLayoutConstraint] = hConstraints1 + hConstraints2 + vConstraints1 + vConstraints2 + [untappdAspect, untappdWidth, untappdCenterX, untappdCenterY]
+                let untappdShadowL = untappdShadow.leftAnchor.constraint(equalTo: untappd.leftAnchor)
+                let untappdShadowR = untappdShadow.rightAnchor.constraint(equalTo: untappd.rightAnchor)
+                let untappdShadowT = untappdShadow.topAnchor.constraint(equalTo: untappd.topAnchor)
+                let untappdShadowB = untappdShadow.bottomAnchor.constraint(equalTo: untappd.bottomAnchor)
+                
+                let dataConstraints: [NSLayoutConstraint] = hConstraints1 + hConstraints2 + vConstraints1 + vConstraints2 + [untappdAspect, untappdWidth, untappdCenterX, untappdCenterY] + [untappdShadowL, untappdShadowR, untappdShadowT, untappdShadowB]
                 
                 NSLayoutConstraint.activate(dataConstraints)
             }
         }
     }
     
-    public func populateWithData(_ data: Model)
+    public func populateWithData(_ data: Model, stats: Stats)
     {
         let imageName = Model.assetNameForDrink(data.checkIn.drink)
         let image = Appearance.shared.drinkIcon(forImageName: imageName)
         
-        let volume = String.init(format: (data.checkIn.drink.volume.value.truncatingRemainder(dividingBy: 1) == 0 ? "%.0f" : "%.1f"), data.checkIn.drink.volume.value as CVarArg)
+        let volume = Format.format(volume: data.checkIn.drink.volume)
+        let units = Format.format(drinks: stats.standardDrinks(data))
+        let abv = Format.format(abv: data.checkIn.drink.abv)
+        let price = Format.format(price: data.checkIn.drink.price ?? 0)
+        let style = Format.format(style: data.checkIn.drink.style)
+        let nameT = (data.checkIn.drink.name != nil && data.checkIn.drink.name?.isEmpty == false ? "\(data.checkIn.drink.name!)" : "")
         
-        let measurementFormatter = MeasurementFormatter.init()
-        measurementFormatter.unitStyle = .short
-        let unit = measurementFormatter.string(from: data.checkIn.drink.volume.unit)
+        let nameString = NSMutableAttributedString.init(string: nameT)
+        nameString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14, weight:.semibold)], range: NSMakeRange(0, nameString.length))
         
-        let abv = String.init(format: "%.1f", data.checkIn.drink.abv * 100)
-        
-        let price: String? = (data.checkIn.drink.price != nil) ? String.init(format: (data.checkIn.drink.price!.truncatingRemainder(dividingBy: 1) == 0 ? "$%.0f" : "$%.2f"), data.checkIn.drink.price! as CVarArg) : nil
-        
-        let amount = "1"
-        
-        let proseText = "\(volume) \(unit) of \(abv)% ABV \(data.checkIn.drink.style) ×\(1)"
-        
-        let proseString = NSMutableAttributedString()
-        createString: do
-        {
-            func appendUnderl(_ str: String, tag: String)
-            {
-                appendNormal(str)
-                return
-                
-                let underlineAttributes: [NSAttributedStringKey:Any] =
-                    [
-                        NSAttributedStringKey.underlineStyle:(NSUnderlineStyle.styleSingle.rawValue),
-                        NSAttributedStringKey.underlineColor:UIColor.gray,
-                        NSAttributedStringKey.foregroundColor:UIColor.darkGray,
-                        NSAttributedStringKey.link:URL.init(fileURLWithPath: tag)
-                ]
-                
-                let text = NSAttributedString.init(string: str, attributes: underlineAttributes)
-                proseString.append(text)
-            }
-            func appendNormal(_ str: String)
-            {
-                let text = NSAttributedString.init(string: str)
-                proseString.append(text)
-            }
-            
-            appendUnderl("\(volume) \(unit)", tag: "volume")
-            appendNormal(" of ")
-            appendUnderl("\(abv)%", tag: "abv")
-            appendNormal(" ABV ")
-            appendUnderl("\(data.checkIn.drink.style)", tag: "style")
-        }
+        let proseText = "\(volume) of \(abv) ABV \(style)"
+        let proseString = NSMutableAttributedString.init(string: proseText)
         proseString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14)], range: NSMakeRange(0, proseString.length))
+        //proseString.insert(nameString, at: 0)
         
-        let nameString = NSMutableAttributedString.init(string: data.checkIn.drink.name ?? "")
-        nameString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14, weight:.bold)], range: NSMakeRange(0, nameString.length))
-        
-        let statsString = NSMutableAttributedString()
-        createStatsString: do
-        {
-            let limits = Limit.init(withCountryCode: "US")
-            let alcoholVolume = data.checkIn.drink.volume * data.checkIn.drink.abv
-            let units = limits.standardUnits(forAlcohol: alcoholVolume)
-            let unitsString = String.init(format: "%.1f", units as CVarArg)
-            
-            // TODO: drink amounts
-            let price = (data.checkIn.drink.price != nil ? data.checkIn.drink.price! * 1 : nil)
-            let priceString: String? = (price != nil) ? String.init(format: (price!.truncatingRemainder(dividingBy: 1) == 0 ? "$%.0f" : "$%.2f"), price! as CVarArg) : nil
-            
-            statsString.append(NSAttributedString.init(string: "Drank \(unitsString) standard units\(price == nil ? "" : " for a total of \(priceString ?? "")")"))
-        }
+        let statsText = "Drank \(units) units\(data.checkIn.drink.price == nil || data.checkIn.drink.price == 0 ? "" : " for \(price)")"
+        let statsString = NSMutableAttributedString.init(string: statsText)
         statsString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor:UIColor.gray], range: NSMakeRange(0, statsString.length))
         
         self.prose.attributedText = proseString
         self.stats.attributedText = statsString
+        self.name.attributedText = nameString
         
         if nameString.length == 0
         {
@@ -191,12 +162,42 @@ public class CheckInCell: UITableViewCell
         {
             self.contentStack.insertArrangedSubview(name, at: 0)
         }
-        self.name.attributedText = nameString
-        
+    
         self.container.setImage(image, for: .normal)
-        self.container.tintColor = UIButton(type: .system).tintColor
         
-        self.container.alpha = 1
+        // TODO: move this to appearance
+        let tint: UIColor
+        let beerTint = Appearance.themeColor
+        let wineTint = UIColor.init(hue: 0.94, saturation: beerTint.s, brightness: beerTint.l, alpha: beerTint.a)
+        let liquorTint = UIColor.init(hue: 0.1, saturation: beerTint.s, brightness: beerTint.l * 0.92, alpha: beerTint.a)
+        switch data.checkIn.drink.style
+        {
+        case .beer:
+            fallthrough
+        case .mead:
+            fallthrough
+        case .cider:
+            tint = beerTint
+            
+        case .sake:
+            tint = liquorTint
+            
+        case .wine:
+            fallthrough
+        case .fortifiedWine:
+            tint = wineTint
+            
+        default:
+            if data.checkIn.drink.style.distilled
+            {
+                tint = liquorTint
+            }
+            else
+            {
+                tint = beerTint
+            }
+        }
+        self.container.tintColor = tint
     }
     
     required public init?(coder aDecoder: NSCoder)

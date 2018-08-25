@@ -44,6 +44,11 @@ public struct Format
         return String.init(format: (price.truncatingRemainder(dividingBy: 1) == 0 ? "$%.0f" : "$%.2f"), price)
     }
     
+    public static func format(drinks: Double) -> String
+    {
+        return String.init(format: (drinks.truncatingRemainder(dividingBy: 1) == 0 ? "%.0f" : "%.1f"), drinks)
+    }
+    
     public static func format(style: DrinkStyle) -> String
     {
         return style.description

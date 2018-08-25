@@ -133,7 +133,7 @@ class FirstViewController: UIViewController
         tableSetup: do
         {
             self.tableView.register(DayHeaderCell.self, forHeaderFooterViewReuseIdentifier: "DayHeaderCell")
-            self.tableView.register(DayHeaderCell.self, forHeaderFooterViewReuseIdentifier: "FooterCell")
+            self.tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "FooterCell")
             self.tableView.register(CheckInCell.self, forCellReuseIdentifier: "CheckInCell")
             self.tableView.register(AddItemCell.self, forCellReuseIdentifier: "AddItemCell")
             
@@ -364,13 +364,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         
         let day = self.cache.calendar.date(byAdding: .day, value: section, to: self.cache.range.0)!
         
-        //return formatter.string(from: day)
         cell.textLabel?.text = formatter.string(from: day)
-//        cell.backgroundColor = UIColor.clear
-//        cell.textLabel?.backgroundColor = UIColor.clear
-//        cell.backgroundView = nil
-//        cell.setNeedsDisplay()
-//        cell.setNeedsLayout()
         
         return cell
     }
@@ -390,6 +384,15 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             {
                 return nil
             }
+            
+            if view.backgroundView == nil
+            {
+                let bgView = UIView()
+                bgView.backgroundColor = .clear
+                view.backgroundView = bgView
+            }
+            
+            //view.backgroundColor = .clear
             
             return view
         }
@@ -413,31 +416,21 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         }
     }
     
-//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
-//    {
-//        let formatter = DateFormatter.init()
-//        formatter.dateFormat = "EEEE, MMMM d, yyyy"
-//        guard let day = self.cache.calendar.date(byAdding: .day, value: section, to: self.cache.range.0) else
-//        {
-//            appError("could not add day to date")
-//            return nil
-//        }
-//
-//        return formatter.string(from: day)
-//    }
-    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let sectionData = self.cache.data[indexPath.section] ?? []
         if indexPath.row < sectionData.count
         {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "CheckInCell") as? CheckInCell else
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: "CheckInCell") as? CheckInCell,
+                let data = self.data
+                else
             {
                 return CheckInCell()
             }
 
             let checkin = sectionData[indexPath.row]
-            cell.populateWithData(checkin)
+            cell.populateWithData(checkin, stats: Stats(data))
 
             return cell
         }
@@ -554,7 +547,6 @@ extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalen
         self.calendar.setCurrentPage(Date(), animated: true)
     }
 }
-
 
 //{
 //    if let token = Defaults.untappdToken
