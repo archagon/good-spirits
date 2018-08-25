@@ -74,8 +74,8 @@ class FirstViewController: UIViewController
     {
         super.viewWillAppear(animated)
         
-        self.navigationController!.navigationBar.isTranslucent = true
-        self.navigationController!.navigationBar.setBackgroundImage(UIImage.init(named: "clear"), for: .default)
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.setBackgroundImage(UIColor.clear.pixel, for: .default)
     }
     
     override func viewDidLoad()
@@ -121,14 +121,8 @@ class FirstViewController: UIViewController
         self.overflowProgressBar = bar2
         self.progressLabel = label
         self.calendar.progressView = stack
-        self.calendar.progressViewHeight = bar.intrinsicContentSize.height + 4 + label.intrinsicContentSize.height
+        self.calendar.progressViewHeight = bar.intrinsicContentSize.height + 4 + label.intrinsicContentSize.height + 50
         self.navigationItem.title = nil
-        
-        // QQQ:
-        if let tabBarVC = self.tabBarController
-        {
-            tabBarVC.delegate = self
-        }
         
         tableSetup: do
         {
@@ -143,7 +137,7 @@ class FirstViewController: UIViewController
             self.tableView.allowsMultipleSelectionDuringEditing = false
 
             self.tableView.rowHeight = UITableViewAutomaticDimension
-            self.tableView.estimatedRowHeight = 20 //TODO: actual estimate
+            self.tableView.estimatedRowHeight = 30 //TODO: actual estimate
         }
         
         self.reloadData(animated: false, fromScratch: false)
@@ -154,7 +148,7 @@ class FirstViewController: UIViewController
             self.reloadData(animated: true, fromScratch: false)
         }
         
-        //self.data?.populateWithSampleData()
+        self.data?.populateWithSampleData()
         //DispatchQueue.main.asyncAfter(deadline:.now() + 3)
         //{
         //    self.data?.populateWithSampleData()
@@ -177,7 +171,7 @@ class FirstViewController: UIViewController
         //let range = Time.currentWeek()
         
         let from = self.calendar.currentPage
-        let to = from.addingTimeInterval((self.calendar.scope == .week ? 7 : 31) * 24 * 60 * 60)
+        let to = calendar.date(byAdding: .day, value: 7, to: from)!
         
         //self.cache?.token != nil && !fromScratch ? self.cache!.token : DataLayer.NullToken
         let token = DataLayer.NullToken
@@ -187,13 +181,14 @@ class FirstViewController: UIViewController
             switch $0
             {
             case .error(let e):
-                fatalError("\(e)")
+                appError("could not get model data in reloadData")
             case .value(let v):
                 if self.cache?.token != v.1
                 {
                     appDebug("changes received with new token \(v.1)!")
                 }
-                // NEXT: move this
+                
+                // NEXT: QQQ:move this
                 if self.cache == nil
                 {
                     self.calendar.isHidden = false
@@ -297,42 +292,6 @@ class FirstViewController: UIViewController
     }
 }
 
-extension FirstViewController: UITabBarControllerDelegate
-{
-    public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool
-    {
-        if viewController is StubViewController
-        {
-            pulleyTest: do
-            {
-                //break pulleyTest
-                (self.tabBarController as? RootViewController)?.showCheckInDrawer()
-                return false
-            }
-            
-            testABV: do
-            {
-                break testABV
-                (self.tabBarController as? RootViewController)?.showLimitPopup()
-                return false
-            }
-            
-            testProgressView: do
-            {
-                break testProgressView
-                testAnimateProgressView()
-                return false
-            }
-            
-            return false
-        }
-        else
-        {
-            return true
-        }
-    }
-}
-
 extension FirstViewController: UITableViewDataSource, UITableViewDelegate
 {
     public func numberOfSections(in tableView: UITableView) -> Int
@@ -349,14 +308,18 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         return (self.cache.data[section]?.count ?? 0) + 1
     }
     
-    // NEXT: configure cells on appear, not on dequeue
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
-        if self.cache == nil { return nil }
+        return tableView.dequeueReusableHeaderFooterView(withIdentifier: "DayHeaderCell")
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
+    {
+        if self.cache == nil { return }
         
-        guard let cell = tableView.dequeueReusableHeaderFooterView(withIdentifier: "DayHeaderCell") as? DayHeaderCell else
+        guard let headerView = view as? DayHeaderCell else
         {
-            return DayHeaderCell()
+            return
         }
         
         let formatter = DateFormatter.init()
@@ -364,9 +327,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         
         let day = self.cache.calendar.date(byAdding: .day, value: section, to: self.cache.range.0)!
         
-        cell.textLabel?.text = formatter.string(from: day)
-        
-        return cell
+        headerView.textLabel?.text = formatter.string(from: day)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
@@ -391,8 +352,6 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
                 bgView.backgroundColor = .clear
                 view.backgroundView = bgView
             }
-            
-            //view.backgroundColor = .clear
             
             return view
         }
@@ -428,7 +387,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             {
                 return CheckInCell()
             }
-
+            
             let checkin = sectionData[indexPath.row]
             cell.populateWithData(checkin, stats: Stats(data))
 
@@ -442,6 +401,24 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             }
 
             return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
+    {
+        let sectionData = self.cache.data[indexPath.section] ?? []
+        if indexPath.row < sectionData.count
+        {
+            guard
+                let cell = cell as? CheckInCell,
+                let data = self.data
+                else
+            {
+                return
+            }
+            
+            let checkin = sectionData[indexPath.row]
+            cell.populateWithData(checkin, stats: Stats(data))
         }
     }
     
@@ -464,7 +441,14 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         { (action, view, handler) in
             appDebug("attempting delete")
             model.delete()
-            self.data!.save(model: model) { _ in handler(false) }
+            if let data = self.data
+            {
+                data.save(model: model) { _ in handler(false) }
+            }
+            else
+            {
+                handler(false)
+            }
         }
         
         //let actions = [incrementAction, deleteAction]

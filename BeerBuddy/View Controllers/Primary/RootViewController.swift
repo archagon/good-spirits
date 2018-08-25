@@ -65,11 +65,13 @@ class RootViewController: UITabBarController, DrawerCoordinating
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        self.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
+        self.delegate = self
     }
     
     override func viewDidLoad()
@@ -235,6 +237,22 @@ class RootViewController: UITabBarController, DrawerCoordinating
         if identifier == "Settings"
         {
             showSettingsPopup()
+        }
+    }
+}
+
+extension RootViewController: UITabBarControllerDelegate
+{
+    public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool
+    {
+        if viewController is StubViewController
+        {
+            showCheckInDrawer()
+            return false
+        }
+        else
+        {
+            return true
         }
     }
 }
