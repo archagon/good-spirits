@@ -148,14 +148,21 @@ extension DataLayer
                             ret(e: e)
                         case .value(let p):
                             let data = model.toData(withLamport: t + 1, existingData: p)
-                            db.commit(data: data, withSite: self.owner)
+                            if data == p
                             {
-                                switch $0
+                                ret(id: data.metadata.id)
+                            }
+                            else
+                            {
+                                db.commit(data: data, withSite: self.owner)
                                 {
-                                case .error(let e):
-                                    ret(e: e)
-                                case .value(let id):
-                                    ret(id: id)
+                                    switch $0
+                                    {
+                                    case .error(let e):
+                                        ret(e: e)
+                                    case .value(let id):
+                                        ret(id: id)
+                                    }
                                 }
                             }
                         }

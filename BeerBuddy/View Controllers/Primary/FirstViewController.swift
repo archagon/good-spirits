@@ -135,7 +135,7 @@ class FirstViewController: UIViewController
             self.tableView.register(DayHeaderCell.self, forHeaderFooterViewReuseIdentifier: "DayHeaderCell")
             self.tableView.register(DayHeaderCell.self, forHeaderFooterViewReuseIdentifier: "FooterCell")
             self.tableView.register(CheckInCell.self, forCellReuseIdentifier: "CheckInCell")
-            //self.tableView.register(AddItemCell.self, forCellReuseIdentifier: "AddItemCell")
+            self.tableView.register(AddItemCell.self, forCellReuseIdentifier: "AddItemCell")
             
             self.tableView.separatorStyle = .none
             
@@ -193,7 +193,7 @@ class FirstViewController: UIViewController
                 {
                     appDebug("changes received with new token \(v.1)!")
                 }
-                // TODO: move this
+                // NEXT: move this
                 if self.cache == nil
                 {
                     self.calendar.isHidden = false
@@ -443,12 +443,10 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         }
         else
         {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "CheckInCell") as? CheckInCell else
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "AddItemCell") as? AddItemCell else
             {
-                return CheckInCell()
+                return AddItemCell()
             }
-
-            cell.populateWithStub()
 
             return cell
         }
