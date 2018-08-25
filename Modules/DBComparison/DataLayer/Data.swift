@@ -56,12 +56,12 @@ public class DataLayer
         self.addStore(store)
         
         self.notificationObserver = NotificationCenter.default.addObserver(forName: type(of: store).DataDidChangeNotification, object: nil, queue: nil)
-        { [unowned `self`] notification in
+        { [weak `self`] notification in
             // BUGFIX: We get into a locked state without this async! GRDB posts notification and then locks
             // while waiting on other db access from main thread.
             onMain
             {
-                NotificationCenter.default.post(name: type(of: self).DataDidChangeNotification, object: self)
+                NotificationCenter.default.post(name: DataLayer.DataDidChangeNotification, object: self)
             }
         }
     }

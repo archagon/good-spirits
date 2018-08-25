@@ -14,7 +14,7 @@ public protocol CheckInViewControllerDelegate: class
 {
     func defaultCheckIn(for: CheckInViewController) -> Model.Drink
     func calendar(for: CheckInViewController) -> Calendar
-    func committed(drink: Model.Drink, for: CheckInViewController)
+    func committed(drink: Model.Drink, onDate: Date?, for: CheckInViewController)
     func updateDimensions(for: CheckInViewController)
 }
 
@@ -45,19 +45,20 @@ public class CheckInViewController: CheckInDrawerViewController
     }
     
     @IBOutlet private var text: UITextView!
-    
+
     public override func viewDidLoad()
     {
         super.viewDidLoad()
         
         self.text.textContainerInset = .zero
         self.text.delegate = self
-        self.text.isSelectable = false
         if #available(iOS 11.0, *)
         {
             self.text.textDragInteraction?.isEnabled = false
         }
         
+        // BUGFIX: no more delay when tapping links
+        self.text.isSelectable = false
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tappedTextView))
         text.addGestureRecognizer(tapRecognizer)
         
@@ -67,18 +68,17 @@ public class CheckInViewController: CheckInDrawerViewController
     }
     
     // https://stackoverflow.com/a/26495954/89812
-    @objc func tappedTextView(tapGesture: UIGestureRecognizer) {
-        
-        let textView = tapGesture.view as! UITextView
+    @objc func tappedTextView(tapGesture: UIGestureRecognizer)
+    {
+        guard let textView = tapGesture.view as? UITextView else { return }
         let tapLocation = tapGesture.location(in: textView)
-        let textPosition = textView.closestPosition(to: tapLocation)
-        let attr = textView.textStyling(at: textPosition!, in: UITextStorageDirection.forward)!
+        guard let textPosition = textView.closestPosition(to: tapLocation) else { return }
+        guard let attr = textView.textStyling(at: textPosition, in: UITextStorageDirection.forward) else { return }
         
-        if let url: NSURL = attr[NSAttributedStringKey.link.rawValue] as? NSURL {
-            self.textView(textView, shouldInteractWith: url as URL, in: NSRange.init(location: 0, length: 0), interaction: UITextItemInteraction.invokeDefaultAction)
-            print("tapped link")
+        if let url: NSURL = attr[NSAttributedStringKey.link.rawValue] as? NSURL
+        {
+            let _ = self.textView(textView, shouldInteractWith: url as URL, in: NSRange.init(location: 0, length: 0), interaction: UITextItemInteraction.invokeDefaultAction)
         }
-        
     }
     
     private func setupText()
@@ -186,7 +186,7 @@ public class CheckInViewController: CheckInDrawerViewController
     {
         let display = self.display
         let model = Model.Drink.init(name: display.name, style: display.style, abv: display.abv, price: display.cost, volume: display.volume)
-        self.delegate.committed(drink: model, for: self)
+        self.delegate.committed(drink: model, onDate: self.checkInDate, for: self)
     }
 }
 
@@ -195,7 +195,6 @@ extension CheckInViewController: UITextViewDelegate
     public func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool
     {
         let id = URL.lastPathComponent
-        print("Tapped \(id)")
         
         if id == "abv" || id == "volume" || id == "type" || id == "price"
         {

@@ -9,80 +9,6 @@
 import UIKit
 import DataLayer
 
-private var _drinkIconCache: [String:UIImage] = [:]
-private func drinkIcon(forImageName imageName: String, sansCircle: Bool = false) -> UIImage
-{
-    if let image = _drinkIconCache[imageName]
-    {
-        return image
-    }
-    else
-    {
-        let size: CGFloat = 100
-        let circleWidth: CGFloat = 0 //was 2 for stroke
-        
-        guard let originalImage = UIImage.init(named: imageName) else
-        {
-            appError("image \(imageName) not found")
-            return UIImage()
-        }
-        
-        UIGraphicsBeginImageContextWithOptions(CGSize.init(width: size, height: size), false, 0)
-        defer { UIGraphicsEndImageContext() }
-        
-        guard let ctx = UIGraphicsGetCurrentContext() else
-        {
-            appError("image context could not be created")
-            return UIImage()
-        }
-        
-        ctx.saveGState()
-        drawCircle: do
-        {
-            // QQQ:
-            if sansCircle
-            {
-                let circleWidth: CGFloat = 2
-                
-                UIColor.black.setStroke()
-                let circle = UIBezierPath.init(ovalIn: CGRect.init(x: circleWidth/2, y: circleWidth/2, width: size-circleWidth, height: size-circleWidth))
-                circle.lineWidth = circleWidth
-                circle.stroke()
-                
-                break drawCircle
-            }
-            
-            UIColor.black.setStroke()
-            let circle = UIBezierPath.init(ovalIn: CGRect.init(x: circleWidth/2, y: circleWidth/2, width: size-circleWidth, height: size-circleWidth))
-            circle.lineWidth = circleWidth
-            //circle.stroke()
-            circle.fill()
-        }
-        ctx.restoreGState()
-        
-        ctx.saveGState()
-        drawImage: do
-        {
-            let scale: CGFloat = 1
-            originalImage.draw(in: CGRect.init(x: size/2-originalImage.size.width*scale/2, y: size/2-originalImage.size.height*scale/2, width: originalImage.size.width*scale, height: originalImage.size.height*scale), blendMode: (sansCircle ? CGBlendMode.normal : CGBlendMode.xor), alpha: 1)
-//            originalImage.draw(at: CGPoint.init(x: size/2-originalImage.size.width/2, y: size/2-originalImage.size.height/2), blendMode: (sansCircle ? CGBlendMode.normal : CGBlendMode.xor), alpha: 1)
-        }
-        ctx.restoreGState()
-        
-        let img = UIGraphicsGetImageFromCurrentImageContext()
-
-        guard var retImg = img else
-        {
-            appError("image could not be rendered")
-            return UIImage()
-        }
-        
-        retImg = retImg.withRenderingMode(.alwaysTemplate)
-        _drinkIconCache[imageName] = retImg
-        return _drinkIconCache[imageName]!
-    }
-}
-
 public class CheckInCell: UITableViewCell
 {
     private let prose: UITextView
@@ -114,23 +40,28 @@ public class CheckInCell: UITableViewCell
         
         self.prose.isEditable = false
         self.prose.isSelectable = false
-        self.prose.delegate = self
         self.prose.isScrollEnabled = false
         
         self.name.isEditable = false
         self.name.isSelectable = false
-        self.name.delegate = self
         self.name.isScrollEnabled = false
         
         self.caption.isEditable = false
         self.caption.isSelectable = false
-        self.caption.delegate = self
         self.caption.isScrollEnabled = false
         
         self.stats.isEditable = false
         self.stats.isSelectable = false
-        self.stats.delegate = self
         self.stats.isScrollEnabled = false
+        
+        // AB: vestigial, easier to respond when just tapping the whole row
+        self.container.adjustsImageWhenHighlighted = true
+        
+        // AB: allows row highlighting
+        self.contentStack.isUserInteractionEnabled = false
+        self.contentBackground.isUserInteractionEnabled = false
+        self.caption.isUserInteractionEnabled = false
+        self.container.isUserInteractionEnabled = false
         
         let untappdSize: CGFloat = 16
         
@@ -242,7 +173,7 @@ public class CheckInCell: UITableViewCell
         NSLayoutConstraint.deactivate(self.dataConstraints)
         NSLayoutConstraint.activate(self.stubConstraints)
         
-        let image = drinkIcon(forImageName: "plus", sansCircle: true)
+        let image = Appearance.shared.drinkIcon(forImageName: "plus", sansCircle: true)
         
         self.prose.isHidden = true
         self.name.isHidden = true
@@ -254,7 +185,7 @@ public class CheckInCell: UITableViewCell
         self.container.setImage(image, for: .normal)
         
         let attributedText = NSMutableAttributedString.init(string: "Add Drink")
-        attributedText.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14)], range: NSMakeRange(0, attributedText.length))
+        attributedText.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 16, weight: .medium)], range: NSMakeRange(0, attributedText.length))
         
         self.caption.attributedText = attributedText
         
@@ -271,7 +202,7 @@ public class CheckInCell: UITableViewCell
         NSLayoutConstraint.activate(self.dataConstraints)
         
         let imageName = Model.assetNameForDrink(data.checkIn.drink)
-        let image = drinkIcon(forImageName: imageName)
+        let image = Appearance.shared.drinkIcon(forImageName: imageName)
         
         let volume = String.init(format: (data.checkIn.drink.volume.value.truncatingRemainder(dividingBy: 1) == 0 ? "%.0f" : "%.1f"), data.checkIn.drink.volume.value as CVarArg)
         
@@ -317,14 +248,6 @@ public class CheckInCell: UITableViewCell
             appendUnderl("\(abv)%", tag: "abv")
             appendNormal(" ABV ")
             appendUnderl("\(data.checkIn.drink.style)", tag: "style")
-            if let price = price
-            {
-                appendNormal(" for ")
-                appendUnderl("\(price)", tag: "price")
-                appendNormal(" ")
-            }
-            appendNormal(" times ")
-            appendUnderl("\(1)", tag: "times")
         }
         proseString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14)], range: NSMakeRange(0, proseString.length))
         
@@ -349,6 +272,15 @@ public class CheckInCell: UITableViewCell
         
         self.prose.attributedText = proseString
         self.stats.attributedText = statsString
+        
+        if nameString.length == 0
+        {
+            self.contentStack.removeArrangedSubview(name)
+        }
+        else
+        {
+            self.contentStack.insertArrangedSubview(name, at: 0)
+        }
         self.name.attributedText = nameString
         
         self.prose.isHidden = false
@@ -363,14 +295,5 @@ public class CheckInCell: UITableViewCell
         
         self.caption.alpha = 1
         self.container.alpha = 1
-    }
-}
-
-extension CheckInCell: UITextViewDelegate
-{
-    public func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool
-    {
-        print("Tapped url \(URL)")
-        return false
     }
 }

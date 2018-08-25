@@ -139,12 +139,14 @@ class FirstViewController: UIViewController
             
             self.tableView.separatorStyle = .none
             
-            self.tableView.allowsSelection = false
+            self.tableView.allowsSelection = true
             self.tableView.allowsMultipleSelectionDuringEditing = false
 
             self.tableView.rowHeight = UITableViewAutomaticDimension
             self.tableView.estimatedRowHeight = 20 //TODO: actual estimate
         }
+        
+        self.reloadData(animated: false, fromScratch: false)
         
         self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
         { [unowned `self`] _ in
@@ -153,10 +155,10 @@ class FirstViewController: UIViewController
         }
         
         self.data?.populateWithSampleData()
-        DispatchQueue.main.asyncAfter(deadline:.now() + 3)
-        {
-            self.data?.populateWithSampleData()
-        }
+        //DispatchQueue.main.asyncAfter(deadline:.now() + 3)
+        //{
+        //    self.data?.populateWithSampleData()
+        //}
     }
     
     override func viewDidLayoutSubviews()
@@ -234,7 +236,9 @@ class FirstViewController: UIViewController
                         
                         for section in unionKeys
                         {
-                            let changes = diff(old: previousData[section] ?? [], new: outOps[section] ?? [])
+                            let old = (previousData[section] ?? [])//.map { $0.metadata.id }
+                            let new = (outOps[section] ?? [])//.map { $0.metadata.id }
+                            let changes = diff(old: old, new: new, algorithm: WagnerFischer())
                             
                             let converter = IndexPathConverter()
                             let indexPaths = converter.convert(changes: changes, section: section)
@@ -244,7 +248,7 @@ class FirstViewController: UIViewController
                             allChanges.inserts += indexPaths.inserts
                         }
                         
-                        self.tableView.reload(changesWithIndexPath: allChanges, completion: { _ in })
+                        self.tableView.reload(changesWithIndexPath: allChanges, insertionAnimation: UITableViewRowAnimation.fade, deletionAnimation: UITableViewRowAnimation.fade, replacementAnimation: .automatic, completion: { _ in })
                     }
                     else
                     {
@@ -455,7 +459,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         let sectionData = self.cache.data[indexPath.section] ?? []
         if indexPath.row >= sectionData.count
         {
-            return nil
+            return UISwipeActionsConfiguration.init(actions: [])
         }
         
         var model = sectionData[indexPath.row]
@@ -477,6 +481,22 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
         
         return actionsConfig
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        if indexPath.row == (self.cache.data[indexPath.section]?.count ?? 0)
+        {
+            // NEXT: date logic
+            let date = self.cache.range.0.addingTimeInterval(TimeInterval(indexPath.section) * 24 * 60 * 60)
+            (self.tabBarController as? RootViewController)?.showCheckInDrawer(withModel: nil, orDate: date)
+        }
+        else if let item = self.cache.data[indexPath.section]?[indexPath.row]
+        {
+            (self.tabBarController as? RootViewController)?.showCheckInDrawer(withModel: item)
+        }
     }
 }
 

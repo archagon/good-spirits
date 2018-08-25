@@ -198,7 +198,16 @@ extension Database: DataProtocolImmediate
     
     public func lastAddedData() throws -> DataModel?
     {
-        return try DataModel.select(sql: "*, MAX(\(DataModel.Columns.metadata_creation_time.rawValue))").fetchOne(self)
+        // BUGFIX: MAX returns table with single null entry if table is empty
+        let count = try DataModel.fetchCount(self)
+        if count > 0
+        {
+            return try DataModel.select(sql: "*, MAX(\(DataModel.Columns.metadata_creation_time.rawValue))").fetchOne(self)
+        }
+        else
+        {
+            return nil
+        }
     }
     
     public func data(afterTimestamp timestamp: VectorClock) throws -> (Set<DataModel>,VectorClock)
@@ -224,8 +233,11 @@ extension Database: DataProtocolImmediate
     
     public func data(fromIncludingDate from: Date, toExcludingDate to: Date, afterTimestamp timestamp: VectorClock?) throws -> ([DataModel], VectorClock)
     {
-        if let timestamp = timestamp
-        {
+        // AB: prevents multiple paths through code, at a very slight performance penalty
+        let timestamp = timestamp ?? VectorClock.init(map: [:])
+        
+        //if let timestamp = timestamp
+        //{
             let globalTimestamp = try vectorTimestamp()
             let innerQuery = try operationLogQuery(afterTimestamp: timestamp, includingMissing: true, onlyGreaterThan: true)
             
@@ -243,21 +255,24 @@ extension Database: DataProtocolImmediate
             let dateColumn = DataModel.Columns.checkin_time_value.rawValue
             
              //SELECT metadata_id_uuid, metadata_id_index FROM (SELECT metadata_id_uuid, metadata_id_index, checkin_time_value FROM log JOIN data ON (log.action_uuid, log.action_index) = (data.metadata_id_uuid, data.metadata_id_index) WHERE (action_uuid = "5E011DC9-638A-4AD7-88A6-4E84DE19DD85" AND action_index > 20 AND action_index < 100)) WHERE (checkin_time_value > 1533990071.58237);
-            
-            let query = "SELECT * FROM (SELECT * FROM \(logTable) JOIN \(dataTable) ON (\(dataIdColumn), \(dataIndexColumn)) = (\(logIdColumn), \(logIndexColumn)) WHERE (\(innerQuery.0))) WHERE (\(dateColumn) >= ? AND \(dateColumn) < ?)"
+            //let query = "SELECT * FROM (SELECT * FROM \(logTable) JOIN \(dataTable) ON (\(dataIdColumn), \(dataIndexColumn)) = (\(logIdColumn), \(logIndexColumn)) WHERE (\(innerQuery.0))) WHERE (\(dateColumn) >= ? AND \(dateColumn) < ?)"
+        
+            let logQuery = "SELECT \(logIdColumn), \(logIndexColumn) FROM \(logTable) WHERE (\(innerQuery.0))"
+            let joinQuery = "(\(dataIdColumn), \(dataIndexColumn)) = (\(logIdColumn), \(logIndexColumn))"
+            let query = "SELECT DISTINCT * FROM ((\(logQuery)) JOIN \(dataTable) ON \(joinQuery)) WHERE (\(dateColumn) >= ? AND \(dateColumn) < ?) ORDER BY \(dateColumn)"
             
             let allData = try DataModel.fetchAll(self, query, arguments: innerQuery.1 + [from.timeIntervalSince1970, to.timeIntervalSince1970])
             
             return (allData, globalTimestamp)
-        }
-        else
-        {
-            let request = DataModel.filter(DataModel.Columns.checkin_time_value >= from.timeIntervalSince1970 && DataModel.Columns.checkin_time_value < to.timeIntervalSince1970)
-            let values = try DataModel.fetchAll(self, request)
-            let timestamp = try vectorTimestamp()
-            
-            return (values, timestamp)
-        }
+        //}
+        //else
+        //{
+        //    let request = DataModel.filter(DataModel.Columns.checkin_time_value >= from.timeIntervalSince1970 && DataModel.Columns.checkin_time_value < to.timeIntervalSince1970)
+        //    let values = try DataModel.fetchAll(self, request)
+        //    let timestamp = try vectorTimestamp()
+        //
+        //    return (values, timestamp)
+        //}
     }
 }
 

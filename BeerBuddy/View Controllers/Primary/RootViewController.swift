@@ -11,48 +11,47 @@ import UIKit
 import DrawerKit
 import DataLayer
 
-// NEXT: tinker with expansion
-// NEXT: ensure gestures work correctly
-
 class RootViewController: UITabBarController, DrawerCoordinating
 {
     // TODO: technically, this probably ought to go in the app delegate
-    var data: DataLayer
-    
-    // TODO: this is sort of a memory leak until the next controller shows up
-    public var drawerDisplayController: DrawerDisplayController?
-    
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
+    // BUGFIX: KLUDGE: lazy-loaded because this controller is created whenever a popup appears
+    lazy var data: DataLayer =
     {
+        let data: DataLayer
+        
         let path: String? = (NSTemporaryDirectory() as NSString).appendingPathComponent("\(UUID()).db")
         if let dataImpl = Data_GRDB.init(withDatabasePath: path)
         {
-            self.data = DataLayer.init(withStore: dataImpl)
+            data = DataLayer.init(withStore: dataImpl)
         }
         else
         {
             appError("database could not be created")
             let dataImpl = Data_Null()
-            self.data = DataLayer.init(withStore: dataImpl)
+            data = DataLayer.init(withStore: dataImpl)
         }
         
+        return data
+    }()
+    
+    // TODO: this is sort of a memory leak until the next controller shows up
+    public var drawerDisplayController: DrawerDisplayController?
+    
+    var modelForCheckIn: Model?
+    
+    // TODO: figure out why this happens
+    //deinit
+    //{
+    //    print("removing root view controller")
+    //}
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
+    {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
     required init?(coder aDecoder: NSCoder)
     {
-        let path: String? = (NSTemporaryDirectory() as NSString).appendingPathComponent("\(UUID()).db")
-        if let dataImpl = Data_GRDB.init(withDatabasePath: path)
-        {
-            self.data = DataLayer.init(withStore: dataImpl)
-        }
-        else
-        {
-            appError("database could not be created")
-            let dataImpl = Data_Null()
-            self.data = DataLayer.init(withStore: dataImpl)
-        }
-        
         super.init(coder: aDecoder)
     }
     
@@ -150,15 +149,38 @@ class RootViewController: UITabBarController, DrawerCoordinating
         self.present(popup, animated: true, completion: nil)
     }
     
-    func showCheckInDrawer()
+    func showCheckInDrawer(withModel model: Model? = nil, orDate date: Date? = nil)
     {
         let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "CheckIn") as! CheckInViewController
         
+        if let model = model
+        {
+            self.modelForCheckIn = model
+            controller.checkInDate = model.checkIn.time
+            controller.name = model.checkIn.drink.name
+            controller.abv = model.checkIn.drink.abv
+            controller.volume = model.checkIn.drink.volume
+            controller.style = model.checkIn.drink.style
+            controller.cost = model.checkIn.drink.price
+        }
+        else if let date = date
+        {
+            self.modelForCheckIn = nil
+            controller.checkInDate = date
+        }
+        else
+        {
+            self.modelForCheckIn = nil
+        }
+        
         controller.delegate = self
         
         var configuration = controller.standardConfiguration
-        configuration.fullExpansionBehaviour = .leavesCustomGap(gap: self.view.bounds.size.height - controller.heightOfPartiallyExpandedDrawer - 100)
+        
+        // BUGFIX: KLUDGE: allows controller to resize on content changes, since we can't change the configuration
+        // after the fact
+        configuration.fullExpansionBehaviour = .leavesCustomGap(gap: self.view.bounds.size.height - controller.heightOfPartiallyExpandedDrawer - 120)
         
         let pulley = DrawerDisplayController.init(presentingViewController: self, presentedViewController: controller, configuration: configuration, inDebugMode: false)
         self.drawerDisplayController = pulley
@@ -206,20 +228,35 @@ extension RootViewController: CheckInViewControllerDelegate
     }
     
     // TODO: check in for arbitrary date
-    public func committed(drink: Model.Drink, for: CheckInViewController)
+    public func committed(drink: Model.Drink, onDate: Date?, for: CheckInViewController)
     {
-        let model = Model.init(metadata: Model.Metadata.init(id: GlobalID.init(siteID: self.data.owner, operationIndex: DataLayer.wildcardIndex), creationTime: Date()), checkIn: Model.CheckIn.init(untappdId: nil, time: Date(), drink: drink))
+        let updatedModel: Model
         
-        self.data.save(model: model)
+        if var existingModel = self.modelForCheckIn
+        {
+            existingModel.checkIn.drink = drink
+            updatedModel = existingModel
+        }
+        else
+        {
+            let date = Date()
+            let checkInDate = onDate ?? date
+            
+            updatedModel = Model.init(metadata: Model.Metadata.init(id: GlobalID.init(siteID: self.data.owner, operationIndex: DataLayer.wildcardIndex), creationTime: date), checkIn: Model.CheckIn.init(untappdId: nil, time: checkInDate, drink: drink))
+        }
+        
+        self.data.save(model: updatedModel)
         {
             switch $0
             {
             case .error(let e):
                 appError("could not commit check-in (\(e))")
-            case .value(let _):
+            case .value(_):
                 break
             }
         }
+        
+        self.modelForCheckIn = nil
     }
     
     func updateDimensions(for vc: CheckInViewController)
@@ -229,6 +266,7 @@ extension RootViewController: CheckInViewControllerDelegate
             return
         }
         
+        // KLUDGE: allows us to send signals to a private method in a private class
         vc.presentationController?.perform(Selector("refresh"))
     }
 }
