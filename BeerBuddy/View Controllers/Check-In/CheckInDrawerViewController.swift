@@ -11,9 +11,10 @@ import DrawerKit
 
 public class CheckInDrawerViewController: UIViewController, DrawerPresentable, DrawerCoordinating
 {
-    @IBOutlet var confirmButton: ABPrettyButton?
-    @IBOutlet var closeButton: ABPrettyButton?
+    @IBOutlet var confirmButton: UIButton?
+    @IBOutlet var closeButton: UIButton?
     @IBOutlet var stackView: UIView!
+    @IBOutlet var titleLabel: UILabel!
     
     public var drawerDisplayController: DrawerDisplayController?
     
@@ -47,8 +48,37 @@ public class CheckInDrawerViewController: UIViewController, DrawerPresentable, D
         
         if let closeButton = self.closeButton
         {            
-            confirmButton?.setTitle("Accept", for: .normal)
+            self.confirmButton?.setTitle("Accept", for: .normal)
         }
+        
+        // TODO: why does this not work with system buttons?
+        let themeColor = Appearance.themeColor.withAlphaComponent(1)
+        let darkenedThemeColor = Appearance.darkenedThemeColor
+        let darkenedTextColor = UIColor.init(white: 0.9, alpha: 1)
+        self.confirmButton?.setBackgroundImage(themeColor.resizableImage(withCornerRadius: 8), for: .normal)
+        self.confirmButton?.setBackgroundImage(darkenedThemeColor.resizableImage(withCornerRadius: 8), for: .highlighted)
+        self.confirmButton?.setBackgroundImage(darkenedThemeColor.resizableImage(withCornerRadius: 8), for: .selected)
+        self.confirmButton?.setBackgroundImage(darkenedThemeColor.resizableImage(withCornerRadius: 8), for: [.highlighted, .selected])
+        self.confirmButton?.setTitleColor(.white, for: .normal)
+        self.confirmButton?.setTitleColor(darkenedTextColor, for: .highlighted)
+        self.confirmButton?.setTitleColor(darkenedTextColor, for: .selected)
+        self.confirmButton?.setTitleColor(darkenedTextColor, for: [.highlighted, .selected])
+        self.confirmButton?.layer.cornerRadius = 8
+        self.confirmButton?.adjustsImageWhenHighlighted = false
+        self.confirmButton?.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
+        self.confirmButton?.contentEdgeInsets = .init(top: 8, left: 0, bottom: 8, right: 0)
+        
+        //self.confirmButton?.addTarget(self, action: #selector(changeShadowDown), for: .touchDown)
+        //self.confirmButton?.addTarget(self, action: #selector(changeShadowDown), for: .touchDragInside)
+        //self.confirmButton?.addTarget(self, action: #selector(changeShadowUp), for: .touchUpInside)
+        //self.confirmButton?.addTarget(self, action: #selector(changeShadowUp), for: .touchUpOutside)
+        //self.confirmButton?.addTarget(self, action: #selector(changeShadowUp), for: .touchDragOutside)
+        //self.confirmButton?.layer.shadowColor = UIColor.black.cgColor
+        //self.confirmButton?.layer.shadowOpacity = 0.2
+        //self.confirmButton?.layer.shadowRadius = 2
+        //self.confirmButton?.layer.shadowOffset = CGSize.init(width: 0, height: 1.5)
+        
+        self.titleLabel?.textColor = Appearance.themeColor.withAlphaComponent(1)
         
         self.confirmButton?.addTarget(self, action: #selector(confirmTapped), for: .touchUpInside)
         self.closeButton?.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)

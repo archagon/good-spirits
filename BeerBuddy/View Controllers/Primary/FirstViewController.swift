@@ -154,7 +154,7 @@ class FirstViewController: UIViewController
             self.reloadData(animated: true, fromScratch: false)
         }
         
-        self.data?.populateWithSampleData()
+        //self.data?.populateWithSampleData()
         //DispatchQueue.main.asyncAfter(deadline:.now() + 3)
         //{
         //    self.data?.populateWithSampleData()
@@ -486,6 +486,16 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             let endDay = self.cache.calendar.date(byAdding: .day, value: section + 1, to: self.cache.range.0)!
             let lastDate = self.cache.data[section]?.last?.checkIn.time ?? startDay
             let nextDate = self.cache.calendar.date(byAdding: .minute, value: 1, to: lastDate)!
+            
+            let todayComp = self.cache.calendar.dateComponents([.day, .month, .year], from: Date())
+            let startComp = self.cache.calendar.dateComponents([.day, .month, .year], from: startDay)
+            
+            if todayComp == startComp
+            {
+                appDebug("it's today!")
+                (self.tabBarController as? RootViewController)?.showCheckInDrawer()
+                return
+            }
             
             let date: Date
             

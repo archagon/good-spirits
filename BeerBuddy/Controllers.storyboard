@@ -90,7 +90,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="FUh-6y-f3V">
-                                <rect key="frame" x="16" y="32" width="343" height="149.5"/>
+                                <rect key="frame" x="16" y="32" width="343" height="141.5"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e9n-wR-8aF">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="75.5"/>
@@ -107,12 +107,12 @@
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v2G-X3-zM0">
-                                        <rect key="frame" x="0.0" y="107.5" width="343" height="42"/>
+                                        <rect key="frame" x="0.0" y="107.5" width="343" height="34"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="343" placeholderIntrinsicHeight="42" translatesAutoresizingMaskIntoConstraints="NO" id="5XO-1D-yDh" customClass="ABPrettyButton" customModule="BeerBuddy" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="343" height="42"/>
-                                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4d1-Lg-tLM">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="34"/>
+                                                <state key="normal" title="Button"/>
+                                            </button>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -127,7 +127,7 @@
                         <viewLayoutGuide key="safeArea" id="7tE-r5-pLE"/>
                     </view>
                     <connections>
-                        <outlet property="confirmButton" destination="5XO-1D-yDh" id="xQ4-iF-2fX"/>
+                        <outlet property="confirmButton" destination="4d1-Lg-tLM" id="D8u-Rm-VeU"/>
                         <outlet property="stackView" destination="FUh-6y-f3V" id="Ie0-0k-7Iz"/>
                         <outlet property="text" destination="e9n-wR-8aF" id="gCH-rB-hYg"/>
                     </connections>
@@ -145,7 +145,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="oj1-DV-fjH">
-                                <rect key="frame" x="16" y="32" width="343" height="324"/>
+                                <rect key="frame" x="16" y="32" width="343" height="316"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PHG-9x-W9D">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
@@ -205,12 +205,12 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="duJ-5b-NHi">
-                                        <rect key="frame" x="0.0" y="282" width="343" height="42"/>
+                                        <rect key="frame" x="0.0" y="282" width="343" height="34"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="343" placeholderIntrinsicHeight="42" translatesAutoresizingMaskIntoConstraints="NO" id="f2u-Gh-Tb9" customClass="ABPrettyButton" customModule="BeerBuddy" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="343" height="42"/>
-                                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X7R-Vl-yV1">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="34"/>
+                                                <state key="normal" title="Button"/>
+                                            </button>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -226,9 +226,10 @@
                     </view>
                     <connections>
                         <outlet property="closeButton" destination="yC1-D7-0Vl" id="yrA-Mb-8FQ"/>
-                        <outlet property="confirmButton" destination="f2u-Gh-Tb9" id="BJP-WA-Pvj"/>
+                        <outlet property="confirmButton" destination="X7R-Vl-yV1" id="MRt-nO-XDO"/>
                         <outlet property="decimalPicker" destination="gHo-cm-HIT" id="PWJ-O3-3hV"/>
                         <outlet property="stackView" destination="oj1-DV-fjH" id="bxH-5b-Z7l"/>
+                        <outlet property="titleLabel" destination="yjZ-2j-3JN" id="oFR-1N-AXS"/>
                         <outlet property="unitPicker" destination="bUk-Ld-qp7" id="uzD-cW-QOn"/>
                     </connections>
                 </viewController>
@@ -245,7 +246,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="C4d-vC-Ng6">
-                                <rect key="frame" x="16" y="32" width="343" height="324"/>
+                                <rect key="frame" x="16" y="32" width="343" height="316"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F1z-jZ-7cj">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
@@ -305,12 +306,12 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mWT-1V-qli">
-                                        <rect key="frame" x="0.0" y="282" width="343" height="42"/>
+                                        <rect key="frame" x="0.0" y="282" width="343" height="34"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="343" placeholderIntrinsicHeight="42" translatesAutoresizingMaskIntoConstraints="NO" id="lt5-vk-1rL" customClass="ABPrettyButton" customModule="BeerBuddy" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="343" height="42"/>
-                                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SLd-RY-shJ">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="34"/>
+                                                <state key="normal" title="Button"/>
+                                            </button>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -326,9 +327,10 @@
                     </view>
                     <connections>
                         <outlet property="closeButton" destination="ev2-dD-Ijv" id="IGp-cB-7YC"/>
-                        <outlet property="confirmButton" destination="lt5-vk-1rL" id="4cV-dR-MwP"/>
+                        <outlet property="confirmButton" destination="SLd-RY-shJ" id="WUu-DM-tJQ"/>
                         <outlet property="decimalPicker" destination="96b-4W-NLh" id="xDN-iI-7BG"/>
                         <outlet property="stackView" destination="C4d-vC-Ng6" id="irt-7A-wPN"/>
+                        <outlet property="titleLabel" destination="Yd1-rX-AxY" id="Nba-j1-Mj8"/>
                         <outlet property="unitPicker" destination="Ydb-G7-2cP" id="vPc-hi-rao"/>
                     </connections>
                 </viewController>
@@ -345,7 +347,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="aDa-Bl-Rqb">
-                                <rect key="frame" x="16" y="32" width="343" height="513"/>
+                                <rect key="frame" x="16" y="32" width="343" height="505"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kFi-ll-VPo">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="128"/>
@@ -433,12 +435,12 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F1z-MH-TpP">
-                                        <rect key="frame" x="0.0" y="471" width="343" height="42"/>
+                                        <rect key="frame" x="0.0" y="471" width="343" height="34"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="343" placeholderIntrinsicHeight="42" translatesAutoresizingMaskIntoConstraints="NO" id="gxj-Ol-RIH" customClass="ABPrettyButton" customModule="BeerBuddy" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="343" height="42"/>
-                                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zsa-M1-CCE">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="34"/>
+                                                <state key="normal" title="Button"/>
+                                            </button>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -454,12 +456,13 @@
                     </view>
                     <connections>
                         <outlet property="closeButton" destination="cS1-ZH-90m" id="Aij-Pa-GMB"/>
-                        <outlet property="confirmButton" destination="gxj-Ol-RIH" id="aXe-v1-cD1"/>
+                        <outlet property="confirmButton" destination="zsa-M1-CCE" id="eKe-Wl-HVY"/>
                         <outlet property="decimalPicker" destination="a8p-1e-EkQ" id="ue7-ge-FW7"/>
                         <outlet property="glasesHeight" destination="sg7-yU-HE5" id="oqE-dB-bg7"/>
                         <outlet property="glasses" destination="44M-up-lhD" id="xju-5u-HOm"/>
                         <outlet property="measurePicker" destination="Snf-A6-in0" id="Clo-66-Gab"/>
                         <outlet property="stackView" destination="aDa-Bl-Rqb" id="yAm-1F-Zda"/>
+                        <outlet property="titleLabel" destination="nLc-y6-ppr" id="AUG-kV-dFf"/>
                         <outlet property="unitPicker" destination="yYE-dM-jDU" id="KZN-82-e0e"/>
                     </connections>
                 </viewController>
@@ -476,7 +479,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="imh-ye-YIt">
-                                <rect key="frame" x="16" y="32" width="343" height="448"/>
+                                <rect key="frame" x="16" y="32" width="343" height="440"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fGo-gW-Umo">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="128"/>
@@ -542,12 +545,12 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MoE-pM-jdc">
-                                        <rect key="frame" x="0.0" y="406" width="343" height="42"/>
+                                        <rect key="frame" x="0.0" y="406" width="343" height="34"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="343" placeholderIntrinsicHeight="42" translatesAutoresizingMaskIntoConstraints="NO" id="sxN-fa-o4B" customClass="ABPrettyButton" customModule="BeerBuddy" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="343" height="42"/>
-                                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AgW-wz-3EI">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="34"/>
+                                                <state key="normal" title="Button"/>
+                                            </button>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -563,10 +566,11 @@
                     </view>
                     <connections>
                         <outlet property="closeButton" destination="x7e-BE-G0K" id="JMK-rU-adX"/>
-                        <outlet property="confirmButton" destination="sxN-fa-o4B" id="anP-4r-z8k"/>
+                        <outlet property="confirmButton" destination="AgW-wz-3EI" id="m74-qr-p2T"/>
                         <outlet property="name" destination="Cne-T0-Iyf" id="VfG-BO-H8m"/>
                         <outlet property="stackView" destination="imh-ye-YIt" id="8Q3-s2-qWo"/>
                         <outlet property="stylePicker" destination="YQd-l0-4Hy" id="Vbx-dm-nFH"/>
+                        <outlet property="titleLabel" destination="XZt-vL-vBI" id="j5q-M0-T3t"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Byd-8O-TXo" userLabel="First Responder" sceneMemberID="firstResponder"/>

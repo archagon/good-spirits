@@ -11,6 +11,7 @@ import Foundation
 class Appearance
 {
     static var themeColor: UIColor = UIColor.init(red: 107/255.0, green: 158/255.0, blue: 255/255.0, alpha: 1)
+    static var darkenedThemeColor = themeColor.mixed(with: .black, by: 0.15)
     
     public static let shared = Appearance()
     

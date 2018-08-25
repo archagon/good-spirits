@@ -299,7 +299,7 @@ extension VolumePickerViewController
                 self.label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
                 self.label.textColor = UIColor.darkText
                 
-                imageContainer.backgroundColor = Appearance.themeColor.withAlphaComponent(0.7)
+                imageContainer.backgroundColor = Appearance.themeColor
                 imageContainer.layer.cornerRadius = 8
                 
                 imageView.tintColor = .white
@@ -328,11 +328,13 @@ extension VolumePickerViewController
             {
                 if isHighlighted
                 {
-                    imageContainer.backgroundColor = Appearance.themeColor.withAlphaComponent(0.9)
+                    imageContainer.backgroundColor = Appearance.darkenedThemeColor
+                    imageView.tintColor = UIColor.init(white: 0.9, alpha: 1)
                 }
                 else
                 {
-                    imageContainer.backgroundColor = Appearance.themeColor.withAlphaComponent(0.7)
+                    imageContainer.backgroundColor = Appearance.themeColor
+                    imageView.tintColor = .white
                 }
             }
         }
@@ -343,11 +345,13 @@ extension VolumePickerViewController
             {
                 if isHighlighted
                 {
-                    imageContainer.backgroundColor = Appearance.themeColor.withAlphaComponent(0.9)
+                    imageContainer.backgroundColor = Appearance.darkenedThemeColor
+                    imageView.tintColor = UIColor.init(white: 0.9, alpha: 1)
                 }
                 else
                 {
-                    imageContainer.backgroundColor = Appearance.themeColor.withAlphaComponent(0.7)
+                    imageContainer.backgroundColor = Appearance.themeColor
+                    imageView.tintColor = .white
                 }
             }
         }

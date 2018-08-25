@@ -73,4 +73,32 @@ extension UIColor
         
         return UIColor.init(red: l * self.r + r * with.r, green: l * self.g + r * with.g, blue: l * self.b + r * with.b, alpha: l * self.a + r * with.a)
     }
+    
+    // https://stackoverflow.com/a/33675160/89812
+    public var pixel: UIImage
+    {
+        let rect = CGRect(origin: .zero, size: CGSize.init(width: 1, height: 1))
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+        
+        self.setFill()
+        UIRectFill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return image ?? UIImage()
+    }
+    
+    public func resizableImage(withCornerRadius r: CGFloat) -> UIImage
+    {
+        let rect = CGRect(origin: .zero, size: CGSize.init(width: 1 + 2 * r, height: 1 + 2 * r))
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+        
+        self.setFill()
+        let shape = UIBezierPath.init(roundedRect: rect, byRoundingCorners: .allCorners, cornerRadii: CGSize.init(width: r, height: r))
+        shape.fill()
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return image?.resizableImage(withCapInsets: UIEdgeInsets.init(top: r, left: r, bottom: r, right: r)) ?? UIImage()
+    }
 }
