@@ -23,6 +23,7 @@ public enum DrinkStyle: String, RawRepresentable
     case whisky
     case brandy
     case liqueur
+    case cocktail
     case other
     case placeholder
     case overflow
@@ -57,6 +58,8 @@ public enum DrinkStyle: String, RawRepresentable
         case .brandy:
             fallthrough
         case .liqueur:
+            fallthrough
+        case .cocktail:
             return false
             
         case .other:
@@ -98,6 +101,8 @@ public enum DrinkStyle: String, RawRepresentable
         case .brandy:
             fallthrough
         case .liqueur:
+            fallthrough
+        case .cocktail:
             return true
             
         case .other:
@@ -138,6 +143,8 @@ public enum DrinkStyle: String, RawRepresentable
         case .brandy:
             fallthrough
         case .liqueur:
+            fallthrough
+        case .cocktail:
             fallthrough
         case .other:
             return true
@@ -193,6 +200,9 @@ public enum DrinkStyle: String, RawRepresentable
             fallthrough
         case .liqueur:
             styles.append(.liqueur)
+            fallthrough
+        case .cocktail:
+            styles.append(.cocktail)
             fallthrough
         case .other:
             styles.append(.other)

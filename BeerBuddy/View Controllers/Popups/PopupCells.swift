@@ -92,6 +92,9 @@ class SubtitleToggleCell: ToggleCell
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
         self.detailTextLabel?.numberOfLines = 1000
+        
+        self.textLabel?.backgroundColor = .clear
+        self.detailTextLabel?.backgroundColor = .clear
     }
     
     required init?(coder aDecoder: NSCoder)

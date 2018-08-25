@@ -334,7 +334,7 @@ extension SettingsViewController
                 if let cell = tableView.cellForRow(at: indexPath) as? ToggleCell
                 {
                     cell.toggle.isOn = !cell.toggle.isOn
-                    //healthKitToggled(cell.toggle)
+                    weekStartsOnMondayToggled(cell.toggle)
                 }
                 
                 tableView.deselectRow(at: indexPath, animated: true)

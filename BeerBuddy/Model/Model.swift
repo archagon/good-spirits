@@ -46,6 +46,8 @@ public extension DrinkStyle
             return 0.4
         case .liqueur:
             return 0.22
+        case .cocktail:
+            return 0.25
             
         case .other:
             fallthrough
@@ -88,6 +90,8 @@ public extension DrinkStyle
                 return .init(value: 1.5, unit: .fluidOunces)
             case .liqueur:
                 return .init(value: 1.5, unit: .fluidOunces)
+            case .cocktail:
+                return .init(value: 6, unit: .fluidOunces)
                 
             case .other:
                 fallthrough
@@ -140,6 +144,14 @@ public extension DrinkStyle
                     .init(value: 1.5, unit: .fluidOunces),
                     .init(value: 5, unit: .fluidOunces),
                 ]
+                
+            case .cocktail:
+                return [
+                    .init(value: 4, unit: .fluidOunces), //lowball 4-6
+                    .init(value: 6, unit: .fluidOunces), //martini ~5
+                    .init(value: 10, unit: .fluidOunces), //highball 8-12
+                    .init(value: 14, unit: .fluidOunces), //collins 12-16
+                ]
             
             default:
                 return [self.defaultVolume]
@@ -154,37 +166,9 @@ extension DrinkStyle: CustomStringConvertible
     {
         switch self
         {
-        case .beer:
-            return self.rawValue
-        case .wine:
-            return self.rawValue
         case .fortifiedWine:
             return "fortified wine"
-        case .mead:
-            return self.rawValue
-        case .cider:
-            return self.rawValue
-        case .sake:
-            return self.rawValue
-        case .vodka:
-            return self.rawValue
-        case .gin:
-            return self.rawValue
-        case .tequilla:
-            return self.rawValue
-        case .rum:
-            return self.rawValue
-        case .whisky:
-            return self.rawValue
-        case .brandy:
-            return self.rawValue
-        case .liqueur:
-            return self.rawValue
-        case .other:
-            return self.rawValue
-        case .placeholder:
-            return self.rawValue
-        case .overflow:
+        default:
             return self.rawValue
         }
     }
@@ -256,13 +240,36 @@ public extension Model
                 return "wine_glass_big"
             }
         }
+        else if drink.style == .cocktail
+        {
+            if equalish(first: drink.volume, second: .init(value: 4, unit: .fluidOunces), delta: .init(value: 0.75, unit: .fluidOunces))
+            {
+                return "lowball"
+            }
+            else if equalish(first: drink.volume, second: .init(value: 6, unit: .fluidOunces), delta: .init(value: 1, unit: .fluidOunces))
+            {
+                return "martini_glass"
+            }
+            else if equalish(first: drink.volume, second: .init(value: 10, unit: .fluidOunces), delta: .init(value: 2, unit: .fluidOunces))
+            {
+                return "highball"
+            }
+            else if equalish(first: drink.volume, second: .init(value: 14, unit: .fluidOunces), delta: .init(value: 2, unit: .fluidOunces))
+            {
+                return "tall_glass"
+            }
+            else
+            {
+                return "martini_glass"
+            }
+        }
         else if drink.style == .sake || drink.style.distilled
         {
             if drink.volume <= Measurement<UnitVolume>.init(value: 2, unit: .fluidOunces)
             {
                 return "shot_glass"
             }
-            else if equalish(first: drink.volume, second: Measurement<UnitVolume>.init(value: 5, unit: .fluidOunces), delta: .init(value: 1, unit: .fluidOunces))
+            else if equalish(first: drink.volume, second: .init(value: 5, unit: .fluidOunces), delta: .init(value: 1, unit: .fluidOunces))
             {
                 return "highball"
             }

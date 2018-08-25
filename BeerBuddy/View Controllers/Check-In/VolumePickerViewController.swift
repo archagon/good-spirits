@@ -155,6 +155,21 @@ extension VolumePickerViewController: UIPickerViewDelegate, UIPickerViewDataSour
         }
     }
     
+    // AB: prevents text cutting off on iPhone SE
+    public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView
+    {
+        let label: UILabel
+        if let view = view as? UILabel { label = view }
+        else { label = UILabel() }
+
+        label.text = self.pickerView(pickerView, titleForRow: row, forComponent: component)
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 23, weight: .regular)
+        label.adjustsFontSizeToFitWidth = true
+
+        return label
+    }
+    
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
         if pickerView == self.unitPicker || pickerView == self.decimalPicker
