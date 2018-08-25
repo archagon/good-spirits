@@ -103,17 +103,19 @@ extension HealthKit
         
         let samplePredicate = HKQuery.predicateForObjects(withMetadataKey: HKMetadataKeySyncIdentifier, operatorType: .equalTo, value: id)
         
-        let query = HKCorrelationQuery.init(type: HKCorrelationType.correlationType(forIdentifier: HKCorrelationTypeIdentifier.food)!, predicate: samplePredicate, samplePredicates: [HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)! : samplePredicate], completion:
-        { [weak `self`] (query, correlations, error) in
+        //let query = HKCorrelationQuery.init(type: HKCorrelationType.correlationType(forIdentifier: HKCorrelationTypeIdentifier.food)!, predicate: samplePredicate, samplePredicates: [HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)! : samplePredicate])
+        let query = HKSampleQuery.init(sampleType: HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)!, predicate: samplePredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil)
+        { [weak `self`] (query, items, error) in
             if let error = error
             {
                 appWarning("could not complete HealthKit delete -- \(error)")
             }
             else
             {
-                for (_, correlation) in (correlations ?? []).enumerated()
+                for (_, item) in (items ?? []).enumerated()
                 {
-                    self?.store?.delete(Array(correlation.objects + [correlation]), withCompletion:
+                    //self?.store?.delete(Array(correlation.objects + [correlation]), withCompletion:
+                    self?.store?.delete(item, withCompletion:
                     { (success, error) in
                         if let error = error as? HKError, error.code == HKError.errorInvalidArgument
                         {
@@ -130,7 +132,7 @@ extension HealthKit
                     })
                 }
             }
-        })
+        }
         
         self.store?.execute(query)
         
@@ -176,10 +178,12 @@ extension HealthKit
             sampleMetadata[Constants.healthKitFoodNameKey] = aName
         }
         
+        // BUGFIX: I was getting an unclearable error 100 about not being able to delete something or other after doing
+        // a bunch of check-ins, and this seems to work a lot better anyway
         let sample = HKQuantitySample.init(type: type, quantity: quantity, start: date, end: date, metadata: sampleMetadata)
-        let food = HKCorrelation.init(type: HKCorrelationType.correlationType(forIdentifier: HKCorrelationTypeIdentifier.food)!, start: date, end: date, objects: [sample], metadata: sampleMetadata)
+        //let food = HKCorrelation.init(type: HKCorrelationType.correlationType(forIdentifier: HKCorrelationTypeIdentifier.food)!, start: date, end: date, objects: [sample], metadata: sampleMetadata)
         
-        self.store?.save(food, withCompletion:
+        self.store?.save(sample, withCompletion:
         { (success, error) in
             if let error = error
             {
