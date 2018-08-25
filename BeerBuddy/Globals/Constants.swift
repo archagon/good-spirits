@@ -28,6 +28,8 @@ class Constants
         return Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as! String
     }
     
+    static let healthKitFoodNameKey = "BBMetadataKeyFoodName"
+    
     static let calorieMultiplier: Double = 1.6
     
     static let standardDrinkSizeDefault: Double = 14

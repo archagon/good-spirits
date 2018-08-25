@@ -31,8 +31,17 @@ class RootViewController: UITabBarController, DrawerCoordinating
             data = DataLayer.init(withStore: dataImpl)
         }
         
+        // TODO: this probably does not belong here, either
+        self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
+        { [weak `self`] _ in
+            self?.syncHealthKit()
+        }
+        
         return data
     }()
+    
+    var notificationObserver: Any?
+    var lastHealthKitToken: DataLayer.Token = DataLayer.NullToken
     
     // TODO: this is sort of a memory leak until the next controller shows up
     public var drawerDisplayController: DrawerDisplayController?
@@ -44,6 +53,14 @@ class RootViewController: UITabBarController, DrawerCoordinating
     //{
     //    print("removing root view controller")
     //}
+    
+    deinit
+    {
+        if let observer = notificationObserver
+        {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
     {
@@ -78,6 +95,31 @@ class RootViewController: UITabBarController, DrawerCoordinating
         if !Defaults.configured
         {
             showLimitPopup()
+        }
+    }
+    
+    private func syncHealthKit()
+    {
+        self.data.getModels(fromIncludingDate: Date.distantPast, toExcludingDate: Date.distantFuture, withToken: self.lastHealthKitToken)
+        {
+            switch $0
+            {
+            case .error(let e):
+                appError("could not get models from database -- \(e)")
+            case .value(let v):
+                for model in v.0
+                {
+                    if model.deleted
+                    {
+                        let _  = HealthKit.shared.delete(model: model.metadata.id)
+                    }
+                    else
+                    {
+                        let _ = HealthKit.shared.commit(model: model, withTimestamp: Date().timeIntervalSince1970 as NSNumber)
+                    }
+                }
+                self.lastHealthKitToken = v.1
+            }
         }
     }
     

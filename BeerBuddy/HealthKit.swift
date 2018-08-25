@@ -11,20 +11,55 @@ import UIKit
 import HealthKit
 import DataLayer
 
-// NEXT:
-// STATES:
-//  * token not set, auth status not determined
-//  * token not set, auth status ???
-//  * token set, but calls fail
-//  * token set, calls succeed
-
 class HealthKit
 {
     static let shared = HealthKit()
     
+    public enum HealthKitError: Error
+    {
+        case notAvailable
+        case notAuthorized
+        case notEnabled
+        case notReady
+    }
+    
+    private var loginPending: Bool = false
+    public enum HealthKitLoginStatus
+    {
+        case unavailable
+        case unauthorized
+        case disabled
+        case pendingAuthorization
+        case enabledAndAuthorized
+    }
+    
+    var loginStatus: HealthKitLoginStatus
+    {
+        if self.loginPending
+        {
+            return .pendingAuthorization
+        }
+        
+        if let status = HealthKit.shared.authStatus()
+        {
+            switch status
+            {
+            case .notDetermined:
+                return .disabled
+            case .sharingAuthorized:
+                return (Defaults.healthKitEnabled ?.enabledAndAuthorized : .disabled)
+            case .sharingDenied:
+                return . unauthorized
+            }
+        }
+        else
+        {
+            return .unavailable
+        }
+    }
+    
     var store: HKHealthStore? =
     {
-        // NEXT: add this check to settings
         if HKHealthStore.isHealthDataAvailable()
         {
             let store = HKHealthStore()
@@ -36,132 +71,126 @@ class HealthKit
         }
     }()
     
-    var testUUID = UUID()
-    
     func authStatus() -> HKAuthorizationStatus?
     {
         let type = HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)!
         return self.store?.authorizationStatus(for: type)
-    }
-    
-    func test()
-    {
-        let allTypes: Set<HKSampleType> = [ HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)! ]
-        
-        HealthKit.shared.store?.requestAuthorization(toShare: allTypes, read: nil)
-        { (success, error) in
-            if !success
-            {
-                appError("\(error!)")
-            }
-            else
-            {
-                let type = HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)!
-                let quantity = HKQuantity.init(unit: HKUnit.kilocalorie(), doubleValue: Double.random(in: 75..<200))
-                let date = Date()
-                
-                let id = self.testUUID.uuidString
-                let v = Date().timeIntervalSince1970
-                let style = "beer"
-                let name = "Random Beve"
-                let alcohol = 14 * 1.5
-                
-                let sampleMetadata: [String:Any] =
-                [
-                    HKMetadataKeySyncIdentifier: id,
-                    HKMetadataKeySyncVersion: v,
-                    HKMetadataKeyFoodType: style,
-                    "BBMetadataKeyFoodName": name,
-                    "BBMetadataKeyAlcoholGrams": alcohol
-                ]
-                let foodMetadata: [String:Any] =
-                [
-                    HKMetadataKeyFoodType: style,
-                    "BBMetadataKeyFoodName": name,
-                    "BBMetadataKeyAlcoholGrams": alcohol,
-                    HKMetadataKeySyncIdentifier: id,
-                    HKMetadataKeySyncVersion: v,
-                ]
-                
-                let sample = HKQuantitySample.init(type: type, quantity: quantity, start: date, end: date, metadata: sampleMetadata)
-                //let sample = HKQuantitySample.init(type: type, quantity: quantity, start: date, end: date, metadata: sampleMetadata)
-                let food = HKCorrelation.init(type: HKCorrelationType.correlationType(forIdentifier: HKCorrelationTypeIdentifier.food)!, start: date, end: date, objects: [sample], metadata: sampleMetadata)
-                
-                let authType = HealthKit.shared.store?.authorizationStatus(for: type) ?? .sharingDenied
-                
-                if authType == .sharingAuthorized
-                {
-                    HealthKit.shared.store?.save(food, withCompletion:
-                    { (success, error) in
-                        if !success
-                        {
-                            appError("\(error!)")
-                        }
-                        else
-                        {
-                            print("hk: success!!!")
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute:
-                            {
-                                let samplePredicate = HKQuery.predicateForObjects(withMetadataKey: HKMetadataKeySyncIdentifier, operatorType: .equalTo, value: id)
-                                
-                                let query = HKCorrelationQuery.init(type: HKCorrelationType.correlationType(forIdentifier: HKCorrelationTypeIdentifier.food)!, predicate: samplePredicate, samplePredicates: [HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)! : samplePredicate], completion:
-                                { (query, correlations, error) in
-                                    if let error = error
-                                    {
-                                        appError("\(error)")
-                                    }
-                                    else
-                                    {
-                                        DispatchQueue.main.async
-                                        {
-                                            print("correlations retrieved")
-                                            
-                                            for (i, correlation) in (correlations ?? []).enumerated()
-                                            {
-                                                print("found correlation \(i)")
-                                                
-                                                HealthKit.shared.store?.delete(Array(correlation.objects + [correlation]), withCompletion:
-                                                { (success, error) in
-                                                    if !success
-                                                    {
-                                                        if let aError = error as? HKError, aError.code == HKError.errorInvalidArgument
-                                                        {
-                                                            print("object already deleted")
-                                                        }
-                                                        else
-                                                        {
-                                                            appError("\(error!)")
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        print("deleted!")
-                                                    }
-                                                })
-                                            }
-                                        }
-                                    }
-                                })
-                                
-                                HealthKit.shared.store?.execute(query)
-                            })
-                        }
-                    })
-                }
-                else
-                {
-                    appError("healthkit not authorized")
-                }
-            }
-        }
     }
 }
 
 // Model interface.
 extension HealthKit
 {
-    func commit(model: Model)
+    func delete(model: GlobalID) -> HealthKitError?
     {
+        switch self.loginStatus
+        {
+        case .unavailable:
+            return HealthKitError.notAvailable
+        case .unauthorized:
+            return HealthKitError.notAuthorized
+        case .disabled:
+            return HealthKitError.notEnabled
+        case .pendingAuthorization:
+            return HealthKitError.notReady
+        case .enabledAndAuthorized:
+            break
+        }
+        
+        appDebug("HK: deleting model \(model)")
+        
+        let id = "\(model.siteID.uuidString).\(model.operationIndex)"
+        
+        let samplePredicate = HKQuery.predicateForObjects(withMetadataKey: HKMetadataKeySyncIdentifier, operatorType: .equalTo, value: id)
+        
+        let query = HKCorrelationQuery.init(type: HKCorrelationType.correlationType(forIdentifier: HKCorrelationTypeIdentifier.food)!, predicate: samplePredicate, samplePredicates: [HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)! : samplePredicate], completion:
+        { [weak `self`] (query, correlations, error) in
+            if let error = error
+            {
+                appWarning("could not complete HealthKit delete -- \(error)")
+            }
+            else
+            {
+                for (_, correlation) in (correlations ?? []).enumerated()
+                {
+                    self?.store?.delete(Array(correlation.objects + [correlation]), withCompletion:
+                    { (success, error) in
+                        if let error = error as? HKError, error.code == HKError.errorInvalidArgument
+                        {
+                            appDebug("HK: model already deleted")
+                        }
+                        else if let error = error
+                        {
+                            appWarning("could not complete HealthKit delete -- \(error)")
+                        }
+                        else
+                        {
+                            appDebug("HK: deleted!")
+                        }
+                    })
+                }
+            }
+        })
+        
+        self.store?.execute(query)
+        
+        return nil
+    }
+    
+    func commit(model: Model, withTimestamp timestamp: NSNumber) -> HealthKitError?
+    {
+        switch self.loginStatus
+        {
+        case .unavailable:
+            return HealthKitError.notAvailable
+        case .unauthorized:
+            return HealthKitError.notAuthorized
+        case .disabled:
+            return HealthKitError.notEnabled
+        case .pendingAuthorization:
+            return HealthKitError.notReady
+        case .enabledAndAuthorized:
+            break
+        }
+        
+        appDebug("HK: syncing model \(model.metadata.id)")
+        
+        let alcoholCalories = (model.checkIn.drink.volume.converted(to: .fluidOunces).value * model.checkIn.drink.abv / 0.6) * 14 * 7 * Constants.calorieMultiplier
+        let date = model.checkIn.time
+        let id = "\(model.metadata.id.siteID.uuidString).\(model.metadata.id.operationIndex)"
+        let v = timestamp
+        let style = model.checkIn.drink.style.rawValue
+        let name = model.checkIn.drink.name
+        
+        let type = HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)!
+        let quantity = HKQuantity.init(unit: HKUnit.kilocalorie(), doubleValue: alcoholCalories)
+        
+        var sampleMetadata: [String:Any] =
+        [
+            HKMetadataKeySyncIdentifier: id,
+            HKMetadataKeySyncVersion: v,
+            HKMetadataKeyFoodType: style
+        ]
+        if let aName = name
+        {
+            sampleMetadata[Constants.healthKitFoodNameKey] = aName
+        }
+        
+        let sample = HKQuantitySample.init(type: type, quantity: quantity, start: date, end: date, metadata: sampleMetadata)
+        let food = HKCorrelation.init(type: HKCorrelationType.correlationType(forIdentifier: HKCorrelationTypeIdentifier.food)!, start: date, end: date, objects: [sample], metadata: sampleMetadata)
+        
+        self.store?.save(food, withCompletion:
+        { (success, error) in
+            if let error = error
+            {
+                appWarning("HK: could not complete HealthKit update -- \(error)")
+            }
+            else
+            {
+                appDebug("HK: synced!")
+            }
+        })
+        
+        return nil
     }
 }

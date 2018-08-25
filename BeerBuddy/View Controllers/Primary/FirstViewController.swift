@@ -150,7 +150,7 @@ class FirstViewController: UIViewController
         
         self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
         { [unowned `self`] _ in
-            print("Requesting change with token \(self.cache?.token ?? DataLayer.NullToken)...")
+            appDebug("requesting change with token \(self.cache?.token ?? DataLayer.NullToken)...")
             self.reloadData(animated: true, fromScratch: false)
         }
         
@@ -191,7 +191,7 @@ class FirstViewController: UIViewController
             case .value(let v):
                 if self.cache?.token != v.1
                 {
-                    print("Changes received with new token \(v.1)!")
+                    appDebug("changes received with new token \(v.1)!")
                 }
                 // TODO: move this
                 if self.cache == nil
@@ -471,7 +471,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         //}
         let deleteAction = UIContextualAction.init(style: .destructive, title: "Delete")
         { (action, view, handler) in
-            print("Attempting delete!")
+            appDebug("attempting delete")
             model.delete()
             self.data!.save(model: model) { _ in handler(false) }
         }
