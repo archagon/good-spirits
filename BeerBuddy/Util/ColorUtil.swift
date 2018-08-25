@@ -66,6 +66,11 @@ extension UIColor
     
     public func mixed(with: UIColor, by: CGFloat) -> UIColor
     {
+        if by == 0
+        {
+            return self
+        }
+        
         let nby = min(max(by, 0), 1)
         
         let l = 1 - nby

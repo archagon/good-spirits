@@ -79,11 +79,11 @@ public class AddItemCell: UITableViewCell
                 
                 self.caption.attributedText = attributedText
                 
-                self.container.tintColor = UIButton(type: .system).tintColor
-                self.caption.textColor = UIButton(type: .system).tintColor
+                self.container.tintColor = Appearance.themeColor
+                self.caption.textColor = Appearance.themeColor
                 
-                self.caption.alpha = 0.7
-                self.container.alpha = 0.7
+                self.caption.alpha = 1
+                self.container.alpha = 0.5
             }
         }
     }

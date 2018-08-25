@@ -22,6 +22,7 @@ class FirstViewController: UIViewController
     var progressLabel: UILabel!
     
     var notificationObserver: Any?
+    var defaultsNotificationObserver: Any?
     
     // guaranteed to always be valid
     var cache: (calendar: Calendar, range: (Date, Date), days: Int, data: [Int:[Model]], token: DataLayer.Token)!
@@ -68,6 +69,10 @@ class FirstViewController: UIViewController
         {
             NotificationCenter.default.removeObserver(observer)
         }
+        if let observer = defaultsNotificationObserver
+        {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool)
@@ -82,47 +87,78 @@ class FirstViewController: UIViewController
     {
         super.viewDidLoad()
 
-        calendar.isHidden = true
-        calendar.setScope(.week, animated: false)
-        let range = Time.currentWeek()
-        let midpoint = Date.init(timeIntervalSince1970: (range.0.timeIntervalSince1970 + range.0.timeIntervalSince1970) / 2)
-        self.calendar.setCurrentPage(midpoint, animated: false)
-        let bar = UIProgressView.init()
-        bar.layer.cornerRadius = bar.intrinsicContentSize.height/2
-        bar.progress = 0.5
-        let bar2 = UIProgressView.init()
-        bar2.layer.cornerRadius = bar2.intrinsicContentSize.height/2
-        bar2.progress = 0.25
-        bar.trackTintColor = UIColor.init(white: 0.95, alpha: 1)
-        bar2.progressTintColor = UIColor.lightGray
-        bar2.trackTintColor = UIColor.clear
-        
-        let progressView = UIView()
-        progressView.translatesAutoresizingMaskIntoConstraints = false
-        bar.translatesAutoresizingMaskIntoConstraints = false
-        bar2.translatesAutoresizingMaskIntoConstraints = false
-        progressView.addSubview(bar)
-        progressView.addSubview(bar2)
-        var hConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[bar]|", options: [], metrics: nil, views: ["bar":bar])
-        var vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[bar]|", options: [], metrics: nil, views: ["bar":bar])
-        NSLayoutConstraint.activate(hConstraints + vConstraints)
-        hConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[bar]|", options: [], metrics: nil, views: ["bar":bar2])
-        vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[bar]|", options: [], metrics: nil, views: ["bar":bar2])
-        NSLayoutConstraint.activate(hConstraints + vConstraints)
-        let label = UILabel()
-        label.text = "1.2 of 5.2 weekly drinks, including 1.2 drink overflow"
-        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        label.textColor = UIColor.lightGray.mixed(with: .white, by: 0.1)
-        label.textAlignment = .center
-        let stack = UIStackView.init(arrangedSubviews: [progressView, label])
-        stack.axis = .vertical
-        stack.spacing = 4
-        self.progressBar = bar
-        self.overflowProgressBar = bar2
-        self.progressLabel = label
-        self.calendar.progressView = stack
-        self.calendar.progressViewHeight = bar.intrinsicContentSize.height + 4 + label.intrinsicContentSize.height + 50
-        self.navigationItem.title = nil
+        setupCalendar: do
+        {
+            calendar.setScope(.week, animated: false)
+            
+            if Defaults.weekStartsOnMonday
+            {
+                self.calendar.firstWeekday = 2
+            }
+            else
+            {
+                self.calendar.firstWeekday = 1
+            }
+            
+            let range = Time.currentWeek()
+            let midpoint = Date.init(timeIntervalSince1970: (range.0.timeIntervalSince1970 + range.0.timeIntervalSince1970) / 2)
+            calendar.setCurrentPage(midpoint, animated: false)
+            
+            let bar = UIProgressView.init()
+            let bar2 = UIProgressView.init()
+            let progressView = UIView()
+            progressView.addSubview(bar)
+            progressView.addSubview(bar2)
+            
+            let label = UILabel()
+            
+            let guide1 = UIView()
+            let guide2 = UIView()
+            
+            let stack = UIStackView.init(arrangedSubviews: [guide1, progressView, label, guide2])
+            stack.frame = CGRect.init(x: 0, y: 0, width: 100, height: 100)
+            stack.axis = .vertical
+            stack.spacing = 6
+            
+            progressView.translatesAutoresizingMaskIntoConstraints = false
+            bar.translatesAutoresizingMaskIntoConstraints = false
+            bar2.translatesAutoresizingMaskIntoConstraints = false
+            label.translatesAutoresizingMaskIntoConstraints = false
+            guide1.translatesAutoresizingMaskIntoConstraints = false
+            guide2.translatesAutoresizingMaskIntoConstraints = false
+            
+            guide1.heightAnchor.constraint(equalTo: guide2.heightAnchor).isActive = true
+            var hConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[bar]|", options: [], metrics: nil, views: ["bar":bar])
+            var vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[bar]|", options: [], metrics: nil, views: ["bar":bar])
+            NSLayoutConstraint.activate(hConstraints + vConstraints)
+            hConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[bar]|", options: [], metrics: nil, views: ["bar":bar2])
+            vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[bar]|", options: [], metrics: nil, views: ["bar":bar2])
+            NSLayoutConstraint.activate(hConstraints + vConstraints)
+            
+            bar.layer.cornerRadius = bar.intrinsicContentSize.height/2
+            bar2.layer.cornerRadius = bar2.intrinsicContentSize.height/2
+            bar.trackTintColor = UIColor.init(white: 0.9, alpha: 1)
+            bar2.progressTintColor = UIColor.lightGray
+            bar2.trackTintColor = UIColor.clear
+            
+            label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+            label.textColor = UIColor.gray //UIColor.lightGray.mixed(with: .white, by: 0.1)
+            label.textAlignment = .center
+            
+            calendar.allowsSelection = false
+            
+            bar.progress = 0.5
+            label.text = "Stats"
+            
+            self.progressBar = bar
+            self.overflowProgressBar = bar2
+            self.progressLabel = label
+            self.calendar.progressView = stack
+            self.calendar.progressViewHeight = bar.intrinsicContentSize.height + 6 + label.intrinsicContentSize.height + 10
+            
+            calendar.isHidden = true
+            self.navigationItem.title = nil
+        }
         
         tableSetup: do
         {
@@ -147,6 +183,22 @@ class FirstViewController: UIViewController
             appDebug("requesting change with token \(self.cache?.token ?? DataLayer.NullToken)...")
             self.reloadData(animated: true, fromScratch: false)
         }
+        self.notificationObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: OperationQueue.main)
+        { [unowned `self`] _ in
+            let offset = self.calendar.currentPage.addingTimeInterval(30 * 60 * 60)
+            if Defaults.weekStartsOnMonday && self.calendar.firstWeekday != 2
+            {
+                self.calendar.firstWeekday = 2
+                self.calendar.setCurrentPage(offset, animated: false)
+                self.reloadData(animated: false, fromScratch: true)
+            }
+            else if !Defaults.weekStartsOnMonday && self.calendar.firstWeekday != 1
+            {
+                self.calendar.firstWeekday = 1
+                self.calendar.setCurrentPage(offset, animated: false)
+                self.reloadData(animated: false, fromScratch: true)
+            }
+        }
         
         self.data?.populateWithSampleData()
         //DispatchQueue.main.asyncAfter(deadline:.now() + 3)
@@ -167,7 +219,7 @@ class FirstViewController: UIViewController
     // Reloads the current data based on the dates provided by the calendar. (The calendar is not reloaded.)
     func reloadData(animated: Bool, fromScratch: Bool = true)
     {
-        let calendar = Time.calendar()
+        let calendar = DataLayer.calendar
         //let range = Time.currentWeek()
         
         let from = self.calendar.currentPage

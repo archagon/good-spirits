@@ -67,8 +67,15 @@ extension Stats
         
         let totalGramsAlcohol = models.reduce(Float(0))
         { total, model in
-            let gramsAlcohol = gramsOfAlcohol(model)
-            return total + Float(gramsAlcohol)
+            if !model.metadata.deleted
+            {
+                let gramsAlcohol = gramsOfAlcohol(model)
+                return total + Float(gramsAlcohol)
+            }
+            else
+            {
+                return total
+            }
         }
         
         return (totalGramsAlcohol / aga, 0)
@@ -76,9 +83,16 @@ extension Stats
     
     public func progress(inRange range: Range<Date>) throws -> (current: Float, previous: Float)
     {
-        let models = try! self.data.getModels(fromIncludingDate: range.lowerBound, toExcludingDate: range.upperBound)
-        
-        return progress(forModels: models.0, inRange: range)
+        do
+        {
+            let models = try self.data.getModels(fromIncludingDate: range.lowerBound, toExcludingDate: range.upperBound)
+            return progress(forModels: models.0, inRange: range)
+        }
+        catch
+        {
+            appError("could not load models for stats -- \(error)")
+            return (0, 0)
+        }
     }
     
     public func gramsOfAlcohol(_ model: Model) -> Double

@@ -49,7 +49,7 @@ public struct Limit
             let dm = limit.grams(limit.dailyLimit(forMale: true) ?? Measurement<UnitVolume>.init(value: 0, unit: .fluidOunces))
             let dw = limit.grams(limit.dailyLimit(forMale: false) ?? Measurement<UnitVolume>.init(value: 0, unit: .fluidOunces))
             
-            print("Daily limit for \(limit.countryName): \(f(dm))g (\(f(dm/divider.grams))) men, \(f(dw))g (\(f(dw/divider.grams))) women")
+            appDebug("daily limit for \(limit.countryName): \(f(dm))g (\(f(dm/divider.grams))) men, \(f(dw))g (\(f(dw/divider.grams))) women")
         }
         
         for item in Limit.data
@@ -61,7 +61,7 @@ public struct Limit
             let wm = limit.grams(limit.weeklyLimit(forMale: true))
             let ww = limit.grams(limit.weeklyLimit(forMale: false))
             
-            print("Weekly limit for \(limit.countryName): \(f(wm))g (\(f(wm/divider.grams))) men, \(f(ww))g (\(f(ww/divider.grams))) women")
+            appDebug("weekly limit for \(limit.countryName): \(f(wm))g (\(f(wm/divider.grams))) men, \(f(ww))g (\(f(ww/divider.grams))) women")
         }
     }
     
@@ -87,7 +87,7 @@ public struct Limit
                 }
                 else
                 {
-                    print("missing data for country \($0.country)")
+                    appDebug("missing data for country \($0.country)")
                     return false
                 }
             }

@@ -384,6 +384,7 @@ extension SettingsViewController
 {
     @objc func weekStartsOnMondayToggled(_ sender: UISwitch)
     {
+        Defaults.weekStartsOnMonday = sender.isOn
     }
     
     @objc func untappdToggled(_ sender: UISwitch)
