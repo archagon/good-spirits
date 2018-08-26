@@ -61,6 +61,7 @@ extension Untappd
     {
         public let bid: Int
         public let beer_name: String?
+        public let beer_style: String?
         public let beer_abv: Double?
     }
     
@@ -71,7 +72,7 @@ extension Untappd
     }
 }
 
-// AB: necessary due to "bug" in Untappd API: an empty venue is an empty array instad of nothing
+// BUGFIX: Necessary due to "bug" in Untappd API: an empty venue is an empty array instad of nothing.
 extension Untappd.CheckIn: Decodable
 {
     enum CodingKeys: CodingKey

@@ -52,7 +52,7 @@ class DataLayerTests: XCTestCase
         let id = GlobalID.init(siteID: randomId, operationIndex: DataLayer.wildcardIndex)
         let metadata = Model.Metadata.init(id: id, creationTime: Date(), deleted: false)
         let drink = Model.Drink.init(name: randomName, style: randomStyle, abv: randomABV, price: randomPrice, volume: randomVolume)
-        let checkIn = Model.CheckIn.init(untappdId: nil, time: randomTime, drink: drink)
+        let checkIn = Model.CheckIn.init(untappdId: nil, untappdApproved: false, time: randomTime, drink: drink)
         let model = Model.init(metadata: metadata, checkIn: checkIn)
         
         return model

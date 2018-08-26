@@ -102,7 +102,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
     
     private func syncHealthKit()
     {
-        self.data.getModels(fromIncludingDate: Date.distantPast, toExcludingDate: Date.distantFuture, withToken: self.lastHealthKitToken)
+        self.data.getModels(fromIncludingDate: Date.distantPast, toExcludingDate: Date.distantFuture, withToken: self.lastHealthKitToken, includingDeleted: true, includingUntappdPending: false)
         {
             switch $0
             {
@@ -302,6 +302,7 @@ extension RootViewController: CheckInViewControllerDelegate
         if var existingModel = self.modelForCheckIn
         {
             existingModel.checkIn.drink = drink
+            existingModel.approve()
             updatedModel = existingModel
         }
         else
@@ -309,7 +310,7 @@ extension RootViewController: CheckInViewControllerDelegate
             let date = Date()
             let checkInDate = onDate ?? date
             
-            updatedModel = Model.init(metadata: Model.Metadata.init(id: GlobalID.init(siteID: self.data.owner, operationIndex: DataLayer.wildcardIndex), creationTime: date), checkIn: Model.CheckIn.init(untappdId: nil, time: checkInDate, drink: drink))
+            updatedModel = Model.init(metadata: Model.Metadata.init(id: GlobalID.init(siteID: self.data.owner, operationIndex: DataLayer.wildcardIndex), creationTime: date), checkIn: Model.CheckIn.init(untappdId: nil, untappdApproved: false, time: checkInDate, drink: drink))
         }
         
         self.data.save(model: updatedModel)

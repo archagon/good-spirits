@@ -210,16 +210,16 @@ class FirstViewController: UIViewController
             }
             else
             {
-                //self.setupUntappdPullToRefresh(false)
+                self.setupUntappdPullToRefresh(false)
             }
         }
         
-        self.data?.populateWithSampleData()
+        //self.data?.populateWithSampleData()
         //DispatchQueue.main.asyncAfter(deadline:.now() + 3)
         //{
         //    self.data?.populateWithSampleData()
         //}
-        setupUntappdPullToRefresh(true)
+        setupUntappdPullToRefresh(Defaults.untappdEnabled && Defaults.untappdToken != nil)
     }
     
     func setupUntappdPullToRefresh(_ enable: Bool)
@@ -250,6 +250,7 @@ class FirstViewController: UIViewController
     {
         Timer.scheduledTimer(withTimeInterval: 1, repeats: false)
         { _ in
+            Untappd.shared.refreshCheckIns(withData: self.data!) //QQQ:
             sender.endRefreshing()
         }
     }
@@ -277,28 +278,40 @@ class FirstViewController: UIViewController
         //self.cache?.token != nil && !fromScratch ? self.cache!.token : DataLayer.NullToken
         let token = DataLayer.NullToken
         
-        self.data?.getModels(fromIncludingDate: from, toExcludingDate: to, withToken: token)
+        self.data?.getModels(fromIncludingDate: from, toExcludingDate: to, withToken: token, includingDeleted: false, includingUntappdPending: true)
         {
             switch $0
             {
             case .error(let e):
-                appError("could not get model data in reloadData")
+                appError("could not get model data in reloadData -- \(e.localizedDescription)")
             case .value(let v):
                 appDebug("data loaded!")
+                
+                // NEXT:
+                self.data?.getModels(fromIncludingDate: Date.distantPast, toExcludingDate: Date.distantFuture, includingDeleted: false, includingUntappdPending: true)
+                {
+                    switch $0
+                    {
+                    case .error(let e):
+                        break
+                    case .value(let v):
+                        break
+                    }
+                }
                 
                 if self.cache?.token != v.1
                 {
                     appDebug("changes received with new token \(v.1)!")
                 }
                 
-                // NEXT: QQQ:move this
+                // NEXT: QQQ: move this
                 if self.cache == nil
                 {
                     self.calendar.isHidden = false
                 }
                 
                 // PERF: could be sorted, but need to double-check inequalities
-                let sortedNewOps = SortedArray<Model>.init(unsorted: v.0.filter { !$0.metadata.deleted }) { return $0.checkIn.time < $1.checkIn.time }
+                let sortedNewOps = SortedArray<Model>.init(unsorted: v.0) { return $0.checkIn.time < $1.checkIn.time }
                 var outOps: [Int:[Model]] = [:]
                 
                 var startDay = from
@@ -312,10 +325,19 @@ class FirstViewController: UIViewController
                     
                     if models.count > 0
                     {
-                        // QQQ:
-                        outOps[i + 1] = models
-                        if outOps[0] == nil { outOps[0] = [] }
-                        outOps[0]! += models
+                        for model in models
+                        {
+                            if model.checkIn.untappdId != nil && !model.checkIn.untappdApproved
+                            {
+                                if outOps[0] == nil { outOps[0] = [] }
+                                outOps[0]!.append(model)
+                            }
+                            else
+                            {
+                                if outOps[i + 1] == nil { outOps[i + 1] = [] }
+                                outOps[i + 1]!.append(model)
+                            }
+                        }
                     }
                     
                     startDay = nextDay
@@ -464,6 +486,13 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         if section == 0
         {
             headerView.textLabel?.text = "Pending Untappd Check-Ins"
+            
+            headerView.backgroundView = UIView()
+            headerView.backgroundView!.backgroundColor = Untappd.themeColor.mixed(with: .white, by: 0.8)
+            //headerView.backgroundView?.isHidden = true
+            //headerView.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+            //headerView.textLabel?.textAlignment = .center
+            headerView.textLabel?.textColor = Untappd.themeColor.darkened(by: 0.2)
         }
         else
         {
@@ -472,6 +501,12 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             let day = self.cache.calendar.date(byAdding: .day, value: section - 1, to: self.cache.range.0)!
             
             headerView.textLabel?.text = formatter.string(from: day)
+            
+            headerView.backgroundColor = nil
+            headerView.backgroundView?.isHidden = false
+            //headerView.textLabel?.font = headerView.originalFont
+            //headerView.textLabel?.textAlignment = .left
+            headerView.textLabel?.textColor = UIColor.black
         }
     }
     
@@ -514,6 +549,20 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             
             return view
         }
+        else if section == 0
+        {
+            guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "FooterCell") else
+            {
+                return nil
+            }
+            
+            // QQQ:
+            let bgView = UIView()
+            bgView.backgroundColor = Untappd.themeColor.darkened(by: 0.0)
+            view.backgroundView = bgView
+            
+            return view
+        }
         else
         {
             return nil
@@ -527,6 +576,10 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         if section == tableView.numberOfSections - 1
         {
             return 20
+        }
+        else if section == 0 && self.cache.data[0]?.count ?? 0 > 0
+        {
+            return 0.5
         }
         else
         {
@@ -587,6 +640,48 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         }
     }
     
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
+    {
+        if self.cache == nil { return UISwipeActionsConfiguration.init(actions: []) }
+        
+        let section = indexPath.section
+        let sectionData = self.cache.data[section] ?? []
+        if section != 0
+        {
+            return UISwipeActionsConfiguration.init(actions: [])
+        }
+        
+        var model = sectionData[indexPath.row]
+        
+        let volumes = model.checkIn.drink.style.assortedVolumes
+        var actions: [UIContextualAction] = []
+        for i in 0..<min(volumes.count, 3)
+        {
+            let volume = volumes[i]
+            let volumeAction = UIContextualAction.init(style: .normal, title: "Commit\n\(Format.format(volume: volume))")
+            { (action, view, handler) in
+                appDebug("attempting commit")
+                model.approve()
+                model.checkIn.drink.volume = volume
+                if let data = self.data
+                {
+                    data.save(model: model) { _ in handler(false) }
+                }
+                else
+                {
+                    handler(false)
+                }
+            }
+            volumeAction.backgroundColor = Appearance.themeColor.darkened(by: 0.07 * CGFloat(i))
+            actions.append(volumeAction)
+        }
+        
+        let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
+        actionsConfig.performsFirstActionWithFullSwipe = false
+        
+        return actionsConfig
+    }
+    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
     {
         if self.cache == nil { return UISwipeActionsConfiguration.init(actions: []) }
@@ -600,54 +695,30 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         
         var model = sectionData[indexPath.row]
         
-        if section  == 0
-        {
-            let deleteAction = UIContextualAction.init(style: .destructive, title: "Dismiss")
-            { (action, view, handler) in
-                //appDebug("attempting dismiss")
-                //model.delete()
-                //if let data = self.data
-                //{
-                //    data.save(model: model) { _ in handler(false) }
-                //}
-                //else
-                //{
-                //    handler(false)
-                //}
+        //let incrementAction = UIContextualAction.init(style: .normal, title: "+1")
+        //{ (action, view, handler) in
+        //    print("Incrementing...")
+        //    handler(true)
+        //}
+        let deleteAction = UIContextualAction.init(style: .destructive, title: "Delete")
+        { (action, view, handler) in
+            appDebug("attempting delete")
+            model.delete()
+            if let data = self.data
+            {
+                data.save(model: model) { _ in handler(false) }
             }
-            
-            let actions = [deleteAction]
-            let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
-            
-            return actionsConfig
-        }
-        else
-        {
-            //let incrementAction = UIContextualAction.init(style: .normal, title: "+1")
-            //{ (action, view, handler) in
-            //    print("Incrementing...")
-            //    handler(true)
-            //}
-            let deleteAction = UIContextualAction.init(style: .destructive, title: "Delete")
-            { (action, view, handler) in
-                appDebug("attempting delete")
-                model.delete()
-                if let data = self.data
-                {
-                    data.save(model: model) { _ in handler(false) }
-                }
-                else
-                {
-                    handler(false)
-                }
+            else
+            {
+                handler(false)
             }
-            
-            //let actions = [incrementAction, deleteAction]
-            let actions = [deleteAction]
-            let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
-            
-            return actionsConfig
         }
+        
+        //let actions = [incrementAction, deleteAction]
+        let actions = [deleteAction]
+        let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
+        
+        return actionsConfig
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
@@ -721,9 +792,8 @@ extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalen
         let nextDay = DataLayer.calendar.date(byAdding: .day, value: 1, to: date)!
         do
         {
-            let data = try self.data?.getModels(fromIncludingDate: date, toExcludingDate: nextDay).0
-            let available = (data ?? []).filter { !$0.metadata.deleted }
-            return available.count
+            let data = try self.data?.getModels(fromIncludingDate: date, toExcludingDate: nextDay, includingDeleted: false).0
+            return data?.count ?? 0
         }
         catch
         {

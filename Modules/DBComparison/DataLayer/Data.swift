@@ -198,7 +198,8 @@ extension DataLayer
         }
     }
     
-    public func getModels(fromIncludingDate from: Date, toExcludingDate to: Date, withToken token: Token? = nil, withCallbackBlock block: @escaping (MaybeError<([Model], Token)>)->Void)
+    // PERF: we can filter these on the database level
+    public func getModels(fromIncludingDate from: Date, toExcludingDate to: Date, withToken token: Token? = nil, includingDeleted: Bool = false, includingUntappdPending: Bool = false, withCallbackBlock block: @escaping (MaybeError<([Model], Token)>)->Void)
     {
         func ret(_ v: MaybeError<([Model], Token)>)
         {
@@ -217,19 +218,44 @@ extension DataLayer
                 case .error(let e):
                     ret(.error(e: e))
                 case .value(let v):
-                    let models = v.0.map { $0.toModel() }
+                    let data = v.0.filter
+                    {
+                        if !includingDeleted && $0.metadata.deleted.v
+                        {
+                            return false
+                        }
+                        if !includingUntappdPending && ($0.checkIn.untappdId.v != nil && !$0.checkIn.untappdApproved.v)
+                        {
+                            return false
+                        }
+                        return true
+                    }
+                    let models = data.map { $0.toModel() }
                     ret(.value(v: (models, v.1)))
                 }
             }
         }
     }
     
-    public func getModels(fromIncludingDate from: Date, toExcludingDate to: Date, withToken token: Token? = nil) throws -> ([Model], Token)
+    // PERF: we can filter these on the database level
+    public func getModels(fromIncludingDate from: Date, toExcludingDate to: Date, withToken token: Token? = nil, includingDeleted: Bool = false, includingUntappdPending: Bool = false) throws -> ([Model], Token)
     {
         return try self.primaryStore.readTransaction
         { db -> ([Model], Token) in
             let v = try db.data(fromIncludingDate: from, toExcludingDate: to, afterTimestamp: token)
-            let models = v.0.map { $0.toModel() }
+            let data = v.0.filter
+            {
+                if !includingDeleted && $0.metadata.deleted.v
+                {
+                    return false
+                }
+                if !includingUntappdPending && ($0.checkIn.untappdId.v != nil && !$0.checkIn.untappdApproved.v)
+                {
+                    return false
+                }
+                return true
+            }
+            let models = data.map { $0.toModel() }
             return (models, v.1)
         }
     }

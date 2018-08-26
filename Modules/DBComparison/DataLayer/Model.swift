@@ -247,12 +247,14 @@ public struct Model: Hashable, Equatable
     public struct CheckIn: Hashable, Equatable
     {
         public var untappdId: ID?
+        public var untappdApproved: Bool
         public var time: Date
         public var drink: Drink
         
-        public init(untappdId: ID?, time: Date, drink: Drink)
+        public init(untappdId: ID?, untappdApproved: Bool, time: Date, drink: Drink)
         {
             self.untappdId = untappdId
+            self.untappdApproved = untappdApproved
             self.time = Date.init(timeIntervalSince1970: time.timeIntervalSince1970)
             self.drink = drink
         }
@@ -306,6 +308,14 @@ public struct Model: Hashable, Equatable
     public mutating func delete()
     {
         self.metadata = Metadata.init(id: self.metadata.id, creationTime: self.metadata.creationTime, deleted: true)
+    }
+    
+    public mutating func approve()
+    {
+        if self.checkIn.untappdId != nil
+        {
+            self.checkIn.untappdApproved = true
+        }
     }
 }
 

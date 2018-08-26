@@ -40,7 +40,7 @@ extension DataLayer
                 let id = GlobalID.init(siteID: self.owner, operationIndex: DataLayer.wildcardIndex)
                 let metadata = Model.Metadata.init(id: id, creationTime: Date())
                 let drink = Model.Drink.init(name: datum.drink_name, style: DrinkStyle.init(rawValue: datum.drink_type)!, abv: datum.drink_abv, price: datum.drink_price, volume: Measurement.init(value: datum.drink_volume, unit: UnitVolume.unit(withSymbol: datum.drink_volume_unit)))
-                let checkIn = Model.CheckIn.init(untappdId: datum.untappd_checkin_id != nil ? Model.ID(datum.untappd_checkin_id!) : nil, time: dateFormatter.date(from: datum.checkin_time)!, drink: drink)
+                let checkIn = Model.CheckIn.init(untappdId: datum.untappd_checkin_id != nil ? Model.ID(datum.untappd_checkin_id!) : nil, untappdApproved: true, time: dateFormatter.date(from: datum.checkin_time)!, drink: drink)
                 let model = Model.init(metadata: metadata, checkIn: checkIn)
                 
                 self.save(model: model) { _ in }

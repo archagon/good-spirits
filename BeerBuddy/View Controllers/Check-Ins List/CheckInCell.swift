@@ -144,12 +144,30 @@ public class CheckInCell: UITableViewCell
         let nameString = NSMutableAttributedString.init(string: nameT)
         nameString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14, weight:.semibold)], range: NSMakeRange(0, nameString.length))
         
-        let proseText = "\(volume) of \(abv) ABV \(style)"
+        let proseText: String
+        if isUntappd
+        {
+            proseText = "\(abv) ABV \(style)"
+        }
+        else
+        {
+            proseText = "\(volume) of \(abv) ABV \(style)"
+        }
         let proseString = NSMutableAttributedString.init(string: proseText)
         proseString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14)], range: NSMakeRange(0, proseString.length))
         //proseString.insert(nameString, at: 0)
         
-        let statsText = "Drank \(units) units\(data.checkIn.drink.price == nil || data.checkIn.drink.price == 0 ? "" : " for \(price)")"
+        let statsText: String
+        if isUntappd
+        {
+            let format = DateFormatter()
+            format.dateFormat = "E, MMMM d, yyyy"
+            statsText = "Checked in on \(format.string(from: data.checkIn.time))"
+        }
+        else
+        {
+            statsText = "Drank \(units) units\(data.checkIn.drink.price == nil || data.checkIn.drink.price == 0 ? "" : " for \(price)")"
+        }
         let statsString = NSMutableAttributedString.init(string: statsText)
         statsString.setAttributes([NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor:UIColor.gray], range: NSMakeRange(0, statsString.length))
         
@@ -205,10 +223,7 @@ public class CheckInCell: UITableViewCell
         
         if isUntappd
         {
-            //self.contentView.backgroundColor = Untappd.themeColor.mixed(with: .white, by: 0.5)
-            self.contentStack.removeArrangedSubview(self.stats)
-            self.stats.isHidden = true
-            
+            self.contentView.backgroundColor = Untappd.themeColor.mixed(with: .white, by: 0.8)
             self.container.setImage(UIImage.init(named: "untappd"), for: .normal)
             self.container.layer.cornerRadius = 34/2
             self.container.clipsToBounds = true
@@ -218,9 +233,6 @@ public class CheckInCell: UITableViewCell
         else
         {
             self.contentView.backgroundColor = nil
-            self.contentStack.addArrangedSubview(self.stats)
-            self.stats.isHidden = false
-            
             self.container.layer.cornerRadius = 0
             self.container.clipsToBounds = false
             self.untappd.isHidden = false

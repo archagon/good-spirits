@@ -22,6 +22,7 @@ class Untappd
     private static let apiURL: URL = URL.init(string: "https://api.untappd.com")!
     private static let rateLimitHeader = "X-Ratelimit-Limit"
     private static let rateLimitRemainingHeader = "X-Ratelimit-Remaining"
+    private static let dateFormat = "E, d MMM yyyy HH:mm:ss Z"
     //https://api.untappd.com/v4/method_name?access_token=ACESSTOKENHERE
     
     public static let shared = Untappd()
@@ -82,7 +83,7 @@ class Untappd
     }
     
     // QQQ:
-    public func refreshCheckIns(withData: DataLayer) -> UntappdError?
+    public func refreshCheckIns(withData data: DataLayer) -> UntappdError?
     {
         switch self.loginStatus
         {
@@ -103,9 +104,78 @@ class Untappd
             }
             else
             {
-                let checkins = checkIns
-                var asdf = 123
-                asdf = 2345
+                var untappdIds: [Int:Model] = [:]
+                for checkin in checkIns
+                {
+                    // NEXT: pull from db to make sure it doesn't already exist
+                    // NEXT: untappdId must be unique, test with sampleData
+                    // NEXT: all appearing on top always
+                    
+                    let id = GlobalID.init(siteID: data.owner, operationIndex: DataLayer.wildcardIndex)
+                    let time: Date
+                    if let stringTime = checkin.created_at
+                    {
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = Untappd.dateFormat
+                        if let date = formatter.date(from: stringTime)
+                        {
+                            time = date
+                        }
+                        else
+                        {
+                            appWarning("could not parse date from \(stringTime)")
+                            time = Date()
+                        }
+                    }
+                    else
+                    {
+                        time = Date()
+                    }
+                    let untappdId = checkin.checkin_id
+                    let style: DrinkStyle
+                    if let stringStyle = checkin.beer.beer_style
+                    {
+                        if stringStyle.hasPrefix("Mead")
+                        {
+                            style = .mead
+                        }
+                        else if stringStyle.hasPrefix("Cider")
+                        {
+                            style = .cider
+                        }
+                        else
+                        {
+                            style = .beer
+                        }
+                    }
+                    else
+                    {
+                        style = .beer
+                    }
+                    let abv = checkin.beer.beer_abv != nil ? checkin.beer.beer_abv! / 100 : style.defaultABV
+                    
+                    let drink = Model.Drink.init(name: checkin.beer.beer_name, style: style, abv: abv, price: nil, volume: style.defaultVolume)
+                    let checkIn = Model.CheckIn.init(untappdId: Model.ID(untappdId), untappdApproved: false, time: time, drink: drink)
+                    let meta = Model.Metadata.init(id: id, creationTime: Date())
+                    let model = Model.init(metadata: meta, checkIn: checkIn)
+                    
+                    if untappdIds[untappdId] != nil
+                    {
+                        print("asdf")
+                    }
+                    untappdIds[untappdId] = model
+                    
+                    data.save(model: model)
+                    {
+                        switch $0
+                        {
+                        case .error(let e):
+                            appError("Untappd commit error -- \(e.localizedDescription)")
+                        case .value(_):
+                            appDebug("saved \(untappdId)!")
+                        }
+                    }
+                }
             }
         }
         

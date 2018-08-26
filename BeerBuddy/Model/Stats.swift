@@ -67,15 +67,8 @@ extension Stats
         
         let totalGramsAlcohol = models.reduce(Float(0))
         { total, model in
-            if !model.metadata.deleted
-            {
-                let gramsAlcohol = gramsOfAlcohol(model)
-                return total + Float(gramsAlcohol)
-            }
-            else
-            {
-                return total
-            }
+            let gramsAlcohol = gramsOfAlcohol(model)
+            return total + Float(gramsAlcohol)
         }
         
         return (totalGramsAlcohol / aga, 0)
@@ -85,7 +78,7 @@ extension Stats
     {
         do
         {
-            let models = try self.data.getModels(fromIncludingDate: range.lowerBound, toExcludingDate: range.upperBound)
+            let models = try self.data.getModels(fromIncludingDate: range.lowerBound, toExcludingDate: range.upperBound, includingDeleted: false)
             return progress(forModels: models.0, inRange: range)
         }
         catch

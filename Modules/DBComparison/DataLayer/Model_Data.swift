@@ -35,7 +35,7 @@ public struct DataModel: Hashable, Equatable, LamportQueriable, Mergeable
         
         mutating public func merge(with: DataModel.Metadata)
         {
-            // AB: deletes are exempt from regular LWW rules, since a delete cannot be overriden.
+            // AB: Deletes are exempt from regular LWW rules, since a delete cannot be overriden.
             self.deleted = LamportValue.init(v: self.deleted.v || with.deleted.v, t: max(self.deleted.t, with.deleted.t))
         }
     }
@@ -43,19 +43,21 @@ public struct DataModel: Hashable, Equatable, LamportQueriable, Mergeable
     public struct CheckIn: Hashable, Equatable, LamportQueriable, Mergeable
     {
         public var untappdId: LamportValue<ID?>
+        public var untappdApproved: LamportValue<Bool>
         public var time: LamportValue<Double>
         public var drink: Drink
         
-        public init(untappdId: LamportValue<ID?>, time: LamportValue<Double>, drink: Drink)
+        public init(untappdId: LamportValue<ID?>, untappdApproved: LamportValue<Bool>, time: LamportValue<Double>, drink: Drink)
         {
             self.untappdId = untappdId
+            self.untappdApproved = untappdApproved
             self.time = time
             self.drink = drink
         }
         
         public var lamport: DataLayer.Time
         {
-            return max(untappdId.lamport, time.lamport, drink.lamport)
+            return max(untappdId.lamport, untappdApproved.lamport, time.lamport, drink.lamport)
         }
         
         mutating public func merge(with: DataModel.CheckIn)
@@ -63,6 +65,9 @@ public struct DataModel: Hashable, Equatable, LamportQueriable, Mergeable
             self.untappdId.merge(with: with.untappdId)
             self.time.merge(with: with.time)
             self.drink.merge(with: with.drink)
+            
+            // AB: Untappd approvals are exempt from regular LWW rules, since an approval cannot be overriden.
+            self.untappdApproved = LamportValue.init(v: self.untappdApproved.v || with.untappdApproved.v, t: max(self.untappdApproved.t, with.untappdApproved.t))
         }
     }
     
@@ -130,15 +135,35 @@ extension DataModel: CustomStringConvertible, CustomDebugStringConvertible
 {
     public var description: String
     {
-        return "\(metadata.id): \(Format.format(volume: checkIn.drink.volume.v)) \(Format.format(abv: checkIn.drink.abv.v)) \(checkIn.drink.name.v == nil || checkIn.drink.name.v == "" ? "" : "\"\(checkIn.drink.name.v!)\" ")\(Format.format(style: checkIn.drink.style.v)) for \(Format.format(price: checkIn.drink.price.v ?? 0))"
+        let untappdString: String
+        if let untappd = checkIn.untappdId.v
+        {
+            untappdString = " (Untappd \(untappd)\(checkIn.untappdApproved.v ? " ✓" : "")"
+        }
+        else
+        {
+            untappdString = ""
+        }
+        
+        return "\(metadata.id)\(untappdString): \(Format.format(volume: checkIn.drink.volume.v)) \(Format.format(abv: checkIn.drink.abv.v)) \(checkIn.drink.name.v == nil || checkIn.drink.name.v == "" ? "" : "\"\(checkIn.drink.name.v!)\" ")\(Format.format(style: checkIn.drink.style.v)) for \(Format.format(price: checkIn.drink.price.v ?? 0))"
     }
     
     public var debugDescription: String
     {
+        let untappdString: String
+        if let untappd = checkIn.untappdId.v
+        {
+            untappdString = " (Untappd \(untappd)(\(checkIn.untappdId.t))\(checkIn.untappdApproved.v ? " ✓" : "")"
+        }
+        else
+        {
+            untappdString = ""
+        }
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "y-MM-dd H:m:ss.SSSS"
         
-        return "\(metadata.id): \(Format.format(volume: checkIn.drink.volume.v))(\(checkIn.drink.volume.t)) \(Format.format(abv: checkIn.drink.abv.v))(\(checkIn.drink.abv.t)) \"\(checkIn.drink.name.v ?? "")\"(\(checkIn.drink.name.t)) \(Format.format(style: checkIn.drink.style.v))(\(checkIn.drink.style.t)) for \(Format.format(price: checkIn.drink.price.v ?? 0))(\(checkIn.drink.price.t)) on \(formatter.string(from: Date.init(timeIntervalSince1970: checkIn.time.v)))(\(checkIn.time.t))"
+        return "\(metadata.id)\(untappdString): \(Format.format(volume: checkIn.drink.volume.v))(\(checkIn.drink.volume.t)) \(Format.format(abv: checkIn.drink.abv.v))(\(checkIn.drink.abv.t)) \"\(checkIn.drink.name.v ?? "")\"(\(checkIn.drink.name.t)) \(Format.format(style: checkIn.drink.style.v))(\(checkIn.drink.style.t)) for \(Format.format(price: checkIn.drink.price.v ?? 0))(\(checkIn.drink.price.t)) on \(formatter.string(from: Date.init(timeIntervalSince1970: checkIn.time.v)))(\(checkIn.time.t))"
     }
 }
 

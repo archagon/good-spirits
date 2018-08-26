@@ -24,7 +24,7 @@ extension DataModel
 {
     enum Columns: String, ColumnExpression
     {
-        case metadata_id_uuid, metadata_id_index, metadata_deleted_value, metadata_deleted_lamport, metadata_creation_time, checkin_untappd_id_value, checkin_untappd_id_lamport, checkin_time_value, checkin_time_lamport, checkin_drink_name_value, checkin_drink_name_lamport, checkin_drink_style_value, checkin_drink_style_lamport, checkin_drink_abv_value, checkin_drink_abv_lamport, checkin_drink_price_value, checkin_drink_price_lamport, checkin_drink_volume_value_value, checkin_drink_volume_value_unit, checkin_drink_volume_lamport
+        case metadata_id_uuid, metadata_id_index, metadata_deleted_value, metadata_deleted_lamport, metadata_creation_time, checkin_untappd_id_value, checkin_untappd_id_lamport, checkin_untappd_approved_value, checkin_untappd_approved_lamport, checkin_time_value, checkin_time_lamport, checkin_drink_name_value, checkin_drink_name_lamport, checkin_drink_style_value, checkin_drink_style_lamport, checkin_drink_abv_value, checkin_drink_abv_lamport, checkin_drink_price_value, checkin_drink_price_lamport, checkin_drink_volume_value_value, checkin_drink_volume_value_unit, checkin_drink_volume_lamport
         
         // https://medium.com/@derrickho_28266/iterate-over-swift-enums-1c251cd28a1c
         static var allCases: [Columns]
@@ -40,6 +40,8 @@ extension DataModel
             case .metadata_creation_time: out.append(.metadata_creation_time); fallthrough
             case .checkin_untappd_id_value: out.append(.checkin_untappd_id_value); fallthrough
             case .checkin_untappd_id_lamport: out.append(.checkin_untappd_id_lamport); fallthrough
+            case .checkin_untappd_approved_value: out.append(.checkin_untappd_approved_value); fallthrough
+            case .checkin_untappd_approved_lamport: out.append(.checkin_untappd_approved_lamport); fallthrough
             case .checkin_time_value: out.append(.checkin_time_value); fallthrough
             case .checkin_time_lamport: out.append(.checkin_time_lamport); fallthrough
             case .checkin_drink_name_value: out.append(.checkin_drink_name_value); fallthrough
@@ -67,6 +69,7 @@ extension DataModel
             case .metadata_deleted_value: fallthrough
             case .metadata_creation_time: fallthrough
             case .checkin_untappd_id_value: fallthrough
+            case .checkin_untappd_approved_value: fallthrough
             case .checkin_time_value: fallthrough
             case .checkin_drink_name_value: fallthrough
             case .checkin_drink_style_value: fallthrough
@@ -78,6 +81,7 @@ extension DataModel
 
             case .metadata_deleted_lamport: fallthrough
             case .checkin_untappd_id_lamport: fallthrough
+            case .checkin_untappd_approved_lamport: fallthrough
             case .checkin_time_lamport: fallthrough
             case .checkin_drink_name_lamport: fallthrough
             case .checkin_drink_style_lamport: fallthrough
@@ -109,8 +113,12 @@ extension DataModel: TableCreatable
             case .metadata_creation_time:
                 td.column(item.rawValue, .double).notNull()
             case .checkin_untappd_id_value:
-                td.column(item.rawValue, .integer)
+                td.column(item.rawValue, .integer).unique()
             case .checkin_untappd_id_lamport:
+                td.column(item.rawValue, .integer).notNull()
+            case .checkin_untappd_approved_value:
+                td.column(item.rawValue, .boolean).notNull()
+            case .checkin_untappd_approved_lamport:
                 td.column(item.rawValue, .integer).notNull()
             case .checkin_time_value:
                 td.column(item.rawValue, .double).notNull()
@@ -180,10 +188,13 @@ extension DataModel: FetchableRecord
         let untappdIdValue: ID? = row[Columns.checkin_untappd_id_value]
         let untappdIdLamport: DataLayer.Time = row[Columns.checkin_untappd_id_lamport]
         let untappdId = LamportValue.init(v: untappdIdValue, t: untappdIdLamport)
+        let untappdApprovedValue: Bool = row[Columns.checkin_untappd_approved_value]
+        let untappdApprovedLamport: DataLayer.Time = row[Columns.checkin_untappd_approved_lamport]
+        let untappdApproved = LamportValue.init(v: untappdApprovedValue, t: untappdApprovedLamport)
         let timeValue: Double = row[Columns.checkin_time_value]
         let timeLamport: DataLayer.Time = row[Columns.checkin_time_lamport]
         let time = LamportValue.init(v: timeValue, t: timeLamport)
-        let checkIn = CheckIn.init(untappdId: untappdId, time: time, drink: drink)
+        let checkIn = CheckIn.init(untappdId: untappdId, untappdApproved: untappdApproved, time: time, drink: drink)
         
         self.metadata = metadata
         self.checkIn = checkIn
@@ -212,6 +223,10 @@ extension DataModel: PersistableRecord
                 container[item] = self.checkIn.untappdId.v
             case .checkin_untappd_id_lamport:
                 container[item] = self.checkIn.untappdId.t
+            case .checkin_untappd_approved_value:
+                container[item] = self.checkIn.untappdApproved.v
+            case .checkin_untappd_approved_lamport:
+                container[item] = self.checkIn.untappdApproved.t
             case .checkin_time_value:
                 container[item] = self.checkIn.time.v
             case .checkin_time_lamport:
