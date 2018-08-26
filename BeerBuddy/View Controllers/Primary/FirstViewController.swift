@@ -165,6 +165,7 @@ class FirstViewController: UIViewController
         tableSetup: do
         {
             self.tableView.register(DayHeaderCell.self, forHeaderFooterViewReuseIdentifier: "DayHeaderCell")
+            self.tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "UntappdHeaderCell")
             self.tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "FooterCell")
             self.tableView.register(CheckInCell.self, forCellReuseIdentifier: "CheckInCell")
             self.tableView.register(AddItemCell.self, forCellReuseIdentifier: "AddItemCell")
@@ -262,6 +263,7 @@ class FirstViewController: UIViewController
         var previousInset = self.tableView.contentInset
         previousInset.top = self.calendar.bounds.size.height
         self.tableView.contentInset = previousInset
+        self.tableView.scrollIndicatorInsets = previousInset
     }
     
     // Reloads the current data based on the dates provided by the calendar. (The calendar is not reloaded.)
@@ -287,18 +289,6 @@ class FirstViewController: UIViewController
             case .value(let v):
                 appDebug("data loaded!")
                 
-                // NEXT:
-                self.data?.getModels(fromIncludingDate: Date.distantPast, toExcludingDate: Date.distantFuture, includingDeleted: false, includingUntappdPending: true)
-                {
-                    switch $0
-                    {
-                    case .error(let e):
-                        break
-                    case .value(let v):
-                        break
-                    }
-                }
-                
                 if self.cache?.token != v.1
                 {
                     appDebug("changes received with new token \(v.1)!")
@@ -311,7 +301,9 @@ class FirstViewController: UIViewController
                 }
                 
                 // PERF: could be sorted, but need to double-check inequalities
-                let sortedNewOps = SortedArray<Model>.init(unsorted: v.0) { return $0.checkIn.time < $1.checkIn.time }
+                let sortedOps = SortedArray<Model>.init(unsorted: v.0) { return $0.checkIn.time < $1.checkIn.time }
+                let sortedRegularOps = sortedOps.filter { $0.checkIn.untappdId == nil || $0.checkIn.untappdApproved }
+                let sortedUntappdOps = sortedOps.filter { $0.checkIn.untappdId != nil && !$0.checkIn.untappdApproved }
                 var outOps: [Int:[Model]] = [:]
                 
                 var startDay = from
@@ -321,28 +313,20 @@ class FirstViewController: UIViewController
                 // TODO: check inequalities
                 while nextDay <= to
                 {
-                    let models: [Model] = sortedNewOps.filter { startDay <= $0.checkIn.time && $0.checkIn.time < nextDay }
+                    let models: [Model] = sortedRegularOps.filter { startDay <= $0.checkIn.time && $0.checkIn.time < nextDay }
                     
                     if models.count > 0
                     {
-                        for model in models
-                        {
-                            if model.checkIn.untappdId != nil && !model.checkIn.untappdApproved
-                            {
-                                if outOps[0] == nil { outOps[0] = [] }
-                                outOps[0]!.append(model)
-                            }
-                            else
-                            {
-                                if outOps[i + 1] == nil { outOps[i + 1] = [] }
-                                outOps[i + 1]!.append(model)
-                            }
-                        }
+                        outOps[i + 1] = models
                     }
                     
                     startDay = nextDay
                     nextDay = calendar.date(byAdding: .day, value: 1, to: startDay)!
                     i += 1
+                }
+                if sortedUntappdOps.count > 0
+                {
+                    outOps[0] = Array(sortedUntappdOps)
                 }
                 
                 tableAdjustment: do
@@ -381,9 +365,15 @@ class FirstViewController: UIViewController
                             { _ in
                             })
                             
-                            if let insert = allChanges.inserts.last, insert.section != 0
+                            // AB: only scroll to non-untappd rows, since untappd check-in confirmations should be rapid
+                            for change in allChanges.inserts.reversed()
                             {
-                                self.tableView.scrollToRow(at: insert, at: .middle, animated: true)
+                                let model = self.cache.data[change.section]![change.row]
+                                if model.checkIn.untappdId == nil
+                                {
+                                    self.tableView.scrollToRow(at: change, at: .middle, animated: true)
+                                    break
+                                }
                             }
                             
                             self.calendar.reloadData()
@@ -471,41 +461,48 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
-        return tableView.dequeueReusableHeaderFooterView(withIdentifier: "DayHeaderCell")
+        if section == 0
+        {
+            return tableView.dequeueReusableHeaderFooterView(withIdentifier: "UntappdHeaderCell")
+        }
+        else
+        {
+            return tableView.dequeueReusableHeaderFooterView(withIdentifier: "DayHeaderCell")
+        }
     }
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
     {
         if self.cache == nil { return }
         
-        guard let headerView = view as? DayHeaderCell else
-        {
-            return
-        }
-        
         if section == 0
         {
-            headerView.textLabel?.text = "Pending Untappd Check-Ins"
+            guard let headerView = view as? UITableViewHeaderFooterView else
+            {
+                return
+            }
             
-            headerView.backgroundView = UIView()
-            headerView.backgroundView!.backgroundColor = Untappd.themeColor.mixed(with: .white, by: 0.8)
-            //headerView.backgroundView?.isHidden = true
-            //headerView.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-            //headerView.textLabel?.textAlignment = .center
+            if headerView.backgroundView == nil
+            {
+                headerView.backgroundView = UIView()
+            }
+            headerView.backgroundView?.backgroundColor = Untappd.themeColor.mixed(with: .white, by: 0.8)
+            
+            headerView.textLabel?.text = "Pending Untappd Check-Ins"
             headerView.textLabel?.textColor = Untappd.themeColor.darkened(by: 0.2)
         }
         else
         {
+            guard let headerView = view as? DayHeaderCell else
+            {
+                return
+            }
+            
             let formatter = DateFormatter.init()
             formatter.dateFormat = "EEEE, MMMM d, yyyy"
             let day = self.cache.calendar.date(byAdding: .day, value: section - 1, to: self.cache.range.0)!
             
             headerView.textLabel?.text = formatter.string(from: day)
-            
-            headerView.backgroundColor = nil
-            headerView.backgroundView?.isHidden = false
-            //headerView.textLabel?.font = headerView.originalFont
-            //headerView.textLabel?.textAlignment = .left
             headerView.textLabel?.textColor = UIColor.black
         }
     }
@@ -533,7 +530,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
     {
         if self.cache == nil { return nil }
         
-        if section == tableView.numberOfSections - 1
+        if section == 0 || section == tableView.numberOfSections - 1
         {
             guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "FooterCell") else
             {
@@ -542,30 +539,29 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             
             if view.backgroundView == nil
             {
-                let bgView = UIView()
-                bgView.backgroundColor = .clear
-                view.backgroundView = bgView
+                view.backgroundView = UIView()
             }
-            
-            return view
-        }
-        else if section == 0
-        {
-            guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "FooterCell") else
-            {
-                return nil
-            }
-            
-            // QQQ:
-            let bgView = UIView()
-            bgView.backgroundColor = Untappd.themeColor.darkened(by: 0.0)
-            view.backgroundView = bgView
             
             return view
         }
         else
         {
             return nil
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int)
+    {
+        if self.cache == nil { return }
+        
+        if section == 0
+        {
+            (view as? UITableViewHeaderFooterView)?.backgroundView?.backgroundColor = Untappd.themeColor.darkened(by: 0.0)
+        }
+        else
+        {
+            (view as? UITableViewHeaderFooterView)?.backgroundView?.backgroundColor = .clear
         }
     }
 

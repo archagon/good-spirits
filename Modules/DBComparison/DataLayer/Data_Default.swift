@@ -353,6 +353,19 @@ extension DataProtocol where Self: DataProtocolImmediate
             block(.error(e: error))
         }
     }
+    
+    public func data(forUntappdID id: DataModel.ID, withCompletionBlock block: @escaping (MaybeError<DataModel?>)->())
+    {
+        do
+        {
+            let value = try self.data(forUntappdID: id)
+            block(.value(v: value))
+        }
+        catch
+        {
+            block(.error(e: error))
+        }
+    }
 }
 
 extension DataWriteProtocol where Self: DataWriteProtocolImmediate

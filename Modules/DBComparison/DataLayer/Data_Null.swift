@@ -93,6 +93,10 @@ extension Data_Null: DataWriteProtocol, DataWriteProtocolImmediate
     public func pendingUntappd() throws -> ([DataModel], VectorClock) {
         return ([], VectorClock.init(map: [:]))
     }
+    
+    public func data(forUntappdID: DataModel.ID) throws -> DataModel? {
+        return nil
+    }
 }
 
 extension Data_Null: DataDebugProtocol

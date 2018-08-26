@@ -97,7 +97,7 @@ extension DataLayer: DataObservationProtocol
     public static var DataDidChangeNotification: Notification.Name = Notification.Name.init(rawValue: "DataDidChangeNotification")
 }
 
-public enum DataError: StringLiteralType, Error
+public enum DataError: StringLiteralType, LocalizedError, Error
 {
     case couldNotOpenStore
     case missingPreceedingOperations
@@ -106,6 +106,11 @@ public enum DataError: StringLiteralType, Error
     case improperOperationFormat
     case internalError
     case unknownError
+    
+    public var errorDescription: String?
+    {
+        return self.rawValue
+    }
 }
 
 // Intended to be called from the main thread.
@@ -114,7 +119,7 @@ extension DataLayer
     public typealias Token = VectorClock
     public static var NullToken = VectorClock.init(map: [:])
     
-    public func save(model: Model, withCallbackBlock block: @escaping (MaybeError<GlobalID>)->Void)
+    public func save(model: Model, syncing: Bool = false, withCallbackBlock block: @escaping (MaybeError<GlobalID>)->Void)
     {
         func ret(id: GlobalID)
         {
@@ -150,18 +155,49 @@ extension DataLayer
                             let data = model.toData(withLamport: t + 1, existingData: p)
                             if data == p
                             {
+                                // TODO: appDebug
+                                #if DEBUG
+                                print("🔵 data already exists")
+                                #endif
                                 ret(id: data.metadata.id)
                             }
                             else
                             {
-                                db.commit(data: data, withSite: self.owner)
+                                if syncing
                                 {
-                                    switch $0
+                                    db.nextOperationIndex(forSite: self.owner)
                                     {
-                                    case .error(let e):
-                                        ret(e: e)
-                                    case .value(let id):
-                                        ret(id: id)
+                                        switch $0
+                                        {
+                                        case .error(let e):
+                                            ret(e: e)
+                                        case .value(let v):
+                                            let log = [self.owner : (v, [model.metadata.id])]
+                                            db.sync(data: [data], withOperationLog: log)
+                                            {
+                                                if let error = $0
+                                                {
+                                                    ret(e: error)
+                                                }
+                                                else
+                                                {
+                                                    ret(id: model.metadata.id)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    db.commit(data: data, withSite: self.owner)
+                                    {
+                                        switch $0
+                                        {
+                                        case .error(let e):
+                                            ret(e: e)
+                                        case .value(let id):
+                                            ret(id: id)
+                                        }
                                     }
                                 }
                             }
@@ -198,6 +234,32 @@ extension DataLayer
         }
     }
     
+    public func load(untappdModel: Model.ID, withCallbackBlock block: @escaping (MaybeError<Model?>)->Void)
+    {
+        func ret(_ v: MaybeError<Model?>)
+        {
+            onMain
+                {
+                    block(v)
+            }
+        }
+        
+        self.primaryStore.readTransaction
+        { db in
+            db.data(forUntappdID: untappdModel)
+            {
+                switch $0
+                {
+                case .error(let e):
+                    ret(.error(e: e))
+                case .value(let p):
+                    let model = p?.toModel()
+                    ret(.value(v: model))
+                }
+            }
+        }
+    }
+    
     // PERF: we can filter these on the database level
     public func getModels(fromIncludingDate from: Date, toExcludingDate to: Date, withToken token: Token? = nil, includingDeleted: Bool = false, includingUntappdPending: Bool = false, withCallbackBlock block: @escaping (MaybeError<([Model], Token)>)->Void)
     {
@@ -218,20 +280,38 @@ extension DataLayer
                 case .error(let e):
                     ret(.error(e: e))
                 case .value(let v):
-                    let data = v.0.filter
+                    var data = v.0.filter
                     {
                         if !includingDeleted && $0.metadata.deleted.v
                         {
                             return false
                         }
-                        if !includingUntappdPending && ($0.checkIn.untappdId.v != nil && !$0.checkIn.untappdApproved.v)
+                        if ($0.checkIn.untappdId.v != nil && !$0.checkIn.untappdApproved.v)
                         {
                             return false
                         }
                         return true
                     }
-                    let models = data.map { $0.toModel() }
-                    ret(.value(v: (models, v.1)))
+                    if includingUntappdPending
+                    {
+                        db.pendingUntappd
+                        {
+                            switch $0
+                            {
+                            case .error(let e):
+                                ret(.error(e: e))
+                            case .value(let v):
+                                data += v.0
+                                let models = data.map { $0.toModel() }
+                                ret(.value(v: (models, v.1)))
+                            }
+                        }
+                    }
+                    else
+                    {
+                        let models = data.map { $0.toModel() }
+                        ret(.value(v: (models, v.1)))
+                    }
                 }
             }
         }
@@ -243,17 +323,21 @@ extension DataLayer
         return try self.primaryStore.readTransaction
         { db -> ([Model], Token) in
             let v = try db.data(fromIncludingDate: from, toExcludingDate: to, afterTimestamp: token)
-            let data = v.0.filter
+            var data = v.0.filter
             {
                 if !includingDeleted && $0.metadata.deleted.v
                 {
                     return false
                 }
-                if !includingUntappdPending && ($0.checkIn.untappdId.v != nil && !$0.checkIn.untappdApproved.v)
+                if ($0.checkIn.untappdId.v != nil && !$0.checkIn.untappdApproved.v)
                 {
                     return false
                 }
                 return true
+            }
+            if includingUntappdPending
+            {
+                data += try db.pendingUntappd().0
             }
             let models = data.map { $0.toModel() }
             return (models, v.1)

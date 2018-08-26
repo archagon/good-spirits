@@ -23,6 +23,7 @@ class Untappd
     private static let rateLimitHeader = "X-Ratelimit-Limit"
     private static let rateLimitRemainingHeader = "X-Ratelimit-Remaining"
     private static let dateFormat = "E, d MMM yyyy HH:mm:ss Z"
+    private static let untappdOwner: DataLayer.SiteID = UUID.init(uuidString: "a7419258-9b21-4eca-a719-5ce2963f42e0")!
     //https://api.untappd.com/v4/method_name?access_token=ACESSTOKENHERE
     
     public static let shared = Untappd()
@@ -104,14 +105,8 @@ class Untappd
             }
             else
             {
-                var untappdIds: [Int:Model] = [:]
                 for checkin in checkIns
                 {
-                    // NEXT: pull from db to make sure it doesn't already exist
-                    // NEXT: untappdId must be unique, test with sampleData
-                    // NEXT: all appearing on top always
-                    
-                    let id = GlobalID.init(siteID: data.owner, operationIndex: DataLayer.wildcardIndex)
                     let time: Date
                     if let stringTime = checkin.created_at
                     {
@@ -132,6 +127,7 @@ class Untappd
                         time = Date()
                     }
                     let untappdId = checkin.checkin_id
+                    let id = GlobalID.init(siteID: Untappd.untappdOwner, operationIndex: DataLayer.Index(untappdId))
                     let style: DrinkStyle
                     if let stringStyle = checkin.beer.beer_style
                     {
@@ -156,16 +152,11 @@ class Untappd
                     
                     let drink = Model.Drink.init(name: checkin.beer.beer_name, style: style, abv: abv, price: nil, volume: style.defaultVolume)
                     let checkIn = Model.CheckIn.init(untappdId: Model.ID(untappdId), untappdApproved: false, time: time, drink: drink)
-                    let meta = Model.Metadata.init(id: id, creationTime: Date())
+                    let meta = Model.Metadata.init(id: id, creationTime: time) //TODO: this should be the current time, but w/o overwriting existing data
                     let model = Model.init(metadata: meta, checkIn: checkIn)
                     
-                    if untappdIds[untappdId] != nil
-                    {
-                        print("asdf")
-                    }
-                    untappdIds[untappdId] = model
-                    
-                    data.save(model: model)
+                    // AB: we "sync" here because of our fake Untappd UUID scheme
+                    data.save(model: model, syncing: true)
                     {
                         switch $0
                         {
@@ -196,7 +187,7 @@ class Untappd
         
         //let minId = (baseline != nil ? "&min_id=\(baseline!)" : "")
         let minId = "" //AB: min_id has age requirements that make it unsuitable for our use case
-        let newUrlString = (Untappd.apiURL.absoluteString as NSString).appendingPathComponent("/v4/user/checkins?access_token=\(token)\(minId)&limit=100")
+        let newUrlString = (Untappd.apiURL.absoluteString as NSString).appendingPathComponent("/v4/user/checkins?access_token=\(token)\(minId)&limit=5")
         let url = URL.init(string: newUrlString)!
         var request = URLRequest.init(url: url)
         request.httpMethod = "GET"

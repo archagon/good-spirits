@@ -44,7 +44,6 @@ public func equalish<T: Dimension>(first: Measurement<T>, second: Measurement<T>
 // TODO: log this and do something sensible
 public func appError(_ message: String)
 {
-    print("Error: \(message)")
     showAlert(message)
     //assert(false)
 }

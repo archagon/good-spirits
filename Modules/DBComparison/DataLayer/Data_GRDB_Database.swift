@@ -281,6 +281,12 @@ extension Database: DataProtocolImmediate
         let data = try DataModel.filter(DataModel.Columns.checkin_untappd_id_value != nil && DataModel.Columns.metadata_deleted_value == false && DataModel.Columns.checkin_untappd_approved_value == false).fetchAll(self)
         return (data, globalTimestamp)
     }
+    
+    public func data(forUntappdID id: DataModel.ID) throws -> DataModel?
+    {
+        let data = try DataModel.select(DataModel.Columns.checkin_untappd_id_value == id).fetchOne(self)
+        return data
+    }
 }
 
 extension Database: DataWriteProtocolImmediate
