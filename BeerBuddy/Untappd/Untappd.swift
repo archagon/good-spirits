@@ -73,7 +73,7 @@ class Untappd
             return .unreachable
         }
         
-        if Defaults.untappdEnabled && Defaults.untappdToken != nil
+        if Defaults.untappdToken != nil
         {
             return .enabledAndAuthorized
         }

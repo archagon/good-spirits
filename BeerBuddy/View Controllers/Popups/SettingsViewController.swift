@@ -271,32 +271,23 @@ extension SettingsViewController
             
             cell.toggle.removeTarget(self, action: nil, for: .valueChanged)
             cell.toggle.addTarget(self, action: #selector(untappdToggled), for: .valueChanged)
-            cell.toggle.isOn = Defaults.untappdEnabled
             
-            if row == 0
-            {
-                cell.textLabel?.text = "Pull Check-Ins from Untappd"
-                cell.textLabel?.numberOfLines = 10
-                cell.detailTextLabel?.numberOfLines = 1000
-                cell.detailTextLabel?.text = "Logged in as Archagon"
-                updateUntappdToggleAppearance(withCell: cell)
-            }
+            cell.textLabel?.text = "Pull Check-Ins from Untappd"
+            cell.textLabel?.numberOfLines = 10
+            cell.detailTextLabel?.numberOfLines = 1000
+            updateUntappdToggleAppearance(withCell: cell)
         case .healthKit:
             let cell = aCell as! ToggleCell
             cell.accessoryType = .none
             
             cell.toggle.removeTarget(self, action: nil, for: .valueChanged)
             cell.toggle.addTarget(self, action: #selector(healthKitToggled), for: .valueChanged)
-            cell.toggle.isOn = Defaults.healthKitEnabled
             
-            if row == 0
-            {
-                cell.textLabel?.text = "Send Check-Ins to Health Kit"
-                cell.textLabel?.numberOfLines = 10
-                cell.detailTextLabel?.numberOfLines = 1000
-                cell.detailTextLabel?.textColor = .red
-                updateHealthKitToggleAppearance(withCell: cell)
-            }
+            cell.textLabel?.text = "Send Check-Ins to Health Kit"
+            cell.textLabel?.numberOfLines = 10
+            cell.detailTextLabel?.numberOfLines = 1000
+            cell.detailTextLabel?.textColor = .red
+            updateHealthKitToggleAppearance(withCell: cell)
         case .info:
             let cell = aCell
             cell.accessoryType = .disclosureIndicator
@@ -413,8 +404,7 @@ extension SettingsViewController
         case .disabled:
             if let token = Defaults.untappdToken
             {
-                Defaults.untappdEnabled = sender.isOn
-                Untappd.shared.refreshCheckIns(withData: ((UIApplication.shared.delegate as? AppDelegate)?.rootController?.data)!)
+                Defaults.untappdToken = (sender.isOn ? token : nil)
                 appDebug("UNTAPPD available!")
             }
             else
@@ -437,7 +427,6 @@ extension SettingsViewController
                         else
                         {
                             appDebug("retrieved token \(token)")
-                            Defaults.untappdEnabled = true
                             Defaults.untappdToken = token
                         }
                         
@@ -449,7 +438,7 @@ extension SettingsViewController
                 }
             }
         case .enabledAndAuthorized:
-            Defaults.untappdEnabled = sender.isOn
+            Defaults.untappdToken = (sender.isOn ? Defaults.untappdToken : nil)
         }
         
         updateUntappdToggleAppearance()

@@ -59,7 +59,7 @@ public class UntappdLoginViewController: UIViewController
     public func load(withBlock block: @escaping (String, Error?)->())
     {
         let url = Untappd.requestURL
-        let request = URLRequest.init(url: URL.init(string: url)!)
+        let request = URLRequest.init(url: URL.init(string: url)!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 15)
         self.tokenBlock = block
         self.webView.load(request)
     }

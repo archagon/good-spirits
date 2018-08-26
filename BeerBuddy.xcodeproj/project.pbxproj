@@ -43,7 +43,6 @@
 		4EA2F18820FEE7C700CE30E1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F18620FEE7C700CE30E1 /* Main.storyboard */; };
 		4EA2F18A20FEE7CB00CE30E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F18920FEE7CB00CE30E1 /* Assets.xcassets */; };
 		4EA2F18D20FEE7CB00CE30E1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F18B20FEE7CB00CE30E1 /* LaunchScreen.storyboard */; };
-		4EA2F19520FEE80D00CE30E1 /* stub.json in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F19420FEE80D00CE30E1 /* stub.json */; };
 		4EA2F19720FEF8B900CE30E1 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19620FEF8B900CE30E1 /* Data.swift */; };
 		4EA2F19B20FF07C100CE30E1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19A20FF07C100CE30E1 /* Model.swift */; };
 		4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */; };
@@ -888,7 +887,6 @@
 				4EA2F18A20FEE7CB00CE30E1 /* Assets.xcassets in Resources */,
 				4EA2F18820FEE7C700CE30E1 /* Main.storyboard in Resources */,
 				4EA2F19F20FF30F500CE30E1 /* DrinkIcons.xcassets in Resources */,
-				4EA2F19520FEE80D00CE30E1 /* stub.json in Resources */,
 				4E16919C212E8AB7007F51D9 /* Licenses.txt in Resources */,
 				4EE3369D2108058500D72B7D /* Controllers.storyboard in Resources */,
 			);

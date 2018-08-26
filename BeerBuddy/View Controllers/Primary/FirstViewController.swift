@@ -205,7 +205,7 @@ class FirstViewController: UIViewController
                 self.calendar.setCurrentPage(offset2, animated: false)
             }
             
-            if Defaults.untappdEnabled && Defaults.untappdToken != nil
+            if Defaults.untappdToken != nil
             {
                 self.setupUntappdPullToRefresh(true)
             }
@@ -215,12 +215,7 @@ class FirstViewController: UIViewController
             }
         }
         
-        //self.data?.populateWithSampleData()
-        //DispatchQueue.main.asyncAfter(deadline:.now() + 3)
-        //{
-        //    self.data?.populateWithSampleData()
-        //}
-        setupUntappdPullToRefresh(Defaults.untappdEnabled && Defaults.untappdToken != nil)
+        setupUntappdPullToRefresh(Defaults.untappdToken != nil)
     }
     
     func setupUntappdPullToRefresh(_ enable: Bool)
@@ -281,7 +276,12 @@ class FirstViewController: UIViewController
         let token = DataLayer.NullToken
         
         self.data?.getModels(fromIncludingDate: from, toExcludingDate: to, withToken: token, includingDeleted: false, includingUntappdPending: true)
-        {
+        { [weak `self`] in
+            guard let `self` = self else
+            {
+                return
+            }
+            
             switch $0
             {
             case .error(let e):
@@ -404,9 +404,11 @@ class FirstViewController: UIViewController
                     }
                 }
                 
+                self.tabBarItem.badgeValue = sortedUntappdOps.count > 0 ? "\(sortedUntappdOps.count)" : nil
+                
                 progressAdjustment: do
                 {
-                    let progress = Stats(self.data!).progress(forModels: v.0, inRange: from..<to)
+                    let progress = Stats(self.data!).progress(forModels: Array(sortedRegularOps), inRange: from..<to)
                     
                     (self.progressBar as? UIProgressView)?.setProgress(progress.previous + progress.current, animated: true)
                     (self.overflowProgressBar as? UIProgressView)?.setProgress(progress.previous, animated: true)
@@ -803,75 +805,3 @@ extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalen
         self.calendar.setCurrentPage(Date(), animated: true)
     }
 }
-
-//{
-//    if let token = Defaults.untappdToken
-//    {
-//        Untappd.UserCheckIns(token)
-//        { (checkIns, error) in
-//        }
-//        return false
-//    }
-//
-//    if qqqPopup == nil
-//    {
-//        untappd: do
-//        {
-//            let untappdVC = UntappdLoginViewController.init
-//            { (token, e) in
-//                if let e = e
-//                {
-//                    print("token error: \(e)")
-//                }
-//                else
-//                {
-//                    print("found token: \(token)")
-//                    Defaults.untappdToken = token
-//                    //self.dismiss(animated: true, completion: nil)
-//                    self.qqqPopup?.dismiss(animated: true, completion: nil)
-//                    self.qqqPopup = nil
-//                }
-//            }
-//            untappdVC.modalPresentationStyle = .popover
-//            self.present(untappdVC, animated: true, completion: nil)
-//            untappdVC.load()
-//            self.qqqPopup = untappdVC
-//        }
-//
-//        popup: do
-//        {
-//            break popup
-//
-//            let vc = UIViewController()
-//            vc.view.backgroundColor = UIColor.red
-//            let label = UITextView.init()
-//            label.text = "This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah. This is a test label for fitting. It has multiple lines for testing. Blah blah blah."
-//            label.font = UIFont.systemFont(ofSize: 12)
-//            label.isEditable = false
-//            label.isSelectable = false
-//            label.isScrollEnabled = false
-//            label.textContainerInset = UIEdgeInsets.zero
-//            label.translatesAutoresizingMaskIntoConstraints = false
-//            vc.view.addSubview(label)
-//            let labelHConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(32)-[label]-(32)-|", options: [], metrics: nil, views: ["label":label])
-//            let labelVConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(64)-[label]-(64)-|", options: [], metrics: nil, views: ["label":label])
-//            NSLayoutConstraint.activate(labelHConstraints + labelVConstraints)
-//
-//            vc.preferredContentSize = CGSize.init(width: 400, height: 0)
-//
-//            let popup = ScrollingPopupViewController.init()
-//            popup.viewController = vc
-//            popup.delegate = self
-//
-//            //.custom? A custom view presentation style that is managed by a custom presentation controller and one or more custom animator objects.
-//            popup.modalPresentationStyle = .overFullScreen
-//
-//
-//            self.qqqPopup = popup
-//
-//            self.present(popup, animated: false)
-//            {
-//            }
-//        }
-//    }
-//}

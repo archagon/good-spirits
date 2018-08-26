@@ -25,7 +25,6 @@ public struct Defaults
     // Having this set means HK was authorized at some point.
     private static let healthKitEnabledKey: String = "HealthKitEnabled"
     
-    private static let untappdEnabledKey: String = "UntappdEnabled"
     private static let untappdTokenKey: String = "UntappdToken"
     private static let untappdBaselineKey: String = "UntappdBaseline"
     
@@ -44,8 +43,7 @@ extension Defaults
         self.defaults.register(defaults: [
             Defaults.weekStartsOnMondayKey: false,
             Defaults.standardDrinkSizeKey: Constants.standardDrinkSizeDefault,
-            Defaults.healthKitEnabledKey: false,
-            Defaults.untappdEnabledKey: false
+            Defaults.healthKitEnabledKey: false
             ])
     }
     
@@ -72,19 +70,6 @@ extension Defaults
         set
         {
             self.defaults.set(newValue, forKey: Defaults.healthKitEnabledKey)
-        }
-    }
-    
-    public var untappdEnabled: Bool
-    {
-        get
-        {
-            let val = self.defaults.bool(forKey: Defaults.untappdEnabledKey)
-            return val
-        }
-        set
-        {
-            self.defaults.set(newValue, forKey: Defaults.untappdEnabledKey)
         }
     }
     
@@ -289,19 +274,6 @@ extension Defaults
         {
             var defaults = Defaults()
             defaults.healthKitEnabled = newValue
-        }
-    }
-    
-    public static var untappdEnabled: Bool
-    {
-        get
-        {
-            return Defaults().untappdEnabled
-        }
-        set
-        {
-            var defaults = Defaults()
-            defaults.untappdEnabled = newValue
         }
     }
     
