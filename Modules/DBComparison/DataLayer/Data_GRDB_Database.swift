@@ -199,10 +199,10 @@ extension Database: DataProtocolImmediate
     public func lastAddedData() throws -> DataModel?
     {
         // BUGFIX: MAX returns table with single null entry if table is empty
-        let count = try DataModel.fetchCount(self)
+        let count = try DataModel.filter(DataModel.Columns.checkin_untappd_id_value == nil).fetchCount(self)
         if count > 0
         {
-            return try DataModel.select(sql: "*, MAX(\(DataModel.Columns.metadata_creation_time.rawValue))").fetchOne(self)
+            return try DataModel.filter(DataModel.Columns.checkin_untappd_id_value == nil).select(sql: "*, MAX(\(DataModel.Columns.metadata_creation_time.rawValue))").fetchOne(self)
         }
         else
         {

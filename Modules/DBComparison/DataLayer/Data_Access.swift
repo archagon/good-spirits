@@ -41,7 +41,7 @@ public protocol DataProtocol
     
     // data
     func data(forID id: GlobalID, withCompletionBlock block: @escaping (MaybeError<DataModel?>)->())
-    func lastAddedData(withCompletionBlock block: @escaping (MaybeError<DataModel?>)->())
+    func lastAddedData(withCompletionBlock block: @escaping (MaybeError<DataModel?>)->()) //only includes non-Untappd items
     
     // batch; contains everything > timestamp and includes missing sites
     // AB: this could return more operations than we need, but conflict-free merge should eliminate errors
@@ -60,7 +60,7 @@ public protocol DataProtocolImmediate
     
     // data
     func data(forID id: GlobalID) throws -> DataModel?
-    func lastAddedData() throws -> DataModel?
+    func lastAddedData() throws -> DataModel? //only includes non-Untappd items
     
     // batch; contains everything >= timestamp and includes missing sites
     func data(afterTimestamp timestamp: VectorClock) throws -> (Set<DataModel>,VectorClock)

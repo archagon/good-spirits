@@ -81,7 +81,8 @@ extension Data_GRDB: DataAccessProtocol, DataAccessProtocolImmediate
                 DataModel.createTable(withTableDefinition: td)
             }
             try db.create(index: "dateIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.checkin_time_value.rawValue])
-            try db.create(index: "creationTimeIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.metadata_creation_time.rawValue])
+            // TODO: does the untappd portion actually help?
+            try db.create(index: "creationTimeIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.metadata_creation_time.rawValue, DataModel.Columns.checkin_untappd_id_value.rawValue])
             let allLamportColumns = DataModel.Columns.allCases.filter { $0.isLamport }
             // TODO: maybe make this a compound index? also, how does max work on compound index?
             for (_, column) in allLamportColumns.enumerated()
