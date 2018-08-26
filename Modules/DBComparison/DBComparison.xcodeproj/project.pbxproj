@@ -155,7 +155,6 @@
 		4EAEC2A3211C077800C1ED0E /* Data_GRDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_GRDB.swift; sourceTree = "<group>"; };
 		4EAEC2A9211C182900C1ED0E /* Data_Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Default.swift; sourceTree = "<group>"; };
 		4EB26065212F98680089B164 /* Data_Null.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Null.swift; sourceTree = "<group>"; };
-		4EC0E89A2123FF26004FB000 /* Data_GRDB_Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_GRDB_Container.swift; sourceTree = "<group>"; };
 		4EC0E89E2123FFD9004FB000 /* Data_GRDB_Database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data_GRDB_Database.swift; sourceTree = "<group>"; };
 		4EC0E8D32124AB5B004FB000 /* Model_Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model_Data.swift; sourceTree = "<group>"; };
 		4EC0E8D52124AB8C004FB000 /* Model_Conversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model_Conversion.swift; sourceTree = "<group>"; };
@@ -272,7 +271,6 @@
 				4E74CF9E2118E3DF009C948A /* Data_Memory.swift */,
 				4EAEC2A3211C077800C1ED0E /* Data_GRDB.swift */,
 				4EC0E89E2123FFD9004FB000 /* Data_GRDB_Database.swift */,
-				4EC0E89A2123FF26004FB000 /* Data_GRDB_Container.swift */,
 				4E74CF9C2118DBCC009C948A /* Types.swift */,
 				4EC5E0E0211A487800AFD980 /* Util.swift */,
 				4E74CFA821194680009C948A /* Format.swift */,

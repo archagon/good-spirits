@@ -340,6 +340,19 @@ extension DataProtocol where Self: DataProtocolImmediate
             block(.error(e: error))
         }
     }
+    
+    public func pendingUntappd(withCompletionBlock block: @escaping (MaybeError<([DataModel],VectorClock)>)->())
+    {
+        do
+        {
+            let value = try self.pendingUntappd()
+            block(.value(v: value))
+        }
+        catch
+        {
+            block(.error(e: error))
+        }
+    }
 }
 
 extension DataWriteProtocol where Self: DataWriteProtocolImmediate

@@ -80,21 +80,21 @@ extension Data_GRDB: DataAccessProtocol, DataAccessProtocolImmediate
             { td in
                 DataModel.createTable(withTableDefinition: td)
             }
-            try db.create(index: "dateIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.checkin_time_value.rawValue])
-            // TODO: does the untappd portion actually help?
-            try db.create(index: "creationTimeIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.metadata_creation_time.rawValue, DataModel.Columns.checkin_untappd_id_value.rawValue])
+            try db.create(index: "dateIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.checkin_time_value.rawValue], ifNotExists: true)
+            try db.create(index: "creationTimeIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.metadata_creation_time.rawValue], ifNotExists: true)
+            try db.create(index: "untappdIdIndex", on: DataModel.databaseTableName, columns: [DataModel.Columns.metadata_id_uuid.rawValue], unique: false, ifNotExists: true, condition: DataModel.Columns.checkin_untappd_id_value != nil)
             let allLamportColumns = DataModel.Columns.allCases.filter { $0.isLamport }
             // TODO: maybe make this a compound index? also, how does max work on compound index?
             for (_, column) in allLamportColumns.enumerated()
             {
-                try db.create(index: "\(column.rawValue.underscoreToCamelCase)Index", on: DataModel.databaseTableName, columns: [column.rawValue])
+                try db.create(index: "\(column.rawValue.underscoreToCamelCase)Index", on: DataModel.databaseTableName, columns: [column.rawValue], ifNotExists: true)
             }
             
             try db.create(table: DataModelLogEntry.databaseTableName, temporary: false, ifNotExists: true, withoutRowID: false)
             { td in
                 DataModelLogEntry.createTable(withTableDefinition: td)
             }
-            try db.create(index: "logIndex", on: DataModelLogEntry.databaseTableName, columns: [DataModelLogEntry.Columns.action_uuid.rawValue, DataModelLogEntry.Columns.action_index.rawValue])
+            try db.create(index: "logIndex", on: DataModelLogEntry.databaseTableName, columns: [DataModelLogEntry.Columns.action_uuid.rawValue, DataModelLogEntry.Columns.action_index.rawValue], ifNotExists: true)
             
             db.add(transactionObserver: self)
         }

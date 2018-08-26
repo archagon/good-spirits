@@ -47,6 +47,7 @@ public protocol DataProtocol
     // AB: this could return more operations than we need, but conflict-free merge should eliminate errors
     func data(afterTimestamp timestamp: VectorClock, withCompletionBlock block: @escaping (MaybeError<(Set<DataModel>,VectorClock)>)->())
     func data(fromIncludingDate from: Date, toExcludingDate to: Date, afterTimestamp: VectorClock?, withCompletionBlock block: @escaping (MaybeError<([DataModel],VectorClock)>)->())
+    func pendingUntappd(withCompletionBlock block: @escaping (MaybeError<([DataModel],VectorClock)>)->())
 }
 public protocol DataProtocolImmediate
 {
@@ -65,6 +66,7 @@ public protocol DataProtocolImmediate
     // batch; contains everything >= timestamp and includes missing sites
     func data(afterTimestamp timestamp: VectorClock) throws -> (Set<DataModel>,VectorClock)
     func data(fromIncludingDate from: Date, toExcludingDate to: Date, afterTimestamp: VectorClock?) throws -> ([DataModel],VectorClock)
+    func pendingUntappd() throws -> ([DataModel],VectorClock)
 }
 
 public protocol DataWriteProtocol: DataProtocol

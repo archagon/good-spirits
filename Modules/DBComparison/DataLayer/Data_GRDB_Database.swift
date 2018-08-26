@@ -274,6 +274,13 @@ extension Database: DataProtocolImmediate
         //    return (values, timestamp)
         //}
     }
+    
+    public func pendingUntappd() throws -> ([DataModel],VectorClock)
+    {
+        let globalTimestamp = try vectorTimestamp()
+        let data = try DataModel.filter(DataModel.Columns.checkin_untappd_id_value != nil && DataModel.Columns.metadata_deleted_value == false && DataModel.Columns.checkin_untappd_approved_value == false).fetchAll(self)
+        return (data, globalTimestamp)
+    }
 }
 
 extension Database: DataWriteProtocolImmediate
