@@ -45,7 +45,8 @@ public func equalish<T: Dimension>(first: Measurement<T>, second: Measurement<T>
 public func appError(_ message: String)
 {
     print("Error: \(message)")
-    assert(false)
+    showAlert(message)
+    //assert(false)
 }
 
 public func appWarning(_ message: String)
@@ -58,6 +59,29 @@ public func appDebug(_ message: String)
     #if DEBUG
     print("🔵 \(message)")
     #endif
+}
+
+public func showAlert(_ msg: String)
+{
+    onMain
+    {
+        let popup = PopupDialog.init(title: "Error", message: "Oops! \(Constants.appName) encountered an unexpected error. (\(msg)) Please e-mail archagon@archagon.net with a sceenshot of this message. My apologies!")
+        
+        let doneButton = DefaultButton.init(title: "OK", height: 44, dismissOnTap: true, action: nil)
+        popup.addButtons([doneButton])
+        
+        if let presented = (UIApplication.shared.delegate as? AppDelegate)?.rootController?.presentedViewController
+        {
+            presented.dismiss(animated: true)
+            {
+                (UIApplication.shared.delegate as? AppDelegate)?.rootController?.present(popup, animated: true, completion: nil)
+            }
+        }
+        else
+        {
+            (UIApplication.shared.delegate as? AppDelegate)?.rootController?.present(popup, animated: true, completion: nil)
+        }
+    }
 }
 
 // https://stackoverflow.com/a/49561764/89812

@@ -17,6 +17,8 @@ extension Untappd
         public let response: T?
     }
     
+    struct NullStruct: Decodable {}
+    
     struct Meta: Decodable
     {
         public struct ResponseTime: Decodable

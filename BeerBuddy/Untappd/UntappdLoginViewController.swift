@@ -13,7 +13,7 @@ public class UntappdLoginViewController: UIViewController
 {
     private let webView: WKWebView
     private let loadingView: UIStackView
-    private var tokenBlock: ((String, Error?)->())! = nil
+    private var tokenBlock: ((String, Error?)->())? = nil
     
     public init()
     {
@@ -34,9 +34,6 @@ public class UntappdLoginViewController: UIViewController
         self.webView.navigationDelegate = self
         
         self.webView.allowsLinkPreview = false
-        
-//        self.webView.scrollView.backgroundColor = UIColor.init(red: 255/255.0, green: 204/255.0, blue: 1/255.0, alpha: 1)
-//        self.webView.backgroundColor = UIColor.init(red: 255/255.0, green: 204/255.0, blue: 1/255.0, alpha: 1)
         self.webView.isOpaque = false
     }
     
@@ -61,19 +58,27 @@ public class UntappdLoginViewController: UIViewController
     
     public func load(withBlock block: @escaping (String, Error?)->())
     {
-        let url = "https://untappd.com/oauth/authenticate/?client_id=\(Untappd.clientID)&response_type=token&redirect_url=\(Untappd.redirectURL)"
+        let url = Untappd.requestURL
         let request = URLRequest.init(url: URL.init(string: url)!)
         self.tokenBlock = block
         self.webView.load(request)
     }
 }
 
-// TODO: timeouts, etc.
 extension UntappdLoginViewController: WKNavigationDelegate
 {
+    public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error)
+    {
+        webView.stopLoading()
+        self.tokenBlock?("", error)
+        self.tokenBlock = nil
+    }
+    
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error)
     {
-        fatalError("failed")
+        webView.stopLoading()
+        self.tokenBlock?("", error)
+        self.tokenBlock = nil
     }
     
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Swift.Void)
@@ -88,12 +93,15 @@ extension UntappdLoginViewController: WKNavigationDelegate
             
             if split.count == 2 && split[0] == "access_token"
             {
-                self.tokenBlock(String(split[1]), nil)
+                appDebug("retrieved token \(String(split[1]))!")
+                webView.stopLoading()
+                self.tokenBlock?(String(split[1]), nil)
+                self.tokenBlock = nil
                 decisionHandler(.cancel)
             }
             else
             {
-                appError("incorrect untappd response: \(url)")
+                appError("unexpected Untappd response -- \(url)")
                 decisionHandler(.allow)
             }
         }

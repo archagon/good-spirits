@@ -34,6 +34,8 @@ class SettingsViewController: UITableViewController
         case enabledAndAuthorized
     }
     
+    var untappdLoginPending: Bool = false
+    
     var notificationObservers: [Any] = []
     
     deinit
@@ -58,6 +60,7 @@ class SettingsViewController: UITableViewController
         let activeNotification = NotificationCenter.default.addObserver(forName: Notification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil)
         { [weak `self`] _ in
             self?.updateHealthKitToggleAppearance()
+            self?.updateUntappdToggleAppearance()
         }
         notificationObservers.append(activeNotification)
     }
@@ -65,6 +68,7 @@ class SettingsViewController: UITableViewController
     func viewWillAppear()
     {
         updateHealthKitToggleAppearance()
+        updateUntappdToggleAppearance()
     }
 }
 
@@ -93,11 +97,11 @@ extension SettingsViewController
         }
         else if sectionCounts[section].0 == .untappd
         {
-            footer.textLabel?.text = "New check-ins will automatically be pulled from your Untappd account. You can also sync manually by pulling-to-refresh in the log view. Check-ins will still need to be completed (or cancelled) from the History view. Does not track past check-ins."
+            footer.textLabel?.text = "New check-ins will automatically be pulled from your Untappd account. Untappd entries will appear at the top of your Log view and will need to be supplemented with volume and price information or dismissed. You can also sync manually by pulling-to-refresh from the same screen. Does not sync past check-ins."
         }
         else if sectionCounts[section].0 == .healthKit
         {
-            footer.textLabel?.text = "New check-ins will be added as nutrition to your HealthKit measurements, with an estimate for the calories based on the volume and alcohol content of your drinks. Does not track past check-ins, unless updated."
+            footer.textLabel?.text = "New check-ins will be added as nutrition to your HealthKit measurements, with an estimate for the calories based on the volume and alcohol content of your drinks. Does not sync past check-ins, unless updated."
         }
         else if sectionCounts[section].0 == .info
         {
@@ -275,6 +279,7 @@ extension SettingsViewController
                 cell.textLabel?.numberOfLines = 10
                 cell.detailTextLabel?.numberOfLines = 1000
                 cell.detailTextLabel?.text = "Logged in as Archagon"
+                updateUntappdToggleAppearance(withCell: cell)
             }
         case .healthKit:
             let cell = aCell as! ToggleCell
@@ -344,7 +349,10 @@ extension SettingsViewController
                 let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
                 let controller = storyboard.instantiateViewController(withIdentifier: "FirstTimeSetupTest") as! StartupListPopupViewController
                 
-                self.navigationController?.pushViewController(controller.child, animated: true)
+                if self.navigationController?.topViewController == self
+                {
+                    self.navigationController?.pushViewController(controller.child, animated: true)
+                }
             }
         case .untappd:
             if let cell = tableView.cellForRow(at: indexPath) as? ToggleCell
@@ -373,7 +381,10 @@ extension SettingsViewController
                 text.navigationTitle = "Licenses"
                 text.content = textContent
                 
-                self.navigationController?.pushViewController(text, animated: true)
+                if self.navigationController?.topViewController == self
+                {
+                    self.navigationController?.pushViewController(text, animated: true)
+                }
             }
         }
     }
@@ -389,30 +400,59 @@ extension SettingsViewController
     
     @objc func untappdToggled(_ sender: UISwitch)
     {
+        if self.untappdLoginPending
+        {
+            return
+        }
+        
         switch Untappd.shared.loginStatus
         {
         case .unreachable:
             print("ERROR: unreachable!")
             return
         case .disabled:
-            break
-        case .pendingAuthorization:
-            print("ERROR: pending auth!")
-            return
-        case .enabledAndAuthorized:
-            print("ERROR: ready!")
-            return
-        }
+            if let token = Defaults.untappdToken
+            {
+                Defaults.untappdEnabled = sender.isOn
+                Untappd.shared.refreshCheckIns(withData: ((UIApplication.shared.delegate as? AppDelegate)?.rootController?.data)!)
+                appDebug("UNTAPPD available!")
+            }
+            else
+            {
+                let controller = UntappdLoginViewController.init()
+                controller.navigationItem.largeTitleDisplayMode = .never
                 
-        let controller = UntappdLoginViewController.init()
-        controller.navigationItem.largeTitleDisplayMode = .never
-        
-        //controller.navigationItem.title = "Untappd Login"
-        self.navigationController?.pushViewController(controller, animated: true)
-        
-        controller.load
-        { (token, error) in
+                if self.navigationController?.topViewController == self
+                {
+                    self.untappdLoginPending = true
+                    
+                    self.navigationController?.pushViewController(controller, animated: true)
+                    
+                    controller.load
+                    { [weak `self`] (token, error) in
+                        if let error = error
+                        {
+                            appError("Untappd login error -- \(error.localizedDescription)")
+                        }
+                        else
+                        {
+                            appDebug("retrieved token \(token)")
+                            Defaults.untappdEnabled = true
+                            Defaults.untappdToken = token
+                        }
+                        
+                        self?.navigationController?.popToRootViewController(animated: true)
+                        
+                        self?.untappdLoginPending = false
+                        self?.updateUntappdToggleAppearance()
+                    }
+                }
+            }
+        case .enabledAndAuthorized:
+            Defaults.untappdEnabled = sender.isOn
         }
+        
+        updateUntappdToggleAppearance()
     }
     
     @objc func healthKitToggled(_ sender: UISwitch)
@@ -509,6 +549,46 @@ extension SettingsViewController
         }
         
         self.updateHealthKitToggleAppearance()
+    }
+    
+    func updateUntappdToggleAppearance(withCell aCell: UITableViewCell? = nil)
+    {
+        let section: Int = self.sectionCounts.firstIndex { $0.0 == .untappd }!
+        
+        if
+            let genericCell = aCell ?? self.tableView.cellForRow(at: IndexPath.init(row: 0, section: section)),
+            let cell = genericCell as? SubtitleToggleCell
+        {
+            tableView.beginUpdates()
+            if self.untappdLoginPending
+            {
+                tableView.beginUpdates()
+                cell.disable()
+                cell.toggle.isEnabled = false
+                tableView.endUpdates()
+            }
+            else
+            {
+                switch Untappd.shared.loginStatus
+                {
+                case .unreachable:
+                    cell.enable()
+                    cell.toggle.isOn = false
+                    cell.toggle.isEnabled = true
+                    cell.detailTextLabel?.text = "Untappd unreachable, please check your internet connection"
+                case .disabled:
+                    cell.enable()
+                    cell.toggle.isOn = false
+                    cell.toggle.isEnabled = true
+                case .enabledAndAuthorized:
+                    cell.enable()
+                    cell.toggle.isOn = true
+                    cell.toggle.isEnabled = true
+                    cell.detailTextLabel?.text = "Logged in as Blah"
+                }
+            }
+            tableView.endUpdates()
+        }
     }
     
     func updateHealthKitToggleAppearance(withCell aCell: UITableViewCell? = nil)
