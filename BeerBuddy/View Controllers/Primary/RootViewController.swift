@@ -207,6 +207,15 @@ class RootViewController: UITabBarController, DrawerCoordinating
             controller.volume = model.checkIn.drink.volume
             controller.style = model.checkIn.drink.style
             controller.cost = model.checkIn.drink.price
+            
+            if model.checkIn.untappdId != nil && !model.checkIn.untappdApproved
+            {
+                controller.type = .untappd
+            }
+            else
+            {
+                controller.type = .update
+            }
         }
         else if let date = date
         {

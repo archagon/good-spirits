@@ -235,8 +235,8 @@ public class CheckInCell: UITableViewCell
             self.contentView.backgroundColor = nil
             self.container.layer.cornerRadius = 0
             self.container.clipsToBounds = false
-            self.untappd.isHidden = false
-            self.untappdShadow.isHidden = false
+            self.untappd.isHidden = (data.checkIn.untappdId == nil)
+            self.untappdShadow.isHidden = self.untappd.isHidden
         }
     }
     

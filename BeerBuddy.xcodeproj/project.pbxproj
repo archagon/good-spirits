@@ -27,6 +27,9 @@
 		4E7FB9F1212E3F2A00052BFC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */; };
 		4E7FB9F3212E58BD00052BFC /* HealthKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F2212E58BD00052BFC /* HealthKit.swift */; };
 		4E7FB9F5212E58E200052BFC /* PopupCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F4212E58E200052BFC /* PopupCells.swift */; };
+		4E882C142133658E00B7587B /* SettingsViewController_HealthKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E882C132133658D00B7587B /* SettingsViewController_HealthKit.swift */; };
+		4E882C16213365A500B7587B /* SettingsViewController_Untappd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E882C15213365A500B7587B /* SettingsViewController_Untappd.swift */; };
+		4E882C18213365B200B7587B /* SettingsViewController_IAP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E882C17213365B200B7587B /* SettingsViewController_IAP.swift */; };
 		4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F048E21114DBB00038F09 /* Formatting.swift */; };
 		4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */; };
 		4E8F049421124FDD00038F09 /* VolumePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */; };
@@ -281,6 +284,9 @@
 		4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		4E7FB9F2212E58BD00052BFC /* HealthKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKit.swift; sourceTree = "<group>"; };
 		4E7FB9F4212E58E200052BFC /* PopupCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupCells.swift; sourceTree = "<group>"; };
+		4E882C132133658D00B7587B /* SettingsViewController_HealthKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController_HealthKit.swift; sourceTree = "<group>"; };
+		4E882C15213365A500B7587B /* SettingsViewController_Untappd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController_Untappd.swift; sourceTree = "<group>"; };
+		4E882C17213365B200B7587B /* SettingsViewController_IAP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController_IAP.swift; sourceTree = "<group>"; };
 		4E8F048E21114DBB00038F09 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
 		4E8F049121124CF700038F09 /* CheckInDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInDrawerViewController.swift; sourceTree = "<group>"; };
 		4E8F049321124FDD00038F09 /* VolumePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumePickerViewController.swift; sourceTree = "<group>"; };
@@ -291,7 +297,7 @@
 		4E93F00821017A5C00B51709 /* DayHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayHeaderCell.swift; sourceTree = "<group>"; };
 		4E9C8552210D598C00DA959D /* ABPrettyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABPrettyButton.swift; sourceTree = "<group>"; };
 		4E9C8554210D68F900DA959D /* ColorUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorUtil.swift; sourceTree = "<group>"; };
-		4EA2F17D20FEE7C700CE30E1 /* BeerBuddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeerBuddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EA2F17D20FEE7C700CE30E1 /* Good Spirits.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Good Spirits.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EA2F18020FEE7C700CE30E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4EA2F18220FEE7C700CE30E1 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
 		4EA2F18420FEE7C700CE30E1 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
@@ -487,6 +493,9 @@
 				4EB437F1212CF77B001D5734 /* StartupViewController.swift */,
 				4EC26CCD212E5E84006E156B /* TextDisplayController.swift */,
 				4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */,
+				4E882C132133658D00B7587B /* SettingsViewController_HealthKit.swift */,
+				4E882C15213365A500B7587B /* SettingsViewController_Untappd.swift */,
+				4E882C17213365B200B7587B /* SettingsViewController_IAP.swift */,
 				4E7FB9F4212E58E200052BFC /* PopupCells.swift */,
 			);
 			path = Popups;
@@ -578,7 +587,7 @@
 		4EA2F17E20FEE7C700CE30E1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4EA2F17D20FEE7C700CE30E1 /* BeerBuddy.app */,
+				4EA2F17D20FEE7C700CE30E1 /* Good Spirits.app */,
 				4E5D847E212697AC0081B273 /* FSCalendar.framework */,
 			);
 			name = Products;
@@ -710,9 +719,9 @@
 			productReference = 4E5D847E212697AC0081B273 /* FSCalendar.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		4EA2F17C20FEE7C700CE30E1 /* BeerBuddy */ = {
+		4EA2F17C20FEE7C700CE30E1 /* Good Spirits */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4EA2F19120FEE7CB00CE30E1 /* Build configuration list for PBXNativeTarget "BeerBuddy" */;
+			buildConfigurationList = 4EA2F19120FEE7CB00CE30E1 /* Build configuration list for PBXNativeTarget "Good Spirits" */;
 			buildPhases = (
 				4EA2F17920FEE7C700CE30E1 /* Sources */,
 				4EA2F17A20FEE7C700CE30E1 /* Frameworks */,
@@ -728,9 +737,9 @@
 				4E5D8484212697AC0081B273 /* PBXTargetDependency */,
 				4E7235F02128E55100EEEAFE /* PBXTargetDependency */,
 			);
-			name = BeerBuddy;
+			name = "Good Spirits";
 			productName = BeerBuddy;
-			productReference = 4EA2F17D20FEE7C700CE30E1 /* BeerBuddy.app */;
+			productReference = 4EA2F17D20FEE7C700CE30E1 /* Good Spirits.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -784,7 +793,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				4EA2F17C20FEE7C700CE30E1 /* BeerBuddy */,
+				4EA2F17C20FEE7C700CE30E1 /* Good Spirits */,
 				4E5D847D212697AC0081B273 /* FSCalendar */,
 			);
 		};
@@ -923,6 +932,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E70D5C72113C0AF0089BBB1 /* PricePickerViewController.swift in Sources */,
+				4E882C142133658E00B7587B /* SettingsViewController_HealthKit.swift in Sources */,
 				4EB437F4212CF7D4001D5734 /* Appearance.swift in Sources */,
 				4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */,
 				4EB437E8212CE311001D5734 /* TransitionAnimator.swift in Sources */,
@@ -933,6 +943,7 @@
 				4EB437E9212CE311001D5734 /* PopupDialog+Keyboard.swift in Sources */,
 				4EB437DA212CE311001D5734 /* CaptureQuality.swift in Sources */,
 				4EB437E2212CE311001D5734 /* UIView+Animations.swift in Sources */,
+				4E882C16213365A500B7587B /* SettingsViewController_Untappd.swift in Sources */,
 				4EB437DB212CE311001D5734 /* TrackingMode.swift in Sources */,
 				4E9C8553210D598C00DA959D /* ABPrettyButton.swift in Sources */,
 				4EB75B8F2127CFEB00A14FCF /* SortedArray.swift in Sources */,
@@ -978,6 +989,7 @@
 				4EB437E7212CE311001D5734 /* UIViewController+Visibility.swift in Sources */,
 				4EB437DE212CE311001D5734 /* DynamicBlurView.swift in Sources */,
 				4EB437E4212CE311001D5734 /* PopupDialog.swift in Sources */,
+				4E882C18213365B200B7587B /* SettingsViewController_IAP.swift in Sources */,
 				4EB437E6212CE311001D5734 /* PopupDialogButton.swift in Sources */,
 				4E7FB9F5212E58E200052BFC /* PopupCells.swift in Sources */,
 				4EA2F19720FEF8B900CE30E1 /* Data.swift in Sources */,
@@ -1224,7 +1236,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Alexei-Baboulevitch.BeerBuddy";
+				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BeerBuddy-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1247,7 +1259,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Alexei-Baboulevitch.BeerBuddy";
+				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BeerBuddy-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
@@ -1276,7 +1288,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4EA2F19120FEE7CB00CE30E1 /* Build configuration list for PBXNativeTarget "BeerBuddy" */ = {
+		4EA2F19120FEE7CB00CE30E1 /* Build configuration list for PBXNativeTarget "Good Spirits" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4EA2F19220FEE7CB00CE30E1 /* Debug */,

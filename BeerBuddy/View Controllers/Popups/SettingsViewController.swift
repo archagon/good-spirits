@@ -20,9 +20,10 @@ class SettingsViewController: UITableViewController
         case settings
         case untappd
         case healthKit
+        case export
         case info
     }
-    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, 3), (.settings, 2), (.untappd, 1), (.healthKit, 1), (.info, 1)]
+    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, 3), (.settings, 2), (.untappd, 1), (.healthKit, 1), (.export, 1), (.info, 1)]
     
     var healthKitLoginPending: Bool = false
     enum HealthKitLoginStatus
@@ -35,6 +36,10 @@ class SettingsViewController: UITableViewController
     }
     
     var untappdLoginPending: Bool = false
+    
+    // IAP stuff
+    var products: [SKProduct]? = nil
+    var productsRequest: SKProductsRequest? = nil
     
     var notificationObservers: [Any] = []
     
@@ -63,6 +68,10 @@ class SettingsViewController: UITableViewController
             self?.updateUntappdToggleAppearance()
         }
         notificationObservers.append(activeNotification)
+        
+        SKPaymentQueue.default().add(self)
+        
+        requestProducts()
     }
     
     func viewWillAppear()
@@ -82,16 +91,47 @@ extension SettingsViewController
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView?
     {
-        let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: "Footer")!
+        let cell = tableView.dequeueReusableHeaderFooterView(withIdentifier: "Footer")!
+        updateFooter(cell, forSection: section)
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int)
+    {
+        updateFooter(view, forSection: section)
+    }
+    
+    func updateFooter(_ view: UIView?, forSection section: Int)
+    {
+        guard let footer = view as? UITableViewHeaderFooterView else
+        {
+            return
+        }
+        
+        if section == 0
+        {
+            footer.textLabel?.textColor = UIColor.black
+        }
+        else
+        {
+            footer.textLabel?.textColor = UIColor.gray
+        }
         
         footer.textLabel?.numberOfLines = 1000
         
         if sectionCounts[section].0 == .iap
         {
-            var iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time and effort. If you're able to visit my website and buy something through my Amazon affiliate link, or donate $donation$ through an in-app purchase, I would be incredibly grateful!"
+            var iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time and effort. If you're able to visit my website and buy something through my Amazon affiliate link, or donate $donation$through an in-app purchase, I would be incredibly grateful!"
             
             iapPrompt.replaceAnchorText("name", value: Constants.appName)
-            iapPrompt.replaceAnchorText("donation", value: "$1")
+            if let price = localizedPrice()
+            {
+                iapPrompt.replaceAnchorText("donation", value: "\(price) ")
+            }
+            else
+            {
+                iapPrompt.replaceAnchorText("donation", value: "")
+            }
             
             footer.textLabel?.text = iapPrompt
         }
@@ -102,6 +142,10 @@ extension SettingsViewController
         else if sectionCounts[section].0 == .healthKit
         {
             footer.textLabel?.text = "New check-ins will be added as nutrition to your HealthKit measurements, with an estimate for the calories based on the volume and alcohol content of your drinks. Does not sync past check-ins, unless updated."
+        }
+        else if sectionCounts[section].0 == .export
+        {
+            footer.textLabel?.text = "Export your data as a SQLite database or JSON for backups or outside processing."
         }
         else if sectionCounts[section].0 == .info
         {
@@ -117,8 +161,6 @@ extension SettingsViewController
         {
             footer.textLabel?.text = nil
         }
-        
-        return footer
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -156,6 +198,9 @@ extension SettingsViewController
         case .healthKit:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
             return cell
+        case .export:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
+            return cell
         case .info:
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
             return cell
@@ -178,23 +223,10 @@ extension SettingsViewController
             return "Untappd"
         case .healthKit:
             return "Health Kit"
+        case .export:
+            return nil
         case .info:
             return nil
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, willDisplayFooterView aView: UIView, forSection section: Int)
-    {
-        if let footer = aView as? UITableViewHeaderFooterView
-        {
-            if section == 0
-            {
-                footer.textLabel?.textColor = UIColor.black
-            }
-            else
-            {
-                footer.textLabel?.textColor = UIColor.gray
-            }
         }
     }
     
@@ -203,7 +235,25 @@ extension SettingsViewController
         let section = indexPath.section
         let type = sectionCounts[section].0
         
+        if type == .meta
+        {
+            if indexPath.row == 2 && self.products == nil
+            {
+                return nil
+            }
+        }
         if type == .healthKit
+        {
+            if let cell = tableView.cellForRow(at: indexPath) as? SubtitleToggleCell
+            {
+                return (cell.toggle.isEnabled ? indexPath : nil)
+            }
+            else
+            {
+                return nil
+            }
+        }
+        else if type == .untappd
         {
             if let cell = tableView.cellForRow(at: indexPath) as? SubtitleToggleCell
             {
@@ -231,19 +281,35 @@ extension SettingsViewController
             cell.accessoryType = .none
         case .meta:
             let cell = aCell
-            cell.accessoryType = .disclosureIndicator
             
             if row == 0
             {
                 cell.textLabel?.text = "Visit Website"
+                cell.accessoryType = .disclosureIndicator
+                cell.accessoryView = nil
             }
             else if row == 1
             {
                 cell.textLabel?.text = "Leave a Review"
+                cell.accessoryType = .disclosureIndicator
+                cell.accessoryView = nil
             }
             else if row == 2
             {
-                cell.textLabel?.text = "Donate"
+                if let price = localizedPrice()
+                {
+                    cell.accessoryType = .disclosureIndicator
+                    cell.accessoryView = nil
+                    cell.textLabel?.text = "Donate \(price)"
+                }
+                else
+                {
+                    cell.accessoryType = .none
+                    let indicator = UIActivityIndicatorView.init(activityIndicatorStyle: .gray)
+                    cell.accessoryView = indicator
+                    indicator.startAnimating()
+                    cell.textLabel?.text = "Donate"
+                }
             }
         case .settings:
             if row == 0
@@ -262,6 +328,7 @@ extension SettingsViewController
             {
                 let cell = aCell
                 cell.accessoryType = .disclosureIndicator
+                cell.accessoryView = nil
                 
                 cell.textLabel?.text = "Limits Setup"
             }
@@ -288,14 +355,18 @@ extension SettingsViewController
             cell.detailTextLabel?.numberOfLines = 1000
             cell.detailTextLabel?.textColor = .red
             updateHealthKitToggleAppearance(withCell: cell)
+        case .export:
+            let cell = aCell
+            cell.accessoryType = .disclosureIndicator
+            cell.accessoryView = nil
+            
+            cell.textLabel?.text = "Export Data"
         case .info:
             let cell = aCell
             cell.accessoryType = .disclosureIndicator
+            cell.accessoryView = nil
             
-            if row == 0
-            {
-                cell.textLabel?.text = "Licenses"
-            }
+            cell.textLabel?.text = "Licenses"
         }
     }
     
@@ -320,7 +391,10 @@ extension SettingsViewController
             }
             else if row == 2
             {
-                //donation
+                if self.products != nil
+                {
+                    purchase()
+                }
             }
             
             tableView.deselectRow(at: indexPath, animated: true)
@@ -359,6 +433,21 @@ extension SettingsViewController
                 cell.toggle.isOn = !cell.toggle.isOn
                 healthKitToggled(cell.toggle)
             }
+            
+            tableView.deselectRow(at: indexPath, animated: true)
+        case .export:
+            appDebug("exporting")
+            
+            let controller = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
+            controller.addAction(UIAlertAction.init(title: "SQLite Database", style: .default, handler:
+            { [weak `self`] _ in
+                
+            }))
+            controller.addAction(UIAlertAction.init(title: "JSON", style: .default, handler:
+            { [weak `self`] _ in
+            }))
+            controller.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
+            self.present(controller, animated: true, completion: nil)
             
             tableView.deselectRow(at: indexPath, animated: true)
         case .info:
@@ -448,176 +537,5 @@ extension SettingsViewController
     {
         let newValue = sender.isOn
         transitionHealthKitStatus(newValue)
-    }
-}
-
-// Quick and dirty HealthKit state machine.
-extension SettingsViewController
-{
-    var healthKitLoginStatus: HealthKitLoginStatus
-    {
-        if self.healthKitLoginPending
-        {
-            return .pendingAuthorization
-        }
-        
-        if let status = HealthKit.shared.authStatus()
-        {
-            switch status
-            {
-            case .notDetermined:
-                return .disabled
-            case .sharingAuthorized:
-                return (Defaults.healthKitEnabled ?.enabledAndAuthorized : .disabled)
-            case .sharingDenied:
-                return . unauthorized
-            }
-        }
-        else
-        {
-            return .unavailable
-        }
-    }
-    
-    func transitionHealthKitStatus(_ enabled: Bool)
-    {
-        switch self.healthKitLoginStatus
-        {
-        case .unavailable:
-            break //no-op, can't do anything
-        case .unauthorized:
-            break //no-op, can't do anything
-        case .disabled:
-            if enabled
-            {
-                // TODO: move this to HealthKit proper
-                authorizeHealthKit: do
-                {
-                    // no need to authorize, already done
-                    if HealthKit.shared.authStatus() == .sharingAuthorized
-                    {
-                        Defaults.healthKitEnabled = true
-                    }
-                    // need to attempt authorization
-                    else
-                    {
-                        self.healthKitLoginPending = true
-                        //self.updateHealthKitToggleAppearance() happens below
-                        
-                        let allTypes: Set<HKSampleType> = [ HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)! ]
-                        HealthKit.shared.store?.requestAuthorization(toShare: allTypes, read: nil)
-                        { [weak `self`] (success, error) in
-                            onMain
-                            {
-                                if success
-                                {
-                                    Defaults.healthKitEnabled = true
-                                }
-                                else
-                                {
-                                    if let error = error
-                                    {
-                                        appWarning("HealthKit error -- \(error)")
-                                    }
-                                }
-                                
-                                self?.healthKitLoginPending = false
-                                self?.updateHealthKitToggleAppearance()
-                            }
-                        }
-                    }
-                }
-            }
-        case .pendingAuthorization:
-            break //can't do anything until login completes
-        case .enabledAndAuthorized:
-            if !enabled
-            {
-                Defaults.healthKitEnabled = false
-            }
-        }
-        
-        self.updateHealthKitToggleAppearance()
-    }
-    
-    func updateUntappdToggleAppearance(withCell aCell: UITableViewCell? = nil)
-    {
-        let section: Int = self.sectionCounts.firstIndex { $0.0 == .untappd }!
-        
-        if
-            let genericCell = aCell ?? self.tableView.cellForRow(at: IndexPath.init(row: 0, section: section)),
-            let cell = genericCell as? SubtitleToggleCell
-        {
-            tableView.beginUpdates()
-            if self.untappdLoginPending
-            {
-                tableView.beginUpdates()
-                cell.disable()
-                cell.toggle.isEnabled = false
-                tableView.endUpdates()
-            }
-            else
-            {
-                switch Untappd.shared.loginStatus
-                {
-                case .unreachable:
-                    cell.enable()
-                    cell.toggle.isOn = false
-                    cell.toggle.isEnabled = true
-                    cell.detailTextLabel?.text = "Untappd unreachable, please check your internet connection"
-                case .disabled:
-                    cell.enable()
-                    cell.toggle.isOn = false
-                    cell.toggle.isEnabled = true
-                case .enabledAndAuthorized:
-                    cell.enable()
-                    cell.toggle.isOn = true
-                    cell.toggle.isEnabled = true
-                    cell.detailTextLabel?.text = "Logged in as Blah"
-                }
-            }
-            tableView.endUpdates()
-        }
-    }
-    
-    func updateHealthKitToggleAppearance(withCell aCell: UITableViewCell? = nil)
-    {
-        let section: Int = self.sectionCounts.firstIndex { $0.0 == .healthKit }!
-        
-        if
-            let genericCell = aCell ?? self.tableView.cellForRow(at: IndexPath.init(row: 0, section: section)),
-            let cell = genericCell as? SubtitleToggleCell
-        {
-            tableView.beginUpdates()
-            switch self.healthKitLoginStatus
-            {
-            case .unavailable:
-                cell.enable()
-                cell.toggle.isOn = false
-                cell.toggle.isEnabled = false
-                cell.detailTextLabel?.text = "HealthKit not available on this device"
-            case .unauthorized:
-                cell.enable()
-                cell.toggle.isOn = false
-                cell.toggle.isEnabled = false
-                cell.detailTextLabel?.text = "Please authorize \(Constants.appName) in HealthKit settings"
-            case .disabled:
-                cell.enable()
-                cell.toggle.isOn = false
-                cell.toggle.isEnabled = true
-                cell.detailTextLabel?.text = nil
-            case .pendingAuthorization:
-                cell.disable()
-                //cell.toggle.isOn = true
-                cell.toggle.isEnabled = false
-                cell.detailTextLabel?.text = nil
-            case .enabledAndAuthorized:
-                cell.enable()
-                cell.toggle.isOn = true
-                cell.toggle.isEnabled = true
-                cell.detailTextLabel?.text = nil
-            }
-            tableView.endUpdates()
-        }
     }
 }

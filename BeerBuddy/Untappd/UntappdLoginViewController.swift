@@ -58,6 +58,24 @@ public class UntappdLoginViewController: UIViewController
     
     public func load(withBlock block: @escaping (String, Error?)->())
     {
+        clearCookies: do
+        {
+            let dataStore = WKWebsiteDataStore.default()
+            dataStore.fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes())
+            { records in
+                for record in records
+                {
+                    if record.displayName.contains("untappd")
+                    {
+                        dataStore.removeData(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), for: [record], completionHandler:
+                        {
+                            print("Deleted: " + record.displayName);
+                        })
+                    }
+                }
+            }
+        }
+        
         let url = Untappd.requestURL
         let request = URLRequest.init(url: URL.init(string: url)!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 15)
         self.tokenBlock = block
@@ -113,6 +131,7 @@ extension UntappdLoginViewController: WKNavigationDelegate
     
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!)
     {
+        appDebug("complete")
         webView.isOpaque = true
         self.loadingView.isHidden = true
     }

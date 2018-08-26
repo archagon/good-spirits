@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>Your check-ins will be logged as calories based on their alcohol content. Any check-in changes will be synced as well.</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>Previous check-ins will be read from HealthKit only in the case where they need to be deleted, following a local check-in being removed.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -21,9 +17,13 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Previous check-ins will be read from HealthKit only in the case where they need to be deleted, following a local check-in being removed.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Your check-ins will be logged as calories based on their alcohol content. Any check-in changes will be synced as well.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

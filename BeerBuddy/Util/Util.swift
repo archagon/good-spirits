@@ -41,11 +41,17 @@ public func equalish<T: Dimension>(first: Measurement<T>, second: Measurement<T>
     return diff <= baseDelta
 }
 
-// TODO: log this and do something sensible
-public func appError(_ message: String)
+public func appError(_ message: String, _ controller: UIViewController? = nil)
 {
-    showAlert(message)
+    let message = "Oops! \(Constants.appName) encountered an unexpected error. (\(message)) Please e-mail archagon@archagon.net with a sceenshot of this message. My apologies!"
+    print("Error: \(message)")
+    showMessage(message, controller)
     //assert(false)
+}
+
+public func appAlert(_ message: String, _ controller: UIViewController? = nil)
+{
+    showMessage(message, controller)
 }
 
 public func appWarning(_ message: String)
@@ -60,25 +66,35 @@ public func appDebug(_ message: String)
     #endif
 }
 
-public func showAlert(_ msg: String)
+public func showMessage(_ msg: String, _ controller: UIViewController? = nil)
 {
     onMain
     {
-        let popup = PopupDialog.init(title: "Error", message: "Oops! \(Constants.appName) encountered an unexpected error. (\(msg)) Please e-mail archagon@archagon.net with a sceenshot of this message. My apologies!")
+        let popup = PopupDialog.init(title: nil, message: "\(msg)")
         
-        let doneButton = DefaultButton.init(title: "OK", height: 44, dismissOnTap: true, action: nil)
+        let doneButton = DefaultButton.init(title: "OK", height: 40, dismissOnTap: true, action: nil)
+        doneButton.backgroundColor = Appearance.themeColor.withAlphaComponent(0.7)
+        doneButton.titleColor = UIColor.init(white: 1, alpha: 1)
+        doneButton.titleFont = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.regular)
         popup.addButtons([doneButton])
         
-        if let presented = (UIApplication.shared.delegate as? AppDelegate)?.rootController?.presentedViewController
+        if let controller = controller
         {
-            presented.dismiss(animated: true)
-            {
-                (UIApplication.shared.delegate as? AppDelegate)?.rootController?.present(popup, animated: true, completion: nil)
-            }
+            controller.present(popup, animated: true, completion: nil)
         }
         else
         {
-            (UIApplication.shared.delegate as? AppDelegate)?.rootController?.present(popup, animated: true, completion: nil)
+            if let presented = (UIApplication.shared.delegate as? AppDelegate)?.rootController?.presentedViewController
+            {
+                presented.dismiss(animated: true)
+                {
+                    (UIApplication.shared.delegate as? AppDelegate)?.rootController?.present(popup, animated: true, completion: nil)
+                }
+            }
+            else
+            {
+                (UIApplication.shared.delegate as? AppDelegate)?.rootController?.present(popup, animated: true, completion: nil)
+            }
         }
     }
 }

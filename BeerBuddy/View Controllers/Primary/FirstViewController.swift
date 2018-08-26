@@ -656,9 +656,9 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         for i in 0..<min(volumes.count, 3)
         {
             let volume = volumes[i]
-            let volumeAction = UIContextualAction.init(style: .normal, title: "Commit\n\(Format.format(volume: volume))")
+            let volumeAction = UIContextualAction.init(style: .normal, title: "Approve\n\(Format.format(volume: volume))")
             { (action, view, handler) in
-                appDebug("attempting commit")
+                appDebug("attempting approve")
                 model.approve()
                 model.checkIn.drink.volume = volume
                 if let data = self.data

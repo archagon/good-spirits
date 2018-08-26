@@ -22,6 +22,14 @@ public class CheckInViewController: CheckInDrawerViewController
 {
     public weak var delegate: CheckInViewControllerDelegate! { didSet { setupText() } }
     
+    public enum Style
+    {
+        case normal
+        case update
+        case untappd
+    }
+    
+    public var type: Style = .normal { didSet { setupText() } }
     public var checkInDate: Date? { didSet { setupText() } }
     public var name: String? { didSet { setupText() } }
     public var abv: Double? { didSet { setupText() } }
@@ -61,8 +69,6 @@ public class CheckInViewController: CheckInDrawerViewController
         self.text.isSelectable = false
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tappedTextView))
         text.addGestureRecognizer(tapRecognizer)
-        
-        self.confirmButton?.setTitle("Check In", for: .normal)
         
         setupText()
     }
@@ -180,6 +186,16 @@ public class CheckInViewController: CheckInDrawerViewController
         }
         
         self.text.attributedText = attributedString
+        
+        switch self.type
+        {
+        case .normal:
+            self.confirmButton?.setTitle("Check In", for: .normal)
+        case .update:
+            self.confirmButton?.setTitle("Update", for: .normal)
+        case .untappd:
+            self.confirmButton?.setTitle("Approve", for: .normal)
+        }
     }
     
     public override func confirmCallback()
