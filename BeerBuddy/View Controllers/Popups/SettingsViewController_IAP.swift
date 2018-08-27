@@ -13,12 +13,15 @@ extension SettingsViewController: SKProductsRequestDelegate, SKPaymentTransactio
 {
     func requestProducts()
     {
-        if self.products != nil {
-            // already have products
+        if self.products != nil
+        {
             return
         }
-        
-        if self.productsRequest == nil
+        else if self.productsRequest != nil
+        {
+            return
+        }
+        else
         {
             appDebug("IAP requesting products...")
             let productsRequest = SKProductsRequest(productIdentifiers: [ Constants.tipIAPProductID ])
@@ -45,15 +48,9 @@ extension SettingsViewController: SKProductsRequestDelegate, SKPaymentTransactio
         {
             let iap = sectionCounts.firstIndex { $0.0 == .iap }!
             let meta = sectionCounts.firstIndex { $0.0 == .meta }!
-            tableView.reloadRows(at: [IndexPath.init(row: 2, section: meta)], with: .none)
+            updateCell(nil, forRowAt: IndexPath.init(row: 2, section: meta))
             updateFooter(tableView.footerView(forSection: iap), forSection: iap)
         }
-        
-        //if self.waitingToPurchase, self.products?.first != nil
-        //{
-        //    self.waitingToPurchase = false
-        //    purchase() //should go through this time
-        //}
     }
     
     func purchase()
@@ -79,22 +76,36 @@ extension SettingsViewController: SKProductsRequestDelegate, SKPaymentTransactio
                 queue.finishTransaction(transaction)
                 break
             case .failed:
-                print("failed!")
-                appAlert("This transaction has failed: \((transaction.error!).localizedDescription)", self)
-                //                if let error = transaction.error as? NSError, error.code == 0 {
-                //                    self.delegate?.iapDidRequestAlert(iap: self, withTitle: "No Connection", message: "Can't connect to the iTunes Store. Are you sure you're on a data network?")
-                //                }
+                appDebug("failed!")
+                if let error = transaction.error as? NSError, error.code == 0
+                {
+                    appAlert("Can't connect to the iTunes Store. Are you sure you're on a data network?", self)
+                }
+                else
+                {
+                    appAlert("The transaction has failed: \((transaction.error!).localizedDescription)", self)
+                }
                 queue.finishTransaction(transaction)
                 break
             case .deferred:
-                print("deferred")
-                //self.delegate?.iapDidRequestAlert(iap: self, withTitle: "Deferred", message: "Your purchase is waiting to be approved.")
+                appDebug("deferred!")
+                appAlert("Your purchase is waiting to be approved.")
                 break
             case .restored:
                 queue.finishTransaction(transaction)
                 break
             }
         }
+    }
+    
+    public func requestDidFinish(_ request: SKRequest)
+    {
+        self.productsRequest = nil
+    }
+    
+    public func request(_ request: SKRequest, didFailWithError error: Error)
+    {
+        self.productsRequest = nil
     }
     
     func localizedPrice() -> String?

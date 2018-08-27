@@ -57,6 +57,7 @@ class SettingsViewController: UITableViewController
         
         self.tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "Footer")
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "PriceCell")
         self.tableView.register(SubtitleToggleCell.self, forCellReuseIdentifier: "ToggleCell")
         
         self.tableView.sectionFooterHeight = UITableViewAutomaticDimension
@@ -137,11 +138,11 @@ extension SettingsViewController
         }
         else if sectionCounts[section].0 == .untappd
         {
-            footer.textLabel?.text = "New check-ins will automatically be pulled from your Untappd account. Untappd entries will appear at the top of your Log view and will need to be supplemented with volume and price information or dismissed. You can also sync manually by pulling-to-refresh from the same screen. Does not sync past check-ins."
+            footer.textLabel?.text = "New check-ins will automatically be pulled from your Untappd account. Untappd entries will appear at the top of your Log view and will need to be supplemented with volume and price information or dismissed. (Try swiping left on an entiry for a shortcut to do this.) You can also sync manually by pulling-to-refresh from the Log view. Does not sync past check-ins."
         }
         else if sectionCounts[section].0 == .healthKit
         {
-            footer.textLabel?.text = "New check-ins will be added as nutrition to your HealthKit measurements, with an estimate for the calories based on the volume and alcohol content of your drinks. Does not sync past check-ins, unless updated."
+            footer.textLabel?.text = "New check-ins will be added as nutrition to your Health app, with an estimate for calories based on the volume and alcohol content of your drinks. Deleted check-ins will also be removed from Health. Does not sync past check-ins, except when updated."
         }
         else if sectionCounts[section].0 == .export
         {
@@ -173,38 +174,42 @@ extension SettingsViewController
         let section = indexPath.section
         let type = sectionCounts[section].0
         
+        let cell: UITableViewCell
+        
         switch type
         {
         case .iap:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
-            return cell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
         case .meta:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
-            return cell
-        case .settings:
-            if indexPath.row == 0
+            if indexPath.row == 2
             {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
-                return cell
+                cell = tableView.dequeueReusableCell(withIdentifier: "PriceCell")!
             }
             else
             {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
-                return cell
+                cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
+            }
+        case .settings:
+            if indexPath.row == 0
+            {
+                cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
+            }
+            else
+            {
+                cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
             }
         case .untappd:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
-            return cell
+            cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
         case .healthKit:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
-            return cell
+            cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
         case .export:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
-            return cell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
         case .info:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
-            return cell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
         }
+        
+        updateCell(cell, forRowAt: indexPath)
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
@@ -270,6 +275,17 @@ extension SettingsViewController
     
     override func tableView(_ tableView: UITableView, willDisplay aCell: UITableViewCell, forRowAt indexPath: IndexPath)
     {
+        updateCell(aCell, forRowAt: indexPath)
+    }
+    
+    func updateCell(_ aCell: UITableViewCell?, forRowAt indexPath: IndexPath)
+    {
+        let maybeCell = aCell ?? self.tableView.cellForRow(at: indexPath)
+        guard let aCell = maybeCell else
+        {
+            return
+        }
+        
         let section = indexPath.section
         let row = indexPath.row
         let type = sectionCounts[section].0
@@ -286,13 +302,11 @@ extension SettingsViewController
             {
                 cell.textLabel?.text = "Visit Website"
                 cell.accessoryType = .disclosureIndicator
-                cell.accessoryView = nil
             }
             else if row == 1
             {
                 cell.textLabel?.text = "Leave a Review"
                 cell.accessoryType = .disclosureIndicator
-                cell.accessoryView = nil
             }
             else if row == 2
             {
@@ -301,6 +315,7 @@ extension SettingsViewController
                     cell.accessoryType = .disclosureIndicator
                     cell.accessoryView = nil
                     cell.textLabel?.text = "Donate \(price)"
+                    cell.textLabel?.textColor = UIColor.black
                 }
                 else
                 {
@@ -309,6 +324,7 @@ extension SettingsViewController
                     cell.accessoryView = indicator
                     indicator.startAnimating()
                     cell.textLabel?.text = "Donate"
+                    cell.textLabel?.textColor = UIColor.gray
                 }
             }
         case .settings:
@@ -328,7 +344,6 @@ extension SettingsViewController
             {
                 let cell = aCell
                 cell.accessoryType = .disclosureIndicator
-                cell.accessoryView = nil
                 
                 cell.textLabel?.text = "Limits Setup"
             }
@@ -358,13 +373,11 @@ extension SettingsViewController
         case .export:
             let cell = aCell
             cell.accessoryType = .disclosureIndicator
-            cell.accessoryView = nil
             
             cell.textLabel?.text = "Export Data"
         case .info:
             let cell = aCell
             cell.accessoryType = .disclosureIndicator
-            cell.accessoryView = nil
             
             cell.textLabel?.text = "Licenses"
         }
