@@ -49,6 +49,11 @@ public struct Format
         return String.init(format: (drinks.truncatingRemainder(dividingBy: 1) == 0 ? "%.0f" : "%.1f"), drinks)
     }
     
+    public static func format(calories: Double) -> String
+    {
+        return String.init(format: "%.0f", calories)
+    }
+    
     public static func format(style: DrinkStyle) -> String
     {
         return style.description

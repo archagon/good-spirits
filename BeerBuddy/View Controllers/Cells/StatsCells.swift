@@ -15,6 +15,13 @@ public class YearStatsCell: UITableViewCell
     var graphView: LineChartView
     var segment: UISegmentedControl
     
+    var drinks: [(Date, CGFloat)]? = nil
+    {
+        didSet
+        {
+        }
+    }
+    
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?)
     {
         self.header = UILabel()
@@ -37,24 +44,50 @@ public class YearStatsCell: UITableViewCell
             set.setCircleColor(.white)
             set.highlightColor = .white
             set.drawValuesEnabled = false
-            let data = LineChartData(dataSet: set)
             
+            var trendlineSamples: [ChartDataEntry] = []
+            for i in 0..<50
+            {
+                let startX = samples.first!.x-2
+                let endX = samples.last!.x+2
+                let trendlineSample = ChartDataEntry.init(x: startX + (Double(i) / 49) * (endX - startX), y: 50)
+                trendlineSamples.append(trendlineSample)
+            }
+            let set2 = LineChartDataSet.init(values: trendlineSamples, label: nil)
+            set2.lineWidth = 2
+            set2.lineDashLengths = [5, 3]
+            set2.drawCirclesEnabled = false
+            set2.setColor(UIColor.green.mixed(with: .white, by: 0.5))
+            set2.drawValuesEnabled = false
+            
+            let data = LineChartData.init(dataSets: [set2, set])
             graphView.data = data
             
             graphView.backgroundColor = Appearance.themeColor
-            graphView.dragEnabled = true
-            graphView.setScaleEnabled(true)
+            graphView.dragEnabled = false
+            graphView.setScaleEnabled(false)
             graphView.pinchZoomEnabled = false
-            graphView.setViewPortOffsets(left: 10, top: 0, right: 10, bottom: 0)
+            graphView.setViewPortOffsets(left: 0, top: 0, right: 0, bottom: 0)
             
             graphView.chartDescription?.enabled = false
             graphView.legend.enabled = false
             
+            let xAxis = graphView.xAxis
+//            xAxis.enabled = true
+            xAxis.labelPosition = .bottomInside
+            xAxis.labelFont = .systemFont(ofSize: 12)
+//            xAxis.drawAxisLineEnabled = true
+            xAxis.gridColor = UIColor.init(white: 1, alpha: 0.7)
+//            xAxis.drawLabelsEnabled = true
+            xAxis.labelTextColor = .white
+            xAxis.setLabelCount(30, force: false)
+            xAxis.valueFormatter = AxisDateFormatter()
+            
             graphView.leftAxis.enabled = false
             graphView.leftAxis.spaceTop = 0.4
             graphView.leftAxis.spaceBottom = 0.4
+            
             graphView.rightAxis.enabled = false
-            graphView.xAxis.enabled = false
             
             graphView.data = data
             
@@ -103,26 +136,38 @@ public class YearStatsCell: UITableViewCell
     {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    class AxisDateFormatter: IAxisValueFormatter
+    {
+        lazy var dateFormatter: DateFormatter =
+        {
+            let aFormatter = DateFormatter()
+            aFormatter.dateFormat = "MMM dd"
+            return aFormatter
+        }()
+        
+        public func stringForValue(_ value: Double, axis: Charts.AxisBase?) -> String
+        {
+            let date = Date.init(timeIntervalSince1970: value)
+            return dateFormatter.string(from: date)
+        }
+    }
 }
 
 public class TrendStatsCell: UITableViewCell
 {
     var label: UILabel
-    var label2: UILabel
     var bgView: UIView
     
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?)
     {
         self.label = UILabel()
-        self.label2 = UILabel()
         self.bgView = UIView()
         
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
         self.label.numberOfLines = 100
-        self.label2.numberOfLines = 100
         self.label.textColor = .white
-        self.label2.textColor = .white
         
         let stack = UIStackView()
         stack.axis = .vertical
@@ -134,12 +179,10 @@ public class TrendStatsCell: UITableViewCell
         {
             stack.translatesAutoresizingMaskIntoConstraints = false
             label.translatesAutoresizingMaskIntoConstraints = false
-            label2.translatesAutoresizingMaskIntoConstraints = false
             bgView.translatesAutoresizingMaskIntoConstraints = false
             
             self.addSubview(bgView)
             stack.addArrangedSubview(label)
-            stack.addArrangedSubview(label2)
             bgView.addSubview(stack)
             
             stack.spacing = 4
@@ -170,6 +213,24 @@ public class WeekStatsCell: UITableViewCell
     var bgViewLeft: UIView
     var leftConstraint: NSLayoutConstraint! = nil
     
+    var labelText: String?
+    {
+        get
+        {
+            return label2.text
+        }
+        set
+        {
+            let pg = NSMutableParagraphStyle.init()
+            pg.lineSpacing = 2
+            let attributes: [NSAttributedStringKey:Any] = [
+                NSAttributedStringKey.font:UIFont.systemFont(ofSize: 16, weight: .regular),
+                NSAttributedStringKey.paragraphStyle:pg
+            ]
+            label2.attributedText = NSAttributedString.init(string: newValue ?? "", attributes: attributes)
+        }
+    }
+    
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?)
     {
         self.label = UILabel()
@@ -186,9 +247,6 @@ public class WeekStatsCell: UITableViewCell
         
         let stack = UIStackView()
         stack.axis = .vertical
-        
-        bgView.backgroundColor = Appearance.darkenedThemeColor
-        bgViewLeft.backgroundColor = bgView.backgroundColor?.mixed(with: .white, by: 0.2)
         
         bgView.clipsToBounds = true
         bgView.layer.cornerRadius = 8
@@ -237,11 +295,6 @@ public class WeekStatsCell: UITableViewCell
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func prepareForReuse()
-    {
-        setProgress(Double.random(in: 0...1))
-    }
-    
     func setProgress(_ v: Double)
     {
         self.leftConstraint.constant = bgView.bounds.size.width * CGFloat(v)
@@ -251,12 +304,12 @@ public class WeekStatsCell: UITableViewCell
             bgViewLeft.backgroundColor = UIColor.init(hex: "1CE577").mixed(with: .black, by: 0.15)
             bgView.backgroundColor = bgViewLeft.backgroundColor?.mixed(with: .white, by: 0.3)
         }
-        else if v <= 0.6
+        else if v <= 0.85
         {
             bgViewLeft.backgroundColor = Appearance.darkenedThemeColor
             bgView.backgroundColor = bgViewLeft.backgroundColor?.mixed(with: .white, by: 0.3)
         }
-        else if v <= 0.8
+        else if v <= 1.0
         {
             bgViewLeft.backgroundColor = UIColor.orange.mixed(with: .white, by: 0.1)
             bgView.backgroundColor = bgViewLeft.backgroundColor?.mixed(with: .white, by: 0.3)
@@ -266,5 +319,15 @@ public class WeekStatsCell: UITableViewCell
             bgViewLeft.backgroundColor = UIColor.red.mixed(with: .white, by: 0.3)
             bgView.backgroundColor = bgViewLeft.backgroundColor?.mixed(with: .white, by: 0.3)
         }
+        
+        self.layoutIfNeeded()
+    }
+    
+    func setDefault()
+    {
+        setProgress(1)
+        
+        bgViewLeft.backgroundColor = Appearance.darkenedThemeColor
+        bgView.backgroundColor = bgViewLeft.backgroundColor?.mixed(with: .white, by: 0.3)
     }
 }

@@ -287,7 +287,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
                 return
             }
             
-            headerView.textLabel?.text = "Overall Trends"
+            headerView.textLabel?.text = "General Trends"
             headerView.textLabel?.textColor = UIColor.black
         }
         else if section == 2
@@ -362,14 +362,40 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
         }
         else if indexPath.section == 1, let cell = cell as? TrendStatsCell
         {
-            cell.label.text = "You did blah-de-di-blah today!"
-            cell.label2.text = "Blah things in blah time"
+            if indexPath.row == 0
+            {
+                cell.label.text = "Your running average over the last year is \("1.2 drinks per day"), which is \("within your target range"). Good job!"
+            }
+            else if indexPath.row == 1
+            {
+                cell.label.text = "Your favorite drink is \("beer") and your ABV is \("12.5%") on average. You tend to drink \("12 fl oz") servings."
+            }
+            else
+            {
+                cell.label.text = "You did blah-de-di-blah today!"
+            }
             
-            cell.bgView.backgroundColor = UIColor.red.mixed(with: .white, by: 0.3)
+            cell.label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+            
+            cell.bgView.backgroundColor = UIColor.purple.mixed(with: .white, by: 0.5)
         }
         else if indexPath.section == 2, let cell = cell as? WeekStatsCell
         {
             let stats = self.cache.weekStats[indexPath.row]
+            
+            let percentOverLimit: Double?
+            
+            if let data = self.data, Defaults.weeklyLimit != nil
+            {
+                let percent = Stats(data).drinksToPercent(Float(stats.drinks), inRange: stats.range)
+                cell.setProgress(Double(percent))
+                percentOverLimit = (percent > 1 ? Double(percent - 1) : nil)
+            }
+            else
+            {
+                cell.setDefault()
+                percentOverLimit = nil
+            }
             
             let formatter = DateFormatter()
             formatter.dateFormat = "MMM d, yyyy"
@@ -377,7 +403,35 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
             let date2 = formatter.string(from: stats.range.upperBound)
             
             cell.label.text = "\(date1) to \(date2)"
-            cell.label2.text = "\(Format.format(drinks: stats.drinks)) drinks, with \(Format.format(drinks: stats.calories)) calories and \(Format.format(price: stats.price)) total price"
+            
+            var infoLabel = ""
+            if stats.drinks > 0
+            {
+                let p1 = "\(Format.format(drinks: stats.drinks)) drinks, or \(Format.format(drinks: stats.drinks/7)) avg. drinks per day"
+                
+                infoLabel = "\(p1)"
+                
+                let p3 = "Gained \(Format.format(calories: stats.calories)) calories"
+                infoLabel += "\n\(p3)"
+                
+                if stats.price > 0
+                {
+                    let p4 = "and spent \(Format.format(price: stats.price))"
+                    infoLabel += " \(p4)"
+                }
+                
+                if let percent = percentOverLimit
+                {
+                    let format = String.init(format: "%.0f", percent * 100)
+                    let p2 = "Went \(format)% over the weekly limit"
+                    infoLabel += "\n\(p2)"
+                }
+            }
+            else
+            {
+                infoLabel = "No drinking this week"
+            }
+            cell.labelText = infoLabel
         }
     }
 }
