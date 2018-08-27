@@ -11,6 +11,7 @@ import Foundation
 public struct Defaults
 {
     private static let configuredKey = "Configured"
+    private static let donatedKey: String = "DonatedKey"
     
     // AB: record-keeping for re-adding drink-free days (and others?)
     private static let limitCountry: String = "LimitCountry"
@@ -61,6 +62,19 @@ extension Defaults
         set
         {
             self.defaults.set(newValue, forKey: Defaults.configuredKey)
+        }
+    }
+    
+    public var donated: Bool
+    {
+        get
+        {
+            let val = self.defaults.bool(forKey: Defaults.donatedKey)
+            return val
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.donatedKey)
         }
     }
     
@@ -325,6 +339,19 @@ extension Defaults
         {
             var defaults = Defaults()
             defaults.configured = newValue
+        }
+    }
+    
+    public static var donated: Bool
+    {
+        get
+        {
+            return Defaults().donated
+        }
+        set
+        {
+            var defaults = Defaults()
+            defaults.donated = newValue
         }
     }
     

@@ -40,6 +40,7 @@ class SettingsViewController: UITableViewController
     // IAP stuff
     var products: [SKProduct]? = nil
     var productsRequest: SKProductsRequest? = nil
+    var paymentInProgress = false
     
     var notificationObservers: [Any] = []
     
@@ -49,6 +50,7 @@ class SettingsViewController: UITableViewController
         {
             NotificationCenter.default.removeObserver(observer)
         }
+        SKPaymentQueue.default().remove(self)
     }
     
     override func viewDidLoad()
@@ -122,16 +124,26 @@ extension SettingsViewController
         
         if sectionCounts[section].0 == .iap
         {
-            var iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time and effort. If you're able to visit my website and buy something through my Amazon affiliate link, or donate $donation$through an in-app purchase, I would be incredibly grateful!"
+            var iapPrompt: String
             
-            iapPrompt.replaceAnchorText("name", value: Constants.appName)
-            if let price = localizedPrice()
+            if !Defaults.donated
             {
-                iapPrompt.replaceAnchorText("donation", value: "\(price) ")
+                iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time and effort. If you're able to visit my website and buy something through my Amazon affiliate link, or donate $donation$through an in-app purchase, I would be incredibly grateful!"
+                
+                iapPrompt.replaceAnchorText("name", value: Constants.appName)
+                if let price = localizedPrice()
+                {
+                    iapPrompt.replaceAnchorText("donation", value: "\(price) ")
+                }
+                else
+                {
+                    iapPrompt.replaceAnchorText("donation", value: "")
+                }
             }
             else
             {
-                iapPrompt.replaceAnchorText("donation", value: "")
+                iapPrompt = "Thank you very much for donating to $name$! Your contribution means a lot. 😊"
+                iapPrompt.replaceAnchorText("name", value: Constants.appName)
             }
             
             footer.textLabel?.text = iapPrompt
@@ -242,7 +254,7 @@ extension SettingsViewController
         
         if type == .meta
         {
-            if indexPath.row == 2 && self.products == nil
+            if indexPath.row == 2 && (self.products == nil || self.paymentInProgress)
             {
                 return nil
             }
@@ -312,10 +324,22 @@ extension SettingsViewController
             {
                 if let price = localizedPrice()
                 {
-                    cell.accessoryType = .disclosureIndicator
-                    cell.accessoryView = nil
                     cell.textLabel?.text = "Donate \(price)"
-                    cell.textLabel?.textColor = UIColor.black
+                    
+                    if self.paymentInProgress
+                    {
+                        cell.accessoryType = .none
+                        let indicator = UIActivityIndicatorView.init(activityIndicatorStyle: .gray)
+                        cell.accessoryView = indicator
+                        indicator.startAnimating()
+                        cell.textLabel?.textColor = UIColor.gray
+                    }
+                    else
+                    {
+                        cell.accessoryType = .disclosureIndicator
+                        cell.accessoryView = nil
+                        cell.textLabel?.textColor = UIColor.black
+                    }
                 }
                 else
                 {

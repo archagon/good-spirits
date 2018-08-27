@@ -216,7 +216,7 @@ class StartupViewController: UITableViewController
     {
         if section == 0
         {
-            var copy = "Welcome to $name$! In order to use this drink tracker, we need to set your daily and weekly drinking limits.\n\nRecent studies tend to agree that there is no safe level of alcohol consumption. However, many countries have published recommendations for what constitutes \"low-risk\" drinking. This concept isn't very well-defined, but in general, the less you drink, the less susceptible you are to alcohol-related cancers and other diseases.\n\nBased on my own research, I would suggest starting with the common European weekly limit of $default-men$ standard US drinks for men or $default-women$ standard US drinks for women, then working your way down from there. A standard drink tends to be smaller than you might be used to, e.g. 12 ounces of 5% beer or 4 ounces of 15% wine."
+            var copy = "Welcome to $name$! In order to use this drink tracker, we need to set your daily and weekly drinking limits.\n\nRecent studies tend to agree that there is no safe level of alcohol consumption. However, many countries have published recommendations for \"low-risk\" drinking. This concept isn't very well-defined, but in general, the less you drink, the less susceptible you are to alcohol-related cancers and other diseases.\n\nBased on my own research, I would suggest starting with the common European weekly limit of $default-men$ standard US drinks for men or $default-women$ standard US drinks for women, then working your way down from there. A standard drink tends to be smaller than you might be used to, e.g. 12 ounces of 5% beer or 4 ounces of 15% wine."
             
             let appName = Constants.appName
             

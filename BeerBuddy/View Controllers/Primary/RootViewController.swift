@@ -108,7 +108,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
             switch $0
             {
             case .error(let e):
-                appError("could not get models from database -- \(e)")
+                appError("could not get models from database -- \(e.localizedDescription)")
             case .value(let v):
                 for model in v.0
                 {
@@ -206,7 +206,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
         }
         catch
         {
-            appError("could not get last added model (\(error))")
+            appError("could not get last added model -- \(error.localizedDescription)")
         }
         
         if let model = model
@@ -316,7 +316,7 @@ extension RootViewController: CheckInViewControllerDelegate
             switch $0
             {
             case .error(let e):
-                appError("could not commit check-in (\(e))")
+                appError("could not commit check-in -- \(e.localizedDescription)")
             case .value(_):
                 break
             }

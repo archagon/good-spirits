@@ -44,21 +44,33 @@ extension SettingsViewController: SKProductsRequestDelegate, SKPaymentTransactio
             return
         }
         
-        reloadCells: do
-        {
-            let iap = sectionCounts.firstIndex { $0.0 == .iap }!
-            let meta = sectionCounts.firstIndex { $0.0 == .meta }!
-            updateCell(nil, forRowAt: IndexPath.init(row: 2, section: meta))
-            updateFooter(tableView.footerView(forSection: iap), forSection: iap)
-        }
+        reloadIAPCells()
+    }
+    
+    func reloadIAPCells()
+    {
+        self.tableView.beginUpdates()
+        let iap = sectionCounts.firstIndex { $0.0 == .iap }!
+        let meta = sectionCounts.firstIndex { $0.0 == .meta }!
+        updateCell(nil, forRowAt: IndexPath.init(row: 2, section: meta))
+        updateFooter(tableView.footerView(forSection: iap), forSection: iap)
+        self.tableView.endUpdates()
     }
     
     func purchase()
     {
+        if paymentInProgress
+        {
+            return
+        }
+        
         if let product = self.products?.first
         {
             let payment = SKMutablePayment(product: product)
             SKPaymentQueue.default().add(payment)
+            
+            self.paymentInProgress = true
+            reloadIAPCells()
         }
     }
     
@@ -73,18 +85,27 @@ extension SettingsViewController: SKProductsRequestDelegate, SKPaymentTransactio
                 break
             case .purchased:
                 appDebug("purchased!")
+                Defaults.donated = true
+                self.paymentInProgress = false
+                reloadIAPCells()
                 queue.finishTransaction(transaction)
                 break
             case .failed:
                 appDebug("failed!")
-                if let error = transaction.error as? NSError, error.code == 0
+                if (transaction.error as NSError?)?.code == 0
                 {
                     appAlert("Can't connect to the iTunes Store. Are you sure you're on a data network?", self)
+                }
+                else if (transaction.error as NSError?)?.code == SKError.paymentCancelled.rawValue
+                {
+                    appDebug("payment cancelled")
                 }
                 else
                 {
                     appAlert("The transaction has failed: \((transaction.error!).localizedDescription)", self)
                 }
+                self.paymentInProgress = false
+                reloadIAPCells()
                 queue.finishTransaction(transaction)
                 break
             case .deferred:
@@ -92,6 +113,8 @@ extension SettingsViewController: SKProductsRequestDelegate, SKPaymentTransactio
                 appAlert("Your purchase is waiting to be approved.")
                 break
             case .restored:
+                self.paymentInProgress = false
+                reloadIAPCells()
                 queue.finishTransaction(transaction)
                 break
             }
