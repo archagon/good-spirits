@@ -28,8 +28,11 @@ public class ABVPickerViewController: CheckInDrawerViewController
         super.viewDidLoad()
         
         let abv = self.delegate.startingABV(for: self) * 100
-        let units = Int(floor(abv))
-        let decimals = Int(floor(abv.truncatingRemainder(dividingBy: 1) * 10))
+        
+        // AB: avoids floating point rounding shenanigans
+        let rounded = round(abv, within: 1)
+        let decimals = rounded.decimals
+        let units = rounded.units
         
         self.unitPicker.selectRow(units, inComponent: 0, animated: false)
         self.decimalPicker.selectRow(decimals, inComponent: 0, animated: false)

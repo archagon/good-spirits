@@ -20,6 +20,18 @@ public func onMain(_ block: @escaping ()->Void)
     }
 }
 
+public func round(_ v: Double, within: Double) -> (decimals: Int, units: Int)
+{
+    precondition(within > 0)
+    
+    let k = pow(10, within)
+    let value = round(v * k)
+    let units = Int(value / k)
+    let decimals = Int(value - (Double(units) * k))
+    
+    return (Int(decimals), Int(units))
+}
+
 public func equalish<T: Dimension>(first: Measurement<T>, second: Measurement<T>, delta: Measurement<T>) -> Bool
 {
     let baseFirst = first.converted(to: T.baseUnit())

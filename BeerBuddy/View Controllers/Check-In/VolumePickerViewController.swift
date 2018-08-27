@@ -81,9 +81,9 @@ public class VolumePickerViewController: CheckInDrawerViewController
         }
         
         // AB: avoids floating point rounding shenanigans
-        let value = round(measure.value * 10)
-        let decimals = Int(value - (floor(value / 10) * 10))
-        let units = Int(floor(value / 10))
+        let rounded = round(measure.value, within: 1)
+        let decimals = rounded.decimals
+        let units = rounded.units
         
         self.measurePicker.selectRow(row, inComponent: 0, animated: animated)
         

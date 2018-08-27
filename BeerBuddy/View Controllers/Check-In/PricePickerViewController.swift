@@ -28,8 +28,11 @@ public class PricePickerViewController: CheckInDrawerViewController
         super.viewDidLoad()
         
         let price = self.delegate.startingPrice(for: self)
-        let units = Int(floor(price))
-        let decimals = Int(floor(price.truncatingRemainder(dividingBy: 1) * 10))
+        
+        // AB: avoids floating point rounding shenanigans
+        let rounded = round(price, within: 2)
+        let decimals = rounded.decimals
+        let units = rounded.units
         
         self.unitPicker.selectRow(units, inComponent: 0, animated: false)
         self.decimalPicker.selectRow(decimals, inComponent: 0, animated: false)
