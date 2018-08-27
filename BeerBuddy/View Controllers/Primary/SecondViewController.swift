@@ -8,6 +8,7 @@
 
 import UIKit
 import DataLayer
+import Charts
 
 class SecondViewController: UIViewController
 {
@@ -24,7 +25,7 @@ class SecondViewController: UIViewController
     
     struct Stat
     {
-        let range: Range<Date>
+        let range: Swift.Range<Date>
         let price: Double
         let calories: Double
         let drinks: Double
@@ -54,6 +55,8 @@ class SecondViewController: UIViewController
     {
         super.viewDidLoad()
         
+        self.tableView.register(DayHeaderCell.self, forHeaderFooterViewReuseIdentifier: "DayHeaderCell")
+        self.tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "EmptyHeaderFooterCell")
         self.tableView.register(YearStatsCell.self, forCellReuseIdentifier: "YearStatsCell")
         self.tableView.register(WeekStatsCell.self, forCellReuseIdentifier: "WeekStatsCell")
         
@@ -90,6 +93,11 @@ class SecondViewController: UIViewController
     
     override func viewWillAppear(_ animated: Bool)
     {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.setBackgroundImage(UIColor.clear.pixel, for: .default)
+        
         // AB: can rely on notifications or viewDidLoad
         //reloadData()
     }
@@ -187,7 +195,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
 {
     public func numberOfSections(in tableView: UITableView) -> Int
     {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -196,17 +204,30 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
         {
             return 1
         }
+        else if section == 1
+        {
+            return 5
+        }
         else
         {
             return self.cache.weekStats.count
         }
     }
     
+    func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int)
+    {
+        (view as? UITableViewHeaderFooterView)?.backgroundView?.backgroundColor = .clear
+    }
+    
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat
     {
         if section == 0
         {
-            return 16
+            return 0
+        }
+        else if section == 1
+        {
+            return 0
         }
         else
         {
@@ -214,15 +235,81 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
     {
         if section == 0
         {
-            return "Year in Review"
+            return 0
+        }
+        else if section == 1
+        {
+            return 40
         }
         else
         {
-            return "Weekly Stats"
+            return 40
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+    {
+        if section == 0
+        {
+            return tableView.dequeueReusableHeaderFooterView(withIdentifier: "DayHeaderCell")
+        }
+        else if section == 1
+        {
+            return tableView.dequeueReusableHeaderFooterView(withIdentifier: "DayHeaderCell")
+        }
+        else
+        {
+            return tableView.dequeueReusableHeaderFooterView(withIdentifier: "DayHeaderCell")
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
+    {
+        if section == 0
+        {
+            guard let headerView = view as? DayHeaderCell else
+            {
+                return
+            }
+            
+            headerView.textLabel?.text = nil
+            headerView.textLabel?.textColor = UIColor.black
+        }
+        else if section == 1
+        {
+            guard let headerView = view as? DayHeaderCell else
+            {
+                return
+            }
+            
+            headerView.textLabel?.text = "Overall Trends"
+            headerView.textLabel?.textColor = UIColor.black
+        }
+        else if section == 2
+        {
+            guard let headerView = view as? DayHeaderCell else
+            {
+                return
+            }
+            
+            headerView.textLabel?.text = "Weekly Stats"
+            headerView.textLabel?.textColor = UIColor.black
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath?
+    {
+        if indexPath.section == 2
+        {
+            return indexPath
+        }
+        else
+        {
+            return nil
         }
     }
     
@@ -241,6 +328,12 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
             updateCellAppearance(cell, forRowAt: indexPath)
             return cell
         }
+        else if indexPath.section == 1
+        {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "WeekStatsCell") ?? WeekStatsCell()
+            updateCellAppearance(cell, forRowAt: indexPath)
+            return cell
+        }
         else
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "WeekStatsCell") ?? WeekStatsCell()
@@ -256,15 +349,23 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
     
     func updateCellAppearance(_ cell: UITableViewCell, forRowAt indexPath: IndexPath)
     {
+        cell.selectionStyle = .none
+        
         if indexPath.section == 0, let cell = cell as? YearStatsCell
         {
-            let totalPrice = self.cache.weekStats.reduce(0) { $0 + $1.price }
-            let totalCalories = self.cache.weekStats.reduce(0) { $0 + $1.calories }
-            let totalDrinks = self.cache.weekStats.reduce(0) { $0 + $1.drinks }
-            
-            cell.label.text = "Stats from 2018: \(Format.format(price: totalPrice)), \(Format.format(drinks: totalDrinks)) drinks, \(Format.format(drinks: totalCalories)) calories"
+//            let totalPrice = self.cache.weekStats.reduce(0) { $0 + $1.price }
+//            let totalCalories = self.cache.weekStats.reduce(0) { $0 + $1.calories }
+//            let totalDrinks = self.cache.weekStats.reduce(0) { $0 + $1.drinks }
+//
+//            cell.label.text = "Stats from 2018: \(Format.format(price: totalPrice)), \(Format.format(drinks: totalDrinks)) drinks, \(Format.format(drinks: totalCalories)) calories"
         }
         else if indexPath.section == 1, let cell = cell as? WeekStatsCell
+        {
+            cell.label.text = "You did blah-de-di-blah today!"
+            cell.label2.text = "Blah things in blah time"
+            cell.bgView.backgroundColor = UIColor.red.mixed(with: .white, by: 0.3)
+        }
+        else if indexPath.section == 2, let cell = cell as? WeekStatsCell
         {
             let stats = self.cache.weekStats[indexPath.row]
             
@@ -276,33 +377,82 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
 
 public class YearStatsCell: UITableViewCell
 {
-    var label: UILabel
-    var graphView: UIView
+    var header: UILabel
+    var graphView: LineChartView
+    var segment: UISegmentedControl
     
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?)
     {
-        self.label = UILabel()
-        self.graphView = UIView()
+        self.header = UILabel()
+        self.graphView = LineChartView.init(frame: CGRect.init(x: 0, y: 0, width: 100, height: 100))
+        self.segment = UISegmentedControl.init(items: ["Week", "Month", "Year"])
+        
+        chartSetup: do
+        {
+            var samples: [ChartDataEntry] = []
+            for i in 0..<30
+            {
+                let val = Double(arc4random_uniform(100)) + 3
+                samples += [ChartDataEntry(x: Double(i), y: val)]
+            }
+            let set = LineChartDataSet(values: samples, label: "DataSet 1")
+            set.lineWidth = 1.75
+            set.circleRadius = 5.0
+            set.circleHoleRadius = 2.5
+            set.setColor(.white)
+            set.setCircleColor(.white)
+            set.highlightColor = .white
+            set.drawValuesEnabled = false
+            let data = LineChartData(dataSet: set)
+            
+            graphView.data = data
+            
+            graphView.backgroundColor = Appearance.themeColor
+            graphView.dragEnabled = true
+            graphView.setScaleEnabled(true)
+            graphView.pinchZoomEnabled = false
+            graphView.setViewPortOffsets(left: 10, top: 0, right: 10, bottom: 0)
+            
+            graphView.chartDescription?.enabled = false
+            graphView.legend.enabled = false
+            
+            graphView.leftAxis.enabled = false
+            graphView.leftAxis.spaceTop = 0.4
+            graphView.leftAxis.spaceBottom = 0.4
+            graphView.rightAxis.enabled = false
+            graphView.xAxis.enabled = false
+            
+            graphView.data = data
+            
+            graphView.animate(xAxisDuration: 1)
+            
+            graphView.layer.cornerRadius = 8
+            graphView.clipsToBounds = true
+        }
         
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-        
-        self.label.numberOfLines = 100
-        self.graphView.backgroundColor = UIColor.green
         
         let stack = UIStackView()
         stack.axis = .vertical
         
+        header.text = "August 2018"
+        header.textAlignment = .center
+        header.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        header.textColor = .gray
+        
         autolayout: do
         {
             stack.translatesAutoresizingMaskIntoConstraints = false
-            label.translatesAutoresizingMaskIntoConstraints = false
+            header.translatesAutoresizingMaskIntoConstraints = false
             graphView.translatesAutoresizingMaskIntoConstraints = false
+            segment.translatesAutoresizingMaskIntoConstraints = false
             
-            stack.addArrangedSubview(label)
+            stack.addArrangedSubview(header)
             stack.addArrangedSubview(graphView)
+            stack.addArrangedSubview(segment)
             self.addSubview(stack)
             
-            stack.spacing = 4
+            stack.spacing = 8
             
             let metrics: [String:Any] = ["gap":8]
             
@@ -337,11 +487,13 @@ public class WeekStatsCell: UITableViewCell
         
         self.label.numberOfLines = 100
         self.label2.numberOfLines = 100
+        self.label.textColor = .white
+        self.label2.textColor = .white
         
         let stack = UIStackView()
         stack.axis = .vertical
         
-        bgView.backgroundColor = .orange
+        bgView.backgroundColor = Appearance.darkenedThemeColor
         bgView.layer.cornerRadius = 8
         
         autolayout: do

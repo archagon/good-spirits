@@ -173,6 +173,15 @@
                                     <outlet property="delegate" destination="w9g-WM-gUs" id="9no-Gt-If7"/>
                                 </connections>
                             </tableView>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Akp-LM-fkK">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="qzp-6B-ldg">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
+                                <blurEffect style="extraLight"/>
+                            </visualEffectView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="98x-93-XvJ">
                                 <rect key="frame" x="169" y="258.5" width="37" height="37"/>
                                 <color key="color" white="0.78231292519999995" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -180,12 +189,16 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="Akp-LM-fkK" firstAttribute="top" secondItem="hQj-wH-gbh" secondAttribute="top" id="1XB-3u-i0g"/>
                             <constraint firstItem="98x-93-XvJ" firstAttribute="centerY" secondItem="82h-dL-H5I" secondAttribute="centerY" id="1jg-Pb-NOZ"/>
+                            <constraint firstItem="Akp-LM-fkK" firstAttribute="leading" secondItem="82h-dL-H5I" secondAttribute="leading" id="7uk-qg-fzy"/>
                             <constraint firstAttribute="bottom" secondItem="5Vn-dH-29p" secondAttribute="bottom" constant="49" id="CLB-DN-Ouy"/>
                             <constraint firstItem="82h-dL-H5I" firstAttribute="trailing" secondItem="5Vn-dH-29p" secondAttribute="trailing" id="Ceg-wH-JYa"/>
                             <constraint firstItem="98x-93-XvJ" firstAttribute="centerX" secondItem="82h-dL-H5I" secondAttribute="centerX" id="K9J-Yc-eYn"/>
+                            <constraint firstItem="82h-dL-H5I" firstAttribute="top" secondItem="Akp-LM-fkK" secondAttribute="bottom" id="PXT-zB-bL8"/>
                             <constraint firstItem="5Vn-dH-29p" firstAttribute="leading" secondItem="82h-dL-H5I" secondAttribute="leading" id="Rdq-Kt-hu7"/>
                             <constraint firstItem="5Vn-dH-29p" firstAttribute="top" secondItem="hQj-wH-gbh" secondAttribute="top" id="SaW-OO-v8Z"/>
+                            <constraint firstItem="82h-dL-H5I" firstAttribute="trailing" secondItem="Akp-LM-fkK" secondAttribute="trailing" id="ueJ-qK-Cif"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="82h-dL-H5I"/>
                     </view>
