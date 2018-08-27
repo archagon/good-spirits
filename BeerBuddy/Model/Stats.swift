@@ -26,11 +26,17 @@ extension Stats
 {
     public func allowedGramsAlcohol(inRange range: Range<Date>) -> Float
     {
-        let standardDrinkSize = self.defaults.standardDrinkSize
-        let totalDays = (range.upperBound.timeIntervalSince1970 - range.lowerBound.timeIntervalSince1970) / 60 / 60 / 24
-        let allowedGramsAlcohol = totalDays * standardDrinkSize
-        
-        return Float(allowedGramsAlcohol)
+        if let weeklyLimit = self.defaults.weeklyLimit
+        {
+            let totalDays = (range.upperBound.timeIntervalSince1970 - range.lowerBound.timeIntervalSince1970) / 60 / 60 / 24
+            let allowedGramsAlcohol = totalDays * (weeklyLimit / 7)
+            
+            return Float(allowedGramsAlcohol)
+        }
+        else
+        {
+            return 0
+        }
     }
     
     public func percentToDrinks(_ percent: Float, inRange range: Range<Date>) -> Float

@@ -19,7 +19,8 @@ class RootViewController: UITabBarController, DrawerCoordinating
     {
         let data: DataLayer
         
-        let path: String? = (NSTemporaryDirectory() as NSString).appendingPathComponent("\(UUID()).db")
+        //let path: String? = (NSTemporaryDirectory() as NSString).appendingPathComponent("\(UUID()).db")
+        let path: String? = (NSTemporaryDirectory() as NSString).appendingPathComponent("data.db")
         if let dataImpl = Data_GRDB.init(withDatabasePath: path)
         {
             data = DataLayer.init(withStore: dataImpl)

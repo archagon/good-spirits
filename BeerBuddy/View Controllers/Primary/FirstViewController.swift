@@ -32,37 +32,6 @@ class FirstViewController: UIViewController
         return (self.tabBarController as? RootViewController)?.data
     }
     
-    func testAnimateProgressView()
-    {
-        if let progress = self.progressBar as? UIProgressView, let progress2 = self.overflowProgressBar as? UIProgressView
-        {
-            let goodRange = Float(0)...0.5
-            let warningRange = goodRange.lowerBound...0.7
-
-            let random = Float.random(in: 0...1.0)
-            let random2 = Float.random(in: 0...random)
-
-            progress.setProgress(random, animated: true)
-            progress2.setProgress(random2, animated: true)
-            
-            if goodRange.contains(random)
-            {
-                //self.progressBar.progressTintColor = UIColor.init(red: 21/255.0, green: 126/255.0, blue: 251/255.0, alpha: 0.6)
-                progress.progressTintColor = nil
-            }
-            else if warningRange.contains(random)
-            {
-                //self.progressBar.progressTintColor = UIColor.yellow
-                progress.progressTintColor = UIColor.yellow.mixed(with: .black, by: 0.1)
-            }
-            else
-            {
-                //self.progressBar.progressTintColor = UIColor.red.withAlphaComponent(0.6)
-                progress.progressTintColor = UIColor.red.withAlphaComponent(0.6)
-            }
-        }
-    }
-    
     deinit
     {
         if let observer = notificationObserver
@@ -573,6 +542,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         
         if section == tableView.numberOfSections - 1
         {
+            // TODO: just make this an inset
             return 20
         }
         else if section == 0 && self.cache.data[0]?.count ?? 0 > 0

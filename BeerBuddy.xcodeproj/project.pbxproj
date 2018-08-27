@@ -46,7 +46,7 @@
 		4EA2F18820FEE7C700CE30E1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F18620FEE7C700CE30E1 /* Main.storyboard */; };
 		4EA2F18A20FEE7CB00CE30E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F18920FEE7CB00CE30E1 /* Assets.xcassets */; };
 		4EA2F18D20FEE7CB00CE30E1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F18B20FEE7CB00CE30E1 /* LaunchScreen.storyboard */; };
-		4EA2F19720FEF8B900CE30E1 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19620FEF8B900CE30E1 /* Data.swift */; };
+		4EA2F19720FEF8B900CE30E1 /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19620FEF8B900CE30E1 /* Time.swift */; };
 		4EA2F19B20FF07C100CE30E1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19A20FF07C100CE30E1 /* Model.swift */; };
 		4EA2F19D20FF259D00CE30E1 /* CheckInCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */; };
 		4EA2F19F20FF30F500CE30E1 /* DrinkIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */; };
@@ -306,7 +306,7 @@
 		4EA2F18C20FEE7CB00CE30E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4EA2F18E20FEE7CB00CE30E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4EA2F19420FEE80D00CE30E1 /* stub.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = stub.json; sourceTree = "<group>"; };
-		4EA2F19620FEF8B900CE30E1 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		4EA2F19620FEF8B900CE30E1 /* Time.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
 		4EA2F19A20FF07C100CE30E1 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInCell.swift; sourceTree = "<group>"; };
 		4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DrinkIcons.xcassets; sourceTree = "<group>"; };
@@ -448,7 +448,6 @@
 			isa = PBXGroup;
 			children = (
 				4EA2F19A20FF07C100CE30E1 /* Model.swift */,
-				4EA2F19620FEF8B900CE30E1 /* Data.swift */,
 				4E721EB4212522770001BBB9 /* SampleData.swift */,
 				4ED560CA212BABDE009B3413 /* Stats.swift */,
 				4EB437F5212D0EB1001D5734 /* Limit.swift */,
@@ -550,6 +549,7 @@
 		4E7FB9EF212E3F0500052BFC /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				4EA2F19620FEF8B900CE30E1 /* Time.swift */,
 				4EA2F1A020FF347D00CE30E1 /* Util.swift */,
 				4E9C8554210D68F900DA959D /* ColorUtil.swift */,
 			);
@@ -992,7 +992,7 @@
 				4E882C18213365B200B7587B /* SettingsViewController_IAP.swift in Sources */,
 				4EB437E6212CE311001D5734 /* PopupDialogButton.swift in Sources */,
 				4E7FB9F5212E58E200052BFC /* PopupCells.swift in Sources */,
-				4EA2F19720FEF8B900CE30E1 /* Data.swift in Sources */,
+				4EA2F19720FEF8B900CE30E1 /* Time.swift in Sources */,
 				4E8F049221124CF700038F09 /* CheckInDrawerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

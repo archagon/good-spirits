@@ -13,7 +13,7 @@
         <!--Data Source-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <viewController id="9pv-A4-QxB" customClass="FirstViewController" customModule="BeerBuddy" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="9pv-A4-QxB" customClass="FirstViewController" customModule="Good_Spirits" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tsR-hK-woN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -87,7 +87,7 @@
                     <navigationItem key="navigationItem" title="August 2018" id="CZz-nO-VV4">
                         <barButtonItem key="leftBarButtonItem" image="gear" id="bv1-O2-TuQ">
                             <connections>
-                                <segue destination="49e-Tb-3d3" kind="custom" identifier="Settings" customClass="SettingsSegue" customModule="BeerBuddy" customModuleProvider="target" id="qTZ-a0-XAT"/>
+                                <segue destination="49e-Tb-3d3" kind="custom" identifier="Settings" customClass="SettingsSegue" customModule="Good_Spirits" customModuleProvider="target" id="qTZ-a0-XAT"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Today" id="qTR-ZY-cTj">
@@ -126,7 +126,7 @@
         <!--Calendar-->
         <scene sceneID="wg7-f3-ORb">
             <objects>
-                <viewController id="8rJ-Kc-sve" customClass="SecondViewController" customModule="BeerBuddy" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="8rJ-Kc-sve" customClass="SecondViewController" customModule="Good_Spirits" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="QS5-Rx-YEW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -160,26 +160,52 @@
         <!--Stats-->
         <scene sceneID="Fxi-e9-kET">
             <objects>
-                <viewController id="w9g-WM-gUs" sceneMemberID="viewController">
+                <viewController id="w9g-WM-gUs" customClass="SecondViewController" customModule="Good_Spirits" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hQj-wH-gbh">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5Vn-dH-29p">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="w9g-WM-gUs" id="JBc-f7-ioZ"/>
+                                    <outlet property="delegate" destination="w9g-WM-gUs" id="9no-Gt-If7"/>
+                                </connections>
+                            </tableView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="98x-93-XvJ">
+                                <rect key="frame" x="169" y="258.5" width="37" height="37"/>
+                                <color key="color" white="0.78231292519999995" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="98x-93-XvJ" firstAttribute="centerY" secondItem="82h-dL-H5I" secondAttribute="centerY" id="1jg-Pb-NOZ"/>
+                            <constraint firstAttribute="bottom" secondItem="5Vn-dH-29p" secondAttribute="bottom" constant="49" id="CLB-DN-Ouy"/>
+                            <constraint firstItem="82h-dL-H5I" firstAttribute="trailing" secondItem="5Vn-dH-29p" secondAttribute="trailing" id="Ceg-wH-JYa"/>
+                            <constraint firstItem="98x-93-XvJ" firstAttribute="centerX" secondItem="82h-dL-H5I" secondAttribute="centerX" id="K9J-Yc-eYn"/>
+                            <constraint firstItem="5Vn-dH-29p" firstAttribute="leading" secondItem="82h-dL-H5I" secondAttribute="leading" id="Rdq-Kt-hu7"/>
+                            <constraint firstItem="5Vn-dH-29p" firstAttribute="top" secondItem="hQj-wH-gbh" secondAttribute="top" id="SaW-OO-v8Z"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="82h-dL-H5I"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Stats" image="bar_chart" id="jDb-r8-6sp"/>
                     <navigationItem key="navigationItem" title="Stats" id="oRL-iw-YIz">
                         <barButtonItem key="leftBarButtonItem" image="gear" id="z6g-WQ-Xi5">
                             <connections>
-                                <segue destination="49e-Tb-3d3" kind="custom" identifier="Settings" customClass="SettingsSegue" customModule="BeerBuddy" customModuleProvider="target" id="SXH-ke-j1X"/>
+                                <segue destination="49e-Tb-3d3" kind="custom" identifier="Settings" customClass="SettingsSegue" customModule="Good_Spirits" customModuleProvider="target" id="SXH-ke-j1X"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="progressSpinner" destination="98x-93-XvJ" id="99q-RV-bpw"/>
+                        <outlet property="tableView" destination="5Vn-dH-29p" id="BJm-Wa-DCV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xod-Ox-DlD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1100" y="1012"/>
+            <point key="canvasLocation" x="1100" y="1011.544227886057"/>
         </scene>
         <!--Log-->
         <scene sceneID="bf8-xG-Ij6">
@@ -201,7 +227,7 @@
         <!--Check In-->
         <scene sceneID="Yf5-bb-ovv">
             <objects>
-                <viewController id="cKQ-VL-Slj" customClass="StubViewController" customModule="BeerBuddy" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="cKQ-VL-Slj" customClass="StubViewController" customModule="Good_Spirits" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FIl-zk-HTw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -219,7 +245,7 @@
         <!--Root View Controller-->
         <scene sceneID="yl2-sM-qoP">
             <objects>
-                <tabBarController id="49e-Tb-3d3" customClass="RootViewController" customModule="BeerBuddy" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController id="49e-Tb-3d3" customClass="RootViewController" customModule="Good_Spirits" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" itemPositioning="centered" itemSpacing="10" id="W28-zg-YXA">
                         <rect key="frame" x="0.0" y="975" width="768" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -245,6 +271,6 @@
         <image name="list" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qTZ-a0-XAT"/>
+        <segue reference="SXH-ke-j1X"/>
     </inferredMetricsTieBreakers>
 </document>
