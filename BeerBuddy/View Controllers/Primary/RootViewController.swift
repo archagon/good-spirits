@@ -199,15 +199,22 @@ class RootViewController: UITabBarController, DrawerCoordinating
         let storyboard = UIStoryboard.init(name: "Controllers", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "CheckIn") as! CheckInViewController
         
+        var defaultDrink: Model.Drink? = nil
+        do
+        {
+            defaultDrink = try self.data.getLastAddedModel()?.checkIn.drink
+        }
+        catch
+        {
+            appError("could not get last added model (\(error))")
+        }
+        
         if let model = model
         {
             self.modelForCheckIn = model
+            
             controller.checkInDate = model.checkIn.time
-            controller.name = model.checkIn.drink.name
-            controller.abv = model.checkIn.drink.abv
-            controller.volume = model.checkIn.drink.volume
-            controller.style = model.checkIn.drink.style
-            controller.cost = model.checkIn.drink.price
+            controller.defaultData = model.checkIn.drink
             
             if model.checkIn.untappdId != nil && !model.checkIn.untappdApproved
             {
@@ -221,11 +228,15 @@ class RootViewController: UITabBarController, DrawerCoordinating
         else if let date = date
         {
             self.modelForCheckIn = nil
+            
+            controller.defaultData = defaultDrink
             controller.checkInDate = date
         }
         else
         {
             self.modelForCheckIn = nil
+            
+            controller.defaultData = defaultDrink
         }
         
         controller.delegate = self
@@ -276,29 +287,6 @@ extension RootViewController: UITabBarControllerDelegate
 
 extension RootViewController: CheckInViewControllerDelegate
 {
-    public func defaultCheckIn(for: CheckInViewController) -> Model.Drink
-    {
-        let defaultPrice: Double = 5
-        let defaultDrink = Model.Drink.init(name: nil, style: DrinkStyle.defaultStyle, abv: DrinkStyle.defaultStyle.defaultABV, price: defaultPrice, volume: DrinkStyle.defaultStyle.defaultVolume)
-        
-        do
-        {
-            if let model = try self.data.getLastAddedModel()
-            {
-                return model.checkIn.drink
-            }
-            else
-            {
-                return defaultDrink
-            }
-        }
-        catch
-        {
-            appError("could not get last added model (\(error))")
-            return defaultDrink
-        }
-    }
-    
     public func calendar(for: CheckInViewController) -> Calendar
     {
         return DataLayer.calendar

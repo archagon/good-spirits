@@ -12,7 +12,6 @@ import DataLayer
 
 public protocol CheckInViewControllerDelegate: class
 {
-    func defaultCheckIn(for: CheckInViewController) -> Model.Drink
     func calendar(for: CheckInViewController) -> Calendar
     func committed(drink: Model.Drink, onDate: Date?, for: CheckInViewController)
     func updateDimensions(for: CheckInViewController)
@@ -29,6 +28,8 @@ public class CheckInViewController: CheckInDrawerViewController
         case untappd
     }
     
+    var defaultData: Model.Drink? = nil { didSet { setupText() } }
+    
     public var type: Style = .normal { didSet { setupText() } }
     public var checkInDate: Date? { didSet { setupText() } }
     public var name: String? { didSet { setupText() } }
@@ -39,7 +40,7 @@ public class CheckInViewController: CheckInDrawerViewController
     
     private var display: (name: String?, date: Date?, abv: Double, volume: Measurement<UnitVolume>, style: DrinkStyle, cost: Double)
     {
-        let defaultCheckIn = self.delegate.defaultCheckIn(for: self)
+        let defaultCheckIn = (self.defaultData ?? Model.Drink.init(name: nil, style: DrinkStyle.defaultStyle, abv: DrinkStyle.defaultStyle.defaultABV, price: 5, volume: DrinkStyle.defaultStyle.defaultVolume))
         
         //let name = self.name ?? defaultCheckIn.name
         let name = self.name
@@ -105,7 +106,8 @@ public class CheckInViewController: CheckInDrawerViewController
         
         let dateFormat = DateFormatter.init()
         dateFormat.dateFormat = "EEEE, MMMM\u{a0}d"
-        let linkColor = self.text.linkTextAttributes["NSColor"] ?? UIColor.blue
+        let linkColor = UIColor.init(red: 0, green: 0.47843137254901963, blue: 1, alpha: 1) //from default attributes
+        let emphLinkColor = UIColor.red
         
         let paragraph = NSMutableParagraphStyle.init()
         paragraph.lineSpacing = 5
@@ -117,14 +119,29 @@ public class CheckInViewController: CheckInDrawerViewController
         
         attributedString.setAttributes(mainAttributes, range: NSMakeRange(0, attributedString.length))
         
-        func replaceLink<T: CustomStringConvertible>(_ anchor: String, value: T, tag: String? = nil)
+        // AB: manual link styling down below
+        self.text.linkTextAttributes = [
+            NSAttributedStringKey.underlineStyle.rawValue:NSUnderlineStyle.styleNone.rawValue
+        ]
+        
+        func replaceLink<T: CustomStringConvertible>(_ anchor: String, value: T, tag: String? = nil, emphasized: Bool = false)
         {
             let rTag = tag ?? anchor
          
             var linkAttributes = mainAttributes
             linkAttributes[NSAttributedStringKey.link] = URL.init(fileURLWithPath: rTag)
             linkAttributes[NSAttributedStringKey.underlineStyle] = (NSUnderlineStyle.styleSingle.rawValue)
-            linkAttributes[NSAttributedStringKey.underlineColor] = linkColor
+
+            if emphasized
+            {
+                linkAttributes[NSAttributedStringKey.foregroundColor] = emphLinkColor
+                linkAttributes[NSAttributedStringKey.underlineColor] = emphLinkColor
+            }
+            else
+            {
+                linkAttributes[NSAttributedStringKey.foregroundColor] = linkColor
+                linkAttributes[NSAttributedStringKey.underlineColor] = linkColor
+            }
             
             let range = (attributedString.string as NSString).range(of: "$\(anchor)$")
             let newText = NSAttributedString.init(string: value.description, attributes: linkAttributes)
@@ -161,7 +178,7 @@ public class CheckInViewController: CheckInDrawerViewController
             replaceText("drinking", value: "am drinking")
             replaceText("date", value: "")
         }
-        replaceLink("volume", value: Format.format(volume: display.volume))
+        replaceLink("volume", value: Format.format(volume: display.volume), emphasized: self.type == .untappd && self.volume == nil)
         replaceLink("abv", value: Format.format(abv: display.abv))
         if let name = withName
         {
@@ -177,12 +194,12 @@ public class CheckInViewController: CheckInDrawerViewController
         if withPrice > 0
         {
             replaceText("price", value: "at $price$ per drink")
-            replaceLink("price", value: "\(Format.format(price: withPrice))")
+            replaceLink("price", value: "\(Format.format(price: withPrice))", emphasized: self.type == .untappd && self.cost == nil)
         }
         else
         {
             replaceText("price", value: "for $price$")
-            replaceLink("price", value: "free")
+            replaceLink("price", value: "free", emphasized: self.type == .untappd && self.cost == nil)
         }
         
         self.text.attributedText = attributedString
