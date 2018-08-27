@@ -25,8 +25,12 @@ public struct Defaults
     // Having this set means HK was authorized at some point.
     private static let healthKitEnabledKey: String = "HealthKitEnabled"
     
+    // Having this set means Untappd was authorized.
     private static let untappdTokenKey: String = "UntappdToken"
     private static let untappdBaselineKey: String = "UntappdBaseline"
+    private static let untappdDisplayNameKey: String = "UntappdDisplayName"
+    private static let untappdRateLimitKey: String = "UntappdRateLimit"
+    private static let untappdRateLimitRemainingKey: String = "UntappdRateLimitRemaining"
     
     private let defaults: UserDefaults
     
@@ -86,16 +90,76 @@ extension Defaults
         }
     }
     
-    public var untappdBaseline: String?
+    public var untappdBaseline: Int?
     {
         get
         {
-            let val = self.defaults.string(forKey: Defaults.untappdBaselineKey)
-            return val
+            if self.defaults.value(forKey: Defaults.untappdBaselineKey) != nil
+            {
+                let val = self.defaults.integer(forKey: Defaults.untappdBaselineKey)
+                return val
+            }
+            else
+            {
+                return nil
+            }
         }
         set
         {
             self.defaults.set(newValue, forKey: Defaults.untappdBaselineKey)
+        }
+    }
+    
+    public var untappdDisplayName: String?
+    {
+        get
+        {
+            let val = self.defaults.string(forKey: Defaults.untappdDisplayNameKey)
+            return val
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.untappdDisplayNameKey)
+        }
+    }
+    
+    public var untappdRateLimit: Int?
+    {
+        get
+        {
+            if self.defaults.value(forKey: Defaults.untappdRateLimitKey) != nil
+            {
+                let val = self.defaults.integer(forKey: Defaults.untappdRateLimitKey)
+                return val
+            }
+            else
+            {
+                return nil
+            }
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.untappdRateLimitKey)
+        }
+    }
+    
+    public var untappdRateLimitRemaining: Int?
+    {
+        get
+        {
+            if self.defaults.value(forKey: Defaults.untappdRateLimitRemainingKey) != nil
+            {
+                let val = self.defaults.integer(forKey: Defaults.untappdRateLimitRemainingKey)
+                return val
+            }
+            else
+            {
+                return nil
+            }
+        }
+        set
+        {
+            self.defaults.set(newValue, forKey: Defaults.untappdRateLimitRemainingKey)
         }
     }
     
@@ -290,7 +354,7 @@ extension Defaults
         }
     }
     
-    public static var untappdBaseline: String?
+    public static var untappdBaseline: Int?
     {
         get
         {
@@ -300,6 +364,45 @@ extension Defaults
         {
             var defaults = Defaults()
             defaults.untappdBaseline = newValue
+        }
+    }
+    
+    public static var untappdDisplayName: String?
+    {
+        get
+        {
+            return Defaults().untappdDisplayName
+        }
+        set
+        {
+            var defaults = Defaults()
+            defaults.untappdDisplayName = newValue
+        }
+    }
+    
+    public static var untappdRateLimit: Int?
+    {
+        get
+        {
+            return Defaults().untappdRateLimit
+        }
+        set
+        {
+            var defaults = Defaults()
+            defaults.untappdRateLimit = newValue
+        }
+    }
+    
+    public static var untappdRateLimitRemaining: Int?
+    {
+        get
+        {
+            return Defaults().untappdRateLimitRemaining
+        }
+        set
+        {
+            var defaults = Defaults()
+            defaults.untappdRateLimitRemaining = newValue
         }
     }
     

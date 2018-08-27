@@ -83,6 +83,37 @@ class Untappd
         }
     }
     
+    // The display name can be retrieved later from Defaults, and will be updated as new check-ins come in.
+    public func authenticate(withToken token: String, block: @escaping (MaybeError<String?>)->())
+    {
+        switch self.loginStatus
+        {
+        case .unreachable:
+            block(.error(e: UntappdError.notReachable))
+            return
+        case .disabled:
+            break
+        case .enabledAndAuthorized:
+            block(.value(v: Defaults.untappdDisplayName))
+            return
+        }
+        
+        clearCaches()
+        Defaults.untappdToken = token
+        
+        // populates the caches
+        userCheckIns(withBaseline: false, limit: 1)
+        {
+            switch $0
+            {
+            case .error(let e):
+                block(.error(e: e))
+            case .value(_):
+                block(.value(v: Defaults.untappdDisplayName))
+            }
+        }
+    }
+    
     // QQQ:
     public func refreshCheckIns(withData data: DataLayer) -> UntappdError?
     {
@@ -97,14 +128,13 @@ class Untappd
         }
         
         // QQQ:
-        userCheckIns(Defaults.untappdToken ?? "", withBaseline: nil)
-        { (checkIns, error) in
-            if let error = error
+        userCheckIns
+        {
+            switch $0
             {
-                appError("Untappd refresh error -- \(error.localizedDescription)")
-            }
-            else
-            {
+            case .error(let e):
+                appError("Untappd refresh error -- \(e.localizedDescription)")
+            case .value(let checkIns):
                 for checkin in checkIns
                 {
                     let time: Date
@@ -173,21 +203,25 @@ class Untappd
         return nil
     }
     
-    func userCheckIns(_ token: String, withBaseline baseline: Int? = nil, block: @escaping ([CheckIn], Error?)->()) -> UntappdError?
+    func userCheckIns(withBaseline: Bool = true, limit: Int = 50, block: @escaping (MaybeError<[CheckIn]>)->())
     {
         switch self.loginStatus
         {
         case .unreachable:
-            return UntappdError.notReachable
+            block(.error(e: UntappdError.notReachable))
+            return
         case .disabled:
-            return UntappdError.notEnabled
+            block(.error(e: UntappdError.notEnabled))
+            return
         case .enabledAndAuthorized:
             break
         }
         
+        let token = Defaults.untappdToken!
+        
         //let minId = (baseline != nil ? "&min_id=\(baseline!)" : "")
         let minId = "" //AB: min_id has age requirements that make it unsuitable for our use case
-        let newUrlString = (Untappd.apiURL.absoluteString as NSString).appendingPathComponent("/v4/user/checkins?access_token=\(token)\(minId)&limit=5")
+        let newUrlString = (Untappd.apiURL.absoluteString as NSString).appendingPathComponent("/v4/user/checkins?access_token=\(token)\(minId)&limit=\(limit)")
         let url = URL.init(string: newUrlString)!
         var request = URLRequest.init(url: url)
         request.httpMethod = "GET"
@@ -195,19 +229,12 @@ class Untappd
         appDebug("request to \(url)...")
         
         let task = URLSession.shared.dataTask(with: request)
-        { (data, response, error) in
-            if
-                let response = response as? HTTPURLResponse,
-                let rateLimit = response.allHeaderFields[Untappd.rateLimitHeader],
-                let rateLimitRemaining = response.allHeaderFields[Untappd.rateLimitRemainingHeader]
-            {
-                appDebug("rate limit \(rateLimit)")
-                appDebug("rate limit remaining \(rateLimitRemaining)")
-            }
+        { [weak `self`] (data, response, error) in
+            self?.updateRateLimits(response)
             
             if let error = error
             {
-                block([], error)
+                block(.error(e: error))
                 return
             }
             
@@ -217,11 +244,21 @@ class Untappd
                 do
                 {
                     let newData = try parser.decode(Response<CheckInsResponse>.self, from: data)
+                    
                     let code = newData.meta.code
                     appDebug("untappd code \(code)")
-                    let checkIns = newData.response?.checkins?.items ?? []
                     
-                    block(checkIns, nil)
+                    // PERF: these probably arrive in order, so we can binary search
+                    var checkIns = newData.response?.checkins?.items ?? []
+                    if withBaseline, let baseline = Defaults.untappdBaseline
+                    {
+                        checkIns = checkIns.filter { $0.checkin_id > baseline }
+                    }
+                    
+                    self?.updateDisplayName(newData)
+                    self?.updateBaseline(newData)
+                    
+                    block(.value(v: checkIns))
                 }
                 catch
                 {
@@ -232,13 +269,63 @@ class Untappd
                     }
                     catch
                     {
-                        block([], error)
+                        block(.error(e: error))
                     }
                 }
             }
         }
         task.resume()
-        
-        return nil
+    }
+    
+    func updateRateLimits(_ response: URLResponse?)
+    {
+        if
+            let response = response as? HTTPURLResponse,
+            let rateLimitString = response.allHeaderFields[Untappd.rateLimitHeader] as? String,
+            let rateLimitRemainingString = response.allHeaderFields[Untappd.rateLimitRemainingHeader] as? String,
+            let rateLimit = Int(rateLimitString),
+            let rateLimitRemaining = Int(rateLimitRemainingString)
+        {
+            Defaults.untappdRateLimit = rateLimit
+            Defaults.untappdRateLimitRemaining = rateLimitRemaining
+            appDebug("rate limit \(rateLimit)")
+            appDebug("rate limit remaining \(rateLimitRemaining)")
+        }
+    }
+    
+    func updateDisplayName(_ response: Response<CheckInsResponse>)
+    {
+        if let checkIn = response.response?.checkins?.items.first
+        {
+            if let firstName = checkIn.user.first_name
+            {
+                let lastName = (checkIn.user.last_name != nil ? " \(checkIn.user.last_name!)" : "")
+                Defaults.untappdDisplayName = "\(firstName)\(lastName) (\(checkIn.user.user_name))"
+            }
+            else
+            {
+                Defaults.untappdDisplayName = "\(checkIn.user.user_name)"
+            }
+            appDebug("set display name to \(Defaults.untappdDisplayName!)")
+        }
+    }
+    
+    func updateBaseline(_ response: Response<CheckInsResponse>)
+    {
+        let highestCheckIn = (response.response?.checkins?.items ?? []).max { $0.checkin_id < $1.checkin_id }
+        if let highestBaseline = highestCheckIn?.checkin_id
+        {
+            appDebug("set baseline to \(highestBaseline)")
+            Defaults.untappdBaseline = highestBaseline
+        }
+    }
+    
+    func clearCaches()
+    {
+        Defaults.untappdToken = nil
+        Defaults.untappdBaseline = nil
+        Defaults.untappdDisplayName = nil
+        Defaults.untappdRateLimit = nil
+        Defaults.untappdRateLimitRemaining = nil
     }
 }

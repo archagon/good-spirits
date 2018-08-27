@@ -76,6 +76,8 @@ public class UntappdLoginViewController: UIViewController
             }
         }
         
+        Untappd.shared.clearCaches()
+        
         let url = Untappd.requestURL
         let request = URLRequest.init(url: URL.init(string: url)!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 15)
         self.tokenBlock = block
@@ -112,10 +114,25 @@ extension UntappdLoginViewController: WKNavigationDelegate
             if split.count == 2 && split[0] == "access_token"
             {
                 appDebug("retrieved token \(String(split[1]))!")
-                webView.stopLoading()
-                self.tokenBlock?(String(split[1]), nil)
-                self.tokenBlock = nil
-                decisionHandler(.cancel)
+                
+                Untappd.shared.authenticate(withToken: String(split[1]))
+                { err in
+                    onMain
+                    {
+                        switch err
+                        {
+                        case .error(let e):
+                            self.tokenBlock?("", e)
+                            self.tokenBlock = nil
+                        case .value(let v):
+                            self.tokenBlock?(String(split[1]), nil)
+                            self.tokenBlock = nil
+                        }
+                        
+                        webView.stopLoading()
+                        decisionHandler(.cancel)
+                    }
+                }
             }
             else
             {

@@ -52,9 +52,17 @@ extension Untappd
         public let created_at: String?
         public let checkin_comment: String?
         public let rating_score: Double?
-        //public let user: User
+        public let user: User
         public let beer: Beer
         public let venue: Venue?
+    }
+    
+    public struct User: Decodable
+    {
+        public let uid: Int
+        public let user_name: String
+        public let first_name: String?
+        public let last_name: String?
     }
     
     public struct Beer: Decodable
@@ -80,6 +88,7 @@ extension Untappd.CheckIn: Decodable
         case checkin_id
         case created_at
         case checkin_comment
+        case user
         case rating_score
         case beer
         case venue
@@ -92,6 +101,7 @@ extension Untappd.CheckIn: Decodable
         self.checkin_id = try container.decode(Int.self, forKey: .checkin_id)
         self.created_at = try container.decode(String?.self, forKey: .created_at)
         self.checkin_comment = try container.decode(String?.self, forKey: .checkin_comment)
+        self.user = try container.decode(Untappd.User.self, forKey: .user)
         self.rating_score = try container.decode(Double?.self, forKey: .rating_score)
         self.beer = try container.decode(Untappd.Beer.self, forKey: .beer)
         
