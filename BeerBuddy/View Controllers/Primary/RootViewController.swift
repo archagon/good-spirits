@@ -32,17 +32,11 @@ class RootViewController: UITabBarController, DrawerCoordinating
             data = DataLayer.init(withStore: dataImpl)
         }
         
-        // TODO: this probably does not belong here, either
-        self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
-        { [weak `self`] _ in
-            self?.syncHealthKit()
-        }
-        
         return data
     }()
     
     var notificationObserver: Any?
-    var lastHealthKitToken: DataLayer.Token = DataLayer.NullToken
+    var defaultsObserver: Any?
     
     // TODO: this is sort of a memory leak until the next controller shows up
     public var drawerDisplayController: DrawerDisplayController?
@@ -58,6 +52,10 @@ class RootViewController: UITabBarController, DrawerCoordinating
     deinit
     {
         if let observer = notificationObserver
+        {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        if let observer = defaultsObserver
         {
             NotificationCenter.default.removeObserver(observer)
         }
@@ -89,6 +87,34 @@ class RootViewController: UITabBarController, DrawerCoordinating
             containerAppearance.cornerRadius = 16
             containerAppearance.shadowOffset = CGSize(width: 0, height: 4)
         }
+        
+        // TODO: this probably does not belong here, either
+        self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
+        { [weak `self`] _ in
+            self?.syncHealthKit()
+        }
+        self.defaultsObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: OperationQueue.main)
+        { [weak `self`] _ in
+            if Defaults.healthKitEnabled && Defaults.healthKitBaseline == nil
+            {
+                appDebug("refreshing HK baseline...")
+                self?.data.getModels(fromIncludingDate: Date.distantFuture, toExcludingDate: Date.distantFuture)
+                {
+                    switch $0
+                    {
+                    case .error(let e):
+                        appError("error fetching token -- \(e.localizedDescription)")
+                    case .value(let v):
+                        Defaults.healthKitBaseline = v.1
+                    }
+                }
+            }
+            else if !Defaults.healthKitEnabled && Defaults.healthKitBaseline != nil
+            {
+                appDebug("clearing HK baseline...")
+                Defaults.healthKitBaseline = nil
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool)
@@ -103,25 +129,60 @@ class RootViewController: UITabBarController, DrawerCoordinating
     
     private func syncHealthKit()
     {
-        self.data.getModels(fromIncludingDate: Date.distantPast, toExcludingDate: Date.distantFuture, withToken: self.lastHealthKitToken, includingDeleted: true, includingUntappdPending: false)
+        if HealthKit.shared.loginStatus != .enabledAndAuthorized
+        {
+            appDebug("HK not enabled, skipping sync")
+            return
+        }
+        
+        guard let lastHealthKitToken = Defaults.healthKitBaseline else
+        {
+            appWarning("HK token not found, can't sync")
+            return
+        }
+        
+        self.data.getModels(fromIncludingDate: Date.distantPast, toExcludingDate: Date.distantFuture, withToken: lastHealthKitToken, includingDeleted: true, includingUntappdPending: false)
         {
             switch $0
             {
             case .error(let e):
                 appError("could not get models from database -- \(e.localizedDescription)")
-            case .value(let v):
-                for model in v.0
-                {
-                    if model.deleted
-                    {
-                        let _  = HealthKit.shared.delete(model: model.metadata.id)
-                    }
-                    else
-                    {
-                        let _ = HealthKit.shared.commit(model: model, withTimestamp: Date().timeIntervalSince1970 as NSNumber)
+            case .value(let data):
+                self.data.primaryStore.readTransaction
+                { db in
+                    // TODO: since we're out of the transaction, this could be invalid at this point
+                    db.lamportTimestamp
+                    { err in
+                        onMain
+                        {
+                            switch err
+                            {
+                            case .error(let e):
+                                appError("could not get lamport from database -- \(e.localizedDescription)")
+                            case .value(let v):
+                                for model in data.0
+                                {
+                                    if model.deleted
+                                    {
+                                        if let err  = HealthKit.shared.delete(model: model.metadata.id)
+                                        {
+                                            appWarning("could not complete HK delete -- \(err.localizedDescription)")
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if let err = HealthKit.shared.commit(model: model, withTimestamp: v as NSNumber)
+                                        {
+                                            appWarning("could not complete HK sync -- \(err.localizedDescription)")
+                                        }
+                                    }
+                                    
+                                    Defaults.healthKitBaseline = data.1
+                                }
+                            }
+                        }
                     }
                 }
-                self.lastHealthKitToken = v.1
             }
         }
     }

@@ -21,8 +21,10 @@ class HealthKit
         case notAuthorized
         case notEnabled
         case notReady
+        case unknown
     }
     
+    // TOOD: should have enabledAndUnauthorized so that we can still disable HK even when unauthorized
     private var loginPending: Bool = false
     public enum HealthKitLoginStatus
     {
@@ -49,7 +51,7 @@ class HealthKit
             case .sharingAuthorized:
                 return (Defaults.healthKitEnabled ?.enabledAndAuthorized : .disabled)
             case .sharingDenied:
-                return . unauthorized
+                return .unauthorized
             }
         }
         else
@@ -81,6 +83,77 @@ class HealthKit
 // Model interface.
 extension HealthKit
 {
+    func authorize(_ val: Bool, block: @escaping (Error?)->Void)
+    {
+        switch self.loginStatus
+        {
+        case .unavailable:
+            block(HealthKitError.notAvailable)
+            return
+        case .unauthorized:
+            block(HealthKitError.notAuthorized)
+            return
+        case .disabled:
+            break
+        case .pendingAuthorization:
+            block(HealthKitError.notReady)
+        case .enabledAndAuthorized:
+            Defaults.healthKitEnabled = val
+            block(nil)
+            return
+        }
+        
+        if val == false
+        {
+            block(nil)
+            return
+        }
+        
+        appDebug("authorizing HK...")
+        
+        authorizeHealthKit: do
+        {
+            // no need to authorize, already done
+            if HealthKit.shared.authStatus() == .sharingAuthorized
+            {
+                Defaults.healthKitEnabled = true
+                block(nil)
+            }
+            // need to attempt authorization
+            else
+            {
+                self.loginPending = true
+                
+                let allTypes: Set<HKSampleType> = [ HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)! ]
+                HealthKit.shared.store?.requestAuthorization(toShare: allTypes, read: nil)
+                { [weak `self`] (success, error) in
+                    onMain
+                    {
+                        self?.loginPending = false
+                        
+                        if success
+                        {
+                            appDebug("HK authorized!")
+                            Defaults.healthKitEnabled = true
+                            block(nil)
+                        }
+                        else
+                        {
+                            if let error = error
+                            {
+                                block(error)
+                            }
+                            else
+                            {
+                                block(HealthKitError.unknown)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     func delete(model: GlobalID) -> HealthKitError?
     {
         switch self.loginStatus

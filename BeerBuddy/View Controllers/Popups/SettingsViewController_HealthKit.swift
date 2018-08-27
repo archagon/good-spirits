@@ -12,89 +12,44 @@ import HealthKit
 // Quick and dirty HealthKit state machine.
 extension SettingsViewController
 {
-    var healthKitLoginStatus: HealthKitLoginStatus
+    func updateHealthKitToggleAppearance(withCell aCell: UITableViewCell? = nil)
     {
-        if self.healthKitLoginPending
-        {
-            return .pendingAuthorization
-        }
+        let section: Int = self.sectionCounts.firstIndex { $0.0 == .healthKit }!
         
-        if let status = HealthKit.shared.authStatus()
+        if
+            let genericCell = aCell ?? self.tableView.cellForRow(at: IndexPath.init(row: 0, section: section)),
+            let cell = genericCell as? SubtitleToggleCell
         {
-            switch status
+            tableView.beginUpdates()
+            switch HealthKit.shared.loginStatus
             {
-            case .notDetermined:
-                return .disabled
-            case .sharingAuthorized:
-                return (Defaults.healthKitEnabled ?.enabledAndAuthorized : .disabled)
-            case .sharingDenied:
-                return . unauthorized
+            case .unavailable:
+                cell.enable()
+                cell.toggle.isOn = false
+                cell.toggle.isEnabled = false
+                cell.detailTextLabel?.text = "HealthKit not available on this device"
+            case .unauthorized:
+                cell.enable()
+                cell.toggle.isOn = false
+                cell.toggle.isEnabled = false
+                cell.detailTextLabel?.text = "Please authorize \(Constants.appName) in HealthKit settings"
+            case .disabled:
+                cell.enable()
+                cell.toggle.isOn = false
+                cell.toggle.isEnabled = true
+                cell.detailTextLabel?.text = nil
+            case .pendingAuthorization:
+                cell.disable()
+                //cell.toggle.isOn = true
+                cell.toggle.isEnabled = false
+                cell.detailTextLabel?.text = nil
+            case .enabledAndAuthorized:
+                cell.enable()
+                cell.toggle.isOn = true
+                cell.toggle.isEnabled = true
+                cell.detailTextLabel?.text = nil
             }
+            tableView.endUpdates()
         }
-        else
-        {
-            return .unavailable
-        }
-    }
-    
-    func transitionHealthKitStatus(_ enabled: Bool)
-    {
-        switch self.healthKitLoginStatus
-        {
-        case .unavailable:
-        break //no-op, can't do anything
-        case .unauthorized:
-        break //no-op, can't do anything
-        case .disabled:
-            if enabled
-            {
-                // TODO: move this to HealthKit proper
-                authorizeHealthKit: do
-                {
-                    // no need to authorize, already done
-                    if HealthKit.shared.authStatus() == .sharingAuthorized
-                    {
-                        Defaults.healthKitEnabled = true
-                    }
-                        // need to attempt authorization
-                    else
-                    {
-                        self.healthKitLoginPending = true
-                        //self.updateHealthKitToggleAppearance() happens below
-                        
-                        let allTypes: Set<HKSampleType> = [ HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)! ]
-                        HealthKit.shared.store?.requestAuthorization(toShare: allTypes, read: nil)
-                        { [weak `self`] (success, error) in
-                        onMain
-                            {
-                                if success
-                                {
-                                    Defaults.healthKitEnabled = true
-                                }
-                                else
-                                {
-                                    if let error = error
-                                    {
-                                        appWarning("HealthKit error -- \(error)")
-                                    }
-                                }
-                                
-                                self?.healthKitLoginPending = false
-                                self?.updateHealthKitToggleAppearance()
-                            }
-                        }
-                    }
-                }
-            }
-        case .pendingAuthorization:
-        break //can't do anything until login completes
-        case .enabledAndAuthorized:
-            if !enabled
-            {
-                Defaults.healthKitEnabled = false
-            }
-        }
-        
-        self.updateHealthKitToggleAppearance()
     }
 }

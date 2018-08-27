@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DataLayer
 
 public struct Defaults
 {
@@ -25,6 +26,7 @@ public struct Defaults
     
     // Having this set means HK was authorized at some point.
     private static let healthKitEnabledKey: String = "HealthKitEnabled"
+    private static let healthKitBaselineKey: String = "HealthKitBaseline"
     
     // Having this set means Untappd was authorized.
     private static let untappdTokenKey: String = "UntappdToken"
@@ -88,6 +90,24 @@ extension Defaults
         set
         {
             self.defaults.set(newValue, forKey: Defaults.healthKitEnabledKey)
+        }
+    }
+    
+    public var healthKitBaseline: VectorClock?
+    {
+        get
+        {
+            guard let data = self.defaults.data(forKey: Defaults.healthKitBaselineKey) else
+            {
+                return nil
+            }
+            let val = try? PropertyListDecoder().decode(VectorClock.self, from: data)
+            return val
+        }
+        set
+        {
+            let data = try? PropertyListEncoder().encode(newValue)
+            self.defaults.set(data, forKey: Defaults.healthKitBaselineKey)
         }
     }
     
@@ -365,6 +385,19 @@ extension Defaults
         {
             var defaults = Defaults()
             defaults.healthKitEnabled = newValue
+        }
+    }
+    
+    public static var healthKitBaseline: VectorClock?
+    {
+        get
+        {
+            return Defaults().healthKitBaseline
+        }
+        set
+        {
+            var defaults = Defaults()
+            defaults.healthKitBaseline = newValue
         }
     }
     

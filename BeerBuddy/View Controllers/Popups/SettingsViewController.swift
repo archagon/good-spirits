@@ -597,6 +597,17 @@ extension SettingsViewController
     @objc func healthKitToggled(_ sender: UISwitch)
     {
         let newValue = sender.isOn
-        transitionHealthKitStatus(newValue)
+        
+        HealthKit.shared.authorize(newValue)
+        { [weak `self`] in
+            if let error = $0
+            {
+                appWarning("HK error -- \(error)")
+            }
+            
+            self?.updateHealthKitToggleAppearance()
+        }
+        
+        updateHealthKitToggleAppearance()
     }
 }

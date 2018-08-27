@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct VectorClock: Equatable, CustomStringConvertible
+public struct VectorClock: Equatable, Codable, CustomStringConvertible
 {
     public let map: [DataLayer.SiteID:DataLayer.Time]
     
