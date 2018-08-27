@@ -18,6 +18,14 @@ class SecondViewController: UIViewController
     var notificationObserver: Any? = nil
     var dataObserver: Any? = nil
     
+    enum Mode
+    {
+        case week
+        case month
+        case year
+    }
+    var mode: Mode = .month
+    
     var data: DataLayer?
     {
         return (self.tabBarController as? RootViewController)?.data
@@ -30,8 +38,13 @@ class SecondViewController: UIViewController
         let calories: Double
         let drinks: Double
     }
+    struct Point
+    {
+        let date: Date
+        let grams: Double
+    }
     
-    var cache: (weekStats: [Stat], weeklyLimit: Double?, standardDrink: Double, startsOnMonday: Bool, token: DataLayer.Token) = ([], Defaults.weeklyLimit, Defaults.standardDrinkSize, Defaults.weekStartsOnMonday, DataLayer.NullToken)
+    var cache: (weekStats: [Stat], weekPoints: [Point], monthPoints: [Point], yearPoints: [Point], endDate: Date, weeklyLimit: Double?, standardDrink: Double, startsOnMonday: Bool, token: DataLayer.Token) = ([], [], [], [], Date(), Defaults.weeklyLimit, Defaults.standardDrinkSize, Defaults.weekStartsOnMonday, DataLayer.NullToken)
     {
         didSet
         {
@@ -113,7 +126,7 @@ class SecondViewController: UIViewController
         {
             // PERF: this should be done through the database
             data.getModels(fromIncludingDate: Date.distantPast, toExcludingDate: Date.distantFuture)
-            {
+            { [weak `self`] in
                 switch $0
                 {
                 case .error(let e):
@@ -135,15 +148,16 @@ class SecondViewController: UIViewController
                     let standardDrink = Defaults.standardDrinkSize
                     let weekStartsOnMonday = Defaults.weekStartsOnMonday
                     
-                    let sortedModels = SortedArray<Model>.init(sorted: v.0) { $0.checkIn.time < $1.checkIn.time }
+                    //let sortedModels = SortedArray<Model>.init(sorted: v.0) { $0.checkIn.time < $1.checkIn.time }
+                    let sortedModels = v.0
                     
                     if sortedModels.count == 0
                     {
-                        self.tableView.isHidden = true
-                        self.progressSpinner.isHidden = true
-                        self.progressSpinner.stopAnimating()
+                        self?.tableView.isHidden = true
+                        self?.progressSpinner.isHidden = true
+                        self?.progressSpinner.stopAnimating()
                         
-                        self.tableView.reloadData()
+                        self?.tableView.reloadData()
                         // NEXT: "nothing to show"
                     }
                     else
@@ -181,10 +195,44 @@ class SecondViewController: UIViewController
                             currentWeek = Time.week(forDate: currentWeek.1)
                         }
                         
-                        self.tableView.isHidden = false
-                        self.progressSpinner.isHidden = true
-                        self.progressSpinner.stopAnimating()
-                        self.cache = (stats.reversed(), weeklyLimit, standardDrink, weekStartsOnMonday, v.1)
+                        let currentDate = Date()
+                        var weekStats: [Point] = []
+                        var monthStats: [Point] = []
+                        var yearStats: [Point] = []
+                        
+                        populatePoints: do
+                        {
+                            let earliestWeekDate = DataLayer.calendar.date(byAdding: .day, value: -7, to: currentDate)!
+                            let earliestMonthDate = DataLayer.calendar.date(byAdding: .day, value: -30, to: currentDate)!
+                            let earliestYearDate = DataLayer.calendar.date(byAdding: .day, value: -365, to: currentDate)!
+                            
+                            for model in sortedModels.reversed()
+                            {
+                                let point = Point.init(date: model.checkIn.time, grams: Stats(data).gramsOfAlcohol(model))
+                                
+                                if model.checkIn.time >= earliestWeekDate
+                                {
+                                    weekStats.append(point)
+                                }
+                                if model.checkIn.time >= earliestMonthDate
+                                {
+                                    monthStats.append(point)
+                                }
+                                if model.checkIn.time >= earliestYearDate
+                                {
+                                    yearStats.append(point)
+                                }
+                                else
+                                {
+                                    break
+                                }
+                            }
+                        }
+                        
+                        self?.tableView.isHidden = false
+                        self?.progressSpinner.isHidden = true
+                        self?.progressSpinner.stopAnimating()
+                        self?.cache = (stats.reversed(), weekStats, monthStats, yearStats, currentDate, weeklyLimit, standardDrink, weekStartsOnMonday, v.1)
                     }
                 }
             }
@@ -325,7 +373,9 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
     {
         if indexPath.section == 0
         {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "YearStatsCell") ?? YearStatsCell()
+            let cell: YearStatsCell = (tableView.dequeueReusableCell(withIdentifier: "YearStatsCell") as? YearStatsCell) ?? YearStatsCell()
+            cell.segment.removeTarget(self, action: nil, for: .valueChanged)
+            cell.segment.addTarget(self, action: #selector(modeChanged), for: .valueChanged)
             updateCellAppearance(cell, forRowAt: indexPath)
             return cell
         }
@@ -354,11 +404,21 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
         
         if indexPath.section == 0, let cell = cell as? YearStatsCell
         {
-//            let totalPrice = self.cache.weekStats.reduce(0) { $0 + $1.price }
-//            let totalCalories = self.cache.weekStats.reduce(0) { $0 + $1.calories }
-//            let totalDrinks = self.cache.weekStats.reduce(0) { $0 + $1.drinks }
-//
-//            cell.label.text = "Stats from 2018: \(Format.format(price: totalPrice)), \(Format.format(drinks: totalDrinks)) drinks, \(Format.format(drinks: totalCalories)) calories"
+            switch self.mode
+            {
+            case .week:
+                cell.header.text = "Last Week"
+                let from = DataLayer.calendar.date(byAdding: .day, value: -7, to: cache.endDate)!
+                cell.populate(withDrinks: self.cache.weekPoints, goal: Defaults.weeklyLimit, inRange: from...cache.endDate)
+            case .month:
+                cell.header.text = "Last Month"
+                let from = DataLayer.calendar.date(byAdding: .day, value: -30, to: cache.endDate)!
+                cell.populate(withDrinks: self.cache.monthPoints, goal: Defaults.weeklyLimit, inRange: from...cache.endDate)
+            case .year:
+                cell.header.text = "Last Year"
+                let from = DataLayer.calendar.date(byAdding: .day, value: -365, to: cache.endDate)!
+                cell.populate(withDrinks: self.cache.yearPoints, goal: Defaults.weeklyLimit, inRange: from...cache.endDate)
+            }
         }
         else if indexPath.section == 1, let cell = cell as? TrendStatsCell
         {
@@ -433,5 +493,26 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
             }
             cell.labelText = infoLabel
         }
+    }
+}
+
+extension SecondViewController
+{
+    @objc func modeChanged(_ sender: UISegmentedControl)
+    {
+        if sender.selectedSegmentIndex == 0
+        {
+            self.mode = .week
+        }
+        else if sender.selectedSegmentIndex == 1
+        {
+            self.mode = .month
+        }
+        else
+        {
+            self.mode = .year
+        }
+        
+        self.tableView.reloadRows(at: [IndexPath.init(item: 0, section: 0)], with: .none)
     }
 }
