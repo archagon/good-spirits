@@ -81,6 +81,7 @@
 		4EB437F4212CF7D4001D5734 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437F3212CF7D4001D5734 /* Appearance.swift */; };
 		4EB437F6212D0EB1001D5734 /* Limit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437F5212D0EB1001D5734 /* Limit.swift */; };
 		4EB75B8F2127CFEB00A14FCF /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */; };
+		4EB873272133BE59000D5C35 /* StatsCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB873262133BE59000D5C35 /* StatsCells.swift */; };
 		4EBE6702210FE4CE00878CA0 /* DrawerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; };
 		4EBE6703210FE4CE00878CA0 /* DrawerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4EC26CCE212E5E84006E156B /* TextDisplayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC26CCD212E5E84006E156B /* TextDisplayController.swift */; };
@@ -344,6 +345,7 @@
 		4EB437F3212CF7D4001D5734 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		4EB437F5212D0EB1001D5734 /* Limit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Limit.swift; sourceTree = "<group>"; };
 		4EB75B8C2127CFEB00A14FCF /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SortedArray.swift; path = "External/SortedArray-0.7.0/Sources/SortedArray.swift"; sourceTree = "<group>"; };
+		4EB873262133BE59000D5C35 /* StatsCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsCells.swift; sourceTree = "<group>"; };
 		4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawerKit.xcodeproj; path = "External/DrawerKit-0.6.0/DrawerKit/DrawerKit.xcodeproj"; sourceTree = "<group>"; };
 		4EC26CCD212E5E84006E156B /* TextDisplayController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayController.swift; sourceTree = "<group>"; };
 		4EC26CE4212E674F006E156B /* BeerBuddy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeerBuddy.entitlements; sourceTree = "<group>"; };
@@ -469,21 +471,22 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		4E70D5CB2113D4810089BBB1 /* Check-Ins List */ = {
+		4E70D5CB2113D4810089BBB1 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
 				4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */,
 				4EA2F19C20FF259D00CE30E1 /* CheckInCell.swift */,
 				4E93F00821017A5C00B51709 /* DayHeaderCell.swift */,
+				4EB873262133BE59000D5C35 /* StatsCells.swift */,
 			);
-			path = "Check-Ins List";
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		4E70D5CC2113D4B80089BBB1 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				4E7FB9ED212E3ED500052BFC /* Primary */,
-				4E70D5CB2113D4810089BBB1 /* Check-Ins List */,
+				4E70D5CB2113D4810089BBB1 /* Cells */,
 				4E8F049021124CCA00038F09 /* Check-In */,
 				4E70D5CD2113D4EE0089BBB1 /* Popups */,
 			);
@@ -982,6 +985,7 @@
 				4E7FB9EC212E3B1400052BFC /* RootViewController.swift in Sources */,
 				4E93F00721015B7800B51709 /* Defaults.swift in Sources */,
 				4E169190212E8647007F51D9 /* Constants.swift in Sources */,
+				4EB873272133BE59000D5C35 /* StatsCells.swift in Sources */,
 				4E7FB9F3212E58BD00052BFC /* HealthKit.swift in Sources */,
 				4EB437DC212CE311001D5734 /* UIImage+Blur.swift in Sources */,
 				4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */,

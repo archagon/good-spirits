@@ -83,7 +83,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="PQr-Ze-W5v"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Log" image="list" badgeValue="3" id="acW-dT-cKf"/>
+                    <tabBarItem key="tabBarItem" title="Log" image="list" id="acW-dT-cKf"/>
                     <navigationItem key="navigationItem" title="August 2018" id="CZz-nO-VV4">
                         <barButtonItem key="leftBarButtonItem" image="gear" id="bv1-O2-TuQ">
                             <connections>
@@ -284,6 +284,6 @@
         <image name="list" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SXH-ke-j1X"/>
+        <segue reference="qTZ-a0-XAT"/>
     </inferredMetricsTieBreakers>
 </document>
