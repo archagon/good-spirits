@@ -8,11 +8,11 @@
 
 import Foundation
 
-public struct DataModel: Hashable, Equatable, LamportQueriable, Mergeable
+public struct DataModel: Hashable, Equatable, Encodable, LamportQueriable, Mergeable
 {
     public typealias ID = UInt64
     
-    public struct Metadata: Hashable, Equatable, LamportQueriable, Mergeable
+    public struct Metadata: Hashable, Equatable, Encodable, LamportQueriable, Mergeable
     {
         // AB: these already contain an implicit lamport value, and can only be created when the other lamport values
         // are initialized, so it's unnecessary to add a LamportValue wrapper here.
@@ -40,7 +40,7 @@ public struct DataModel: Hashable, Equatable, LamportQueriable, Mergeable
         }
     }
     
-    public struct CheckIn: Hashable, Equatable, LamportQueriable, Mergeable
+    public struct CheckIn: Hashable, Equatable, Encodable, LamportQueriable, Mergeable
     {
         public var untappdId: LamportValue<ID?>
         public var untappdApproved: LamportValue<Bool>
@@ -71,7 +71,7 @@ public struct DataModel: Hashable, Equatable, LamportQueriable, Mergeable
         }
     }
     
-    public struct Drink: Hashable, Equatable, LamportQueriable, Mergeable
+    public struct Drink: Hashable, Equatable, Encodable, LamportQueriable, Mergeable
     {
         public var name: LamportValue<String?>
         public var style: LamportValue<DrinkStyle>
@@ -119,6 +119,8 @@ public struct DataModel: Hashable, Equatable, LamportQueriable, Mergeable
     
     mutating public func merge(with: DataModel)
     {
+        assert(self.metadata.id == with.metadata.id)
+        
         self.metadata.merge(with: with.metadata)
         self.checkIn.merge(with: with.checkIn)
     }

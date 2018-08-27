@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum DrinkStyle: String, RawRepresentable
+public enum DrinkStyle: String, RawRepresentable, Encodable
 {
     case beer
     case wine
@@ -223,11 +223,11 @@ public enum DrinkStyle: String, RawRepresentable
     }
 }
 
-public struct Model: Hashable, Equatable
+public struct Model: Hashable, Equatable, Encodable
 {
     public typealias ID = UInt64
     
-    public struct Metadata: Hashable, Equatable
+    public struct Metadata: Hashable, Equatable, Encodable
     {
         public let id: GlobalID
         public let creationTime: Date
@@ -244,7 +244,7 @@ public struct Model: Hashable, Equatable
         }
     }
     
-    public struct CheckIn: Hashable, Equatable
+    public struct CheckIn: Hashable, Equatable, Encodable
     {
         public var untappdId: ID?
         public var untappdApproved: Bool
@@ -260,7 +260,7 @@ public struct Model: Hashable, Equatable
         }
     }
     
-    public struct Drink: Hashable, Equatable
+    public struct Drink: Hashable, Equatable, Encodable
     {
         public var name: String?
         public var style: DrinkStyle

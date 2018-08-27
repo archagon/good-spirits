@@ -11,6 +11,11 @@ import GRDB
 
 public class Data_GRDB
 {
+    public var path: String
+    {
+        return database.path
+    }
+    
     let database: DatabaseQueue
     let queue: DispatchQueue
     

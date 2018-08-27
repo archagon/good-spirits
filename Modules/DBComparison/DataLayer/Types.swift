@@ -58,7 +58,7 @@ public struct VectorClock: Equatable, CustomStringConvertible
     }
 }
 
-public struct GlobalID: Hashable, Comparable, CustomStringConvertible
+public struct GlobalID: Hashable, Comparable, Encodable, CustomStringConvertible
 {
     public let siteID: DataLayer.SiteID
     public let operationIndex: DataLayer.Index
@@ -99,7 +99,7 @@ public enum MaybeError<T>
     case error(e: Error)
 }
 
-public struct LamportValue<T: Hashable>: Hashable, LamportQueriable, Mergeable
+public struct LamportValue<T: Hashable & Encodable>: Hashable, LamportQueriable, Encodable, Mergeable
 {
     public var v: T
     public var t: DataLayer.Time

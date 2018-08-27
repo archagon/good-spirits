@@ -303,3 +303,18 @@ public extension Model
         }
     }
 }
+
+public extension DataLayer
+{
+    public func toJSON() throws -> String
+    {
+        let allEntries = try self.primaryStore.readTransaction { db in return try db.data(fromIncludingDate: Date.distantPast, toExcludingDate: Date.distantFuture, afterTimestamp: nil) }
+        let modelData = allEntries.0.map { $0.toModel() }
+        
+        let encoder = JSONEncoder.init()
+        let data = try encoder.encode(modelData)
+        let jsonString = String(data: data, encoding: .utf8)
+        
+        return jsonString ?? ""
+    }
+}

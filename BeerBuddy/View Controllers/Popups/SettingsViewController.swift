@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import StoreKit
 import HealthKit
+import DataLayer
 
 class SettingsViewController: UITableViewController
 {
@@ -43,6 +44,11 @@ class SettingsViewController: UITableViewController
     var paymentInProgress = false
     
     var notificationObservers: [Any] = []
+    
+    var data: DataLayer?
+    {
+        return (self.presentingViewController as? RootViewController)?.data
+    }
     
     deinit
     {
@@ -478,10 +484,28 @@ extension SettingsViewController
             let controller = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
             controller.addAction(UIAlertAction.init(title: "SQLite Database", style: .default, handler:
             { [weak `self`] _ in
-                
+                if let data = self?.data, let db = data.primaryStore as? Data_GRDB
+                {
+                    let url = URL.init(fileURLWithPath: db.path)
+                    let shareVC = UIActivityViewController.init(activityItems: [url], applicationActivities: nil)
+                    self?.present(shareVC, animated: true, completion: nil)
+                }
             }))
             controller.addAction(UIAlertAction.init(title: "JSON", style: .default, handler:
             { [weak `self`] _ in
+                do
+                {
+                    if let data = self?.data
+                    {
+                        let data = try data.toJSON()
+                        let shareVC = UIActivityViewController.init(activityItems: [data], applicationActivities: nil)
+                        self?.present(shareVC, animated: true, completion: nil)
+                    }
+                }
+                catch
+                {
+                    appError("error converting to JSON -- \(error)")
+                }
             }))
             controller.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
             self.present(controller, animated: true, completion: nil)
