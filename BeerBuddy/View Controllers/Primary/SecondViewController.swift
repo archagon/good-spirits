@@ -12,7 +12,6 @@ import Charts
 
 class SecondViewController: UIViewController
 {
-    @IBOutlet var progressSpinner: UIActivityIndicatorView! = nil
     @IBOutlet var tableView: UITableView! = nil
     
     var notificationObserver: Any? = nil
@@ -118,10 +117,6 @@ class SecondViewController: UIViewController
     
     func reloadData()
     {
-        //self.tableView.isHidden = true
-        //self.progressSpinner.isHidden = false
-        //self.progressSpinner.startAnimating()
-        
         if let data = self.data
         {
             // PERF: this should be done through the database
@@ -136,9 +131,6 @@ class SecondViewController: UIViewController
                     //if self.cache.token == v.1
                     //{
                     //    appDebug("no changes in stats")
-                    //    self.tableView.isHidden = false
-                    //    self.progressSpinner.isHidden = true
-                    //    self.progressSpinner.stopAnimating()
                     //    return
                     //}
                     
@@ -153,12 +145,7 @@ class SecondViewController: UIViewController
                     
                     if sortedModels.count == 0
                     {
-                        self?.tableView.isHidden = true
-                        self?.progressSpinner.isHidden = true
-                        self?.progressSpinner.stopAnimating()
-                        
                         self?.tableView.reloadData()
-                        // NEXT: "nothing to show"
                     }
                     else
                     {
@@ -195,7 +182,7 @@ class SecondViewController: UIViewController
                             currentWeek = Time.week(forDate: currentWeek.1)
                         }
                         
-                        let currentDate = Date()
+                        var currentDate = Date()
                         var weekStats: [Point] = []
                         var monthStats: [Point] = []
                         var yearStats: [Point] = []
@@ -229,9 +216,55 @@ class SecondViewController: UIViewController
                             }
                         }
                         
-                        self?.tableView.isHidden = false
-                        self?.progressSpinner.isHidden = true
-                        self?.progressSpinner.stopAnimating()
+                        
+                        
+                        // NEXT:
+                        iterateDays: do
+                        {
+                            var today = Date()
+                            today = DataLayer.calendar.date(bySettingHour: 0, minute: 0, second: 0, of: today)!
+                            let tomorrow = DataLayer.calendar.date(byAdding: .day, value: 1, to: today)!
+                            
+                            currentDate = tomorrow
+                            
+                            var yearPoints: [Point] = []
+                            
+                            let weeks = 50
+                            
+                            var range = today..<tomorrow
+                            var modelIndex = sortedModels.count - 1
+                            for _ in 0..<(7 * weeks)
+                            {
+                                var drinks: Double = 0
+                                
+                                while modelIndex >= 0, range.lowerBound <= sortedModels[modelIndex].checkIn.time
+                                {
+                                    drinks += Stats(data).standardDrinks(sortedModels[modelIndex])
+                                    modelIndex -= 1
+                                }
+                                
+                                yearPoints.append(Point.init(date: range.lowerBound, grams: drinks))
+                                
+                                let newLowerBound = DataLayer.calendar.date(byAdding: .day, value: -1, to: range.lowerBound)!
+                                range = newLowerBound..<range.lowerBound
+                            }
+                            
+                            weekStats = Array(yearPoints[0..<7].reversed())
+                            monthStats = Array(yearPoints[0..<30].reversed())
+                            
+//                            var yearWeekPoints: [Point] = []
+//                            var i = 0
+//                            while i < (7 * weeks)
+//                            {
+//                                let sumDate = yearPoints[i..<(i+7)].reduce(0) { $0 + $1.date.timeIntervalSince1970 }
+//                                let sumGrams = yearPoints[i..<(i+7)].reduce(0) { $0 + $1.grams }
+//                                yearWeekPoints.append(Point.init(date: Date.init(timeIntervalSince1970: sumDate / Double(7)), grams: sumGrams))
+//                                i += 7
+//                            }
+//                            yearStats = yearWeekPoints.reversed()
+                            yearStats = yearPoints.reversed()
+                        }
+
                         self?.cache = (stats.reversed(), weekStats, monthStats, yearStats, currentDate, weeklyLimit, standardDrink, weekStartsOnMonday, v.1)
                     }
                 }
@@ -404,20 +437,55 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
         
         if indexPath.section == 0, let cell = cell as? YearStatsCell
         {
+            let count: Int
+            switch self.mode
+            {
+            case .week:
+                count = 7
+            case .month:
+                count = 30
+            case .year:
+                count = 350
+            }
+            
+            let granularity: Int
+            switch self.mode
+            {
+            case .week:
+                granularity = 1
+            case .month:
+                granularity = 5
+            case .year:
+                granularity = 50
+            }
+            
+            let goal: Double?
+            let goalLabel: String?
+            if let limit = Defaults.weeklyLimit
+            {
+                goal = ((limit / 7) / Defaults.standardDrinkSize) * Double(granularity)
+                goalLabel = "\(goal!) drinks"
+            }
+            else
+            {
+                goal = nil
+                goalLabel = nil
+            }
+            
             switch self.mode
             {
             case .week:
                 cell.header.text = "Last Week"
-                let from = DataLayer.calendar.date(byAdding: .day, value: -7, to: cache.endDate)!
-                cell.populate(withDrinks: self.cache.weekPoints, goal: Defaults.weeklyLimit, inRange: from...cache.endDate)
+                cell.populate(withDrinks: self.cache.weekPoints, goal: goal, goalLabel: goalLabel, granularity: 1)
+                cell.segment.selectedSegmentIndex = 0
             case .month:
                 cell.header.text = "Last Month"
-                let from = DataLayer.calendar.date(byAdding: .day, value: -30, to: cache.endDate)!
-                cell.populate(withDrinks: self.cache.monthPoints, goal: Defaults.weeklyLimit, inRange: from...cache.endDate)
+                cell.populate(withDrinks: self.cache.monthPoints, goal: goal, goalLabel: goalLabel, granularity: 5)
+                cell.segment.selectedSegmentIndex = 1
             case .year:
                 cell.header.text = "Last Year"
-                let from = DataLayer.calendar.date(byAdding: .day, value: -365, to: cache.endDate)!
-                cell.populate(withDrinks: self.cache.yearPoints, goal: Defaults.weeklyLimit, inRange: from...cache.endDate)
+                cell.populate(withDrinks: self.cache.yearPoints, goal: goal, goalLabel: goalLabel, granularity: 50)
+                cell.segment.selectedSegmentIndex = 2
             }
         }
         else if indexPath.section == 1, let cell = cell as? TrendStatsCell
@@ -513,6 +581,10 @@ extension SecondViewController
             self.mode = .year
         }
         
-        self.tableView.reloadRows(at: [IndexPath.init(item: 0, section: 0)], with: .none)
+        let row = IndexPath.init(item: 0, section: 0)
+        if let chart = self.tableView.cellForRow(at: row) as? YearStatsCell
+        {
+            updateCellAppearance(chart, forRowAt: row)
+        }
     }
 }

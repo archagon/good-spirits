@@ -24,45 +24,51 @@ public class YearStatsCell: UITableViewCell
         chartSetup: do
         {
             graphView.backgroundColor = Appearance.themeColor
+            graphView.layer.cornerRadius = 8
+            graphView.clipsToBounds = true
+            
             graphView.dragEnabled = false
             graphView.setScaleEnabled(false)
             graphView.pinchZoomEnabled = false
-            graphView.setViewPortOffsets(left: 0, top: 0, right: 0, bottom: 0)
+            graphView.highlightPerTapEnabled = false
+            graphView.highlightPerDragEnabled = false
             
             graphView.chartDescription?.enabled = false
             graphView.legend.enabled = false
+            
+            graphView.setViewPortOffsets(left: 30, top: 0, right: 30, bottom: 0)
             
             graphView.noDataFont = UIFont.systemFont(ofSize: 16, weight: .medium)
             graphView.noDataTextColor = .white
             
             let xAxis = graphView.xAxis
-//            xAxis.enabled = true
             xAxis.labelPosition = .bottomInside
+            //xAxis.drawAxisLineEnabled = true
+            //xAxis.drawLabelsEnabled = true
             xAxis.labelFont = .systemFont(ofSize: 12)
-//            xAxis.drawAxisLineEnabled = true
-            xAxis.gridColor = UIColor.init(white: 1, alpha: 0.7)
-//            xAxis.drawLabelsEnabled = true
-            xAxis.labelTextColor = .white
+            xAxis.gridColor = UIColor.init(white: 1, alpha: 0.4)
+            xAxis.labelTextColor = UIColor.init(white: 1, alpha: 0.7)
             xAxis.valueFormatter = AxisDateFormatter()
-            
-            graphView.leftAxis.enabled = false
-            graphView.leftAxis.spaceTop = 0.4
-            graphView.leftAxis.spaceBottom = 0.4
             
             graphView.rightAxis.enabled = false
             
-            graphView.animate(xAxisDuration: 1)
-            
-            graphView.layer.cornerRadius = 8
-            graphView.clipsToBounds = true
+            let yAxis = graphView.leftAxis
+            yAxis.enabled = true
+            yAxis.drawZeroLineEnabled = true
+            yAxis.drawLabelsEnabled = false
+            yAxis.drawAxisLineEnabled = false
+            yAxis.drawGridLinesEnabled = false
+            yAxis.zeroLineColor = UIColor.init(white: 1, alpha: 0.4)
+            yAxis.spaceTop = 0.4
+            yAxis.spaceBottom = 0.4
         }
         
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
         
         let stack = UIStackView()
         stack.axis = .vertical
         
-        header.text = "August 2018"
+        header.text = ""
         header.textAlignment = .center
         header.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         header.textColor = .gray
@@ -97,71 +103,86 @@ public class YearStatsCell: UITableViewCell
         fatalError("init(coder:) has not been implemented")
     }
     
-    func populate(withDrinks drinks: [SecondViewController.Point], goal: Double?, inRange range: Swift.ClosedRange<Date>)
+    func populate(withDrinks drinks: [SecondViewController.Point], goal: Double?, goalLabel: String?, granularity: Int = 1)
     {
-        self.graphView.clear()
+        assert(drinks.count % granularity == 0)
+        
+        let xAxis = graphView.xAxis
+        let yAxis = graphView.leftAxis
+        
+        yAxis.removeAllLimitLines()
+        graphView.data = nil
         
         if drinks.count == 0
         {
             return
         }
-        
-        let xAxis = graphView.xAxis
-        if drinks.count <= 7
-        {
-            xAxis.setLabelCount(drinks.count, force: false)
-        }
-        else if drinks.count <= 31
-        {
-            xAxis.setLabelCount(drinks.count / 2, force: false)
-        }
-        else
-        {
-            xAxis.setLabelCount(drinks.count / 30, force: false)
-        }
-        
-        var samples: [ChartDataEntry] = []
-        for drink in drinks
-        {
-            samples.append(ChartDataEntry(x: drink.date.timeIntervalSince1970, y: drink.grams))
-        }
-        let set = LineChartDataSet.init(values: samples, label: nil)
-        set.lineWidth = 1.75
-        set.circleRadius = 5.0
-        set.circleHoleRadius = 2.5
-        set.setColor(.white)
-        set.setCircleColor(.white)
-        set.highlightColor = .white
-        set.drawValuesEnabled = false
+
+        xAxis.setLabelCount(drinks.count / granularity, force: true)
         
         if let goal = goal
         {
-            var trendlineSamples: [ChartDataEntry] = []
-            let samplesCount = 50
-            for i in 0..<samplesCount
-            {
-                let startX = range.lowerBound.timeIntervalSince1970 - (4 * 60 * 60)
-                let endX = range.upperBound.timeIntervalSince1970 + (4 * 60 * 60)
-                let trendlineSample = ChartDataEntry.init(x: startX + (Double(i) / Double(samplesCount - 1)) * (endX - startX), y: goal)
-                trendlineSamples.append(trendlineSample)
-            }
-            let set2 = LineChartDataSet.init(values: trendlineSamples, label: nil)
-            set2.lineWidth = 1.5
-            set2.lineDashLengths = [5, 3]
-            set2.drawCirclesEnabled = false
-            set2.setColor(UIColor.green.mixed(with: .white, by: 0.5))
-            set2.drawValuesEnabled = false
+            let limitLine = ChartLimitLine.init(limit: goal)
+            limitLine.lineColor = UIColor.green.mixed(with: .white, by: 0.5)
+            limitLine.drawLabelEnabled = false
+            limitLine.lineWidth = 1.5
+            limitLine.lineDashLengths = [5, 3]
+            limitLine.valueFont = UIFont.systemFont(ofSize: 12, weight: .bold)
+            limitLine.valueTextColor = UIColor.green.mixed(with: .white, by: 0.5)
+            limitLine.label = goalLabel ?? ""
             
-            let data = LineChartData.init(dataSets: [set2, set])
-            graphView.data = data
-        }
-        else
-        {
-            let data = LineChartData.init(dataSets: [set])
-            graphView.data = data
+            yAxis.drawLimitLinesBehindDataEnabled = true
+            yAxis.addLimitLine(limitLine)
         }
         
-        graphView.setNeedsDisplay()
+        // TODO: don't exclude odd numbers
+        var samples: [ChartDataEntry] = []
+        calculateSamples: do
+        {
+            var i = 0
+            while i < (drinks.count-(granularity-1))
+            {
+                let drinks = drinks[i..<i+granularity]
+                let entry = drinks.reduce(ChartDataEntry.init(x: 0, y: 0))
+                {
+                    ChartDataEntry.init(x: $0.x + (1/Double(granularity)) * $1.date.timeIntervalSince1970, y: $0.y + $1.grams)
+                }
+                samples.append(entry)
+                i += granularity
+            }
+        }
+        
+        let set = LineChartDataSet.init(values: samples, label: nil)
+        set.lineWidth = 1.75
+        set.circleRadius = 4
+        set.setColor(.white)
+        set.setCircleColor(.white)
+        set.highlightColor = .white
+        set.drawValuesEnabled = true
+        set.valueTextColor = Appearance.themeColor.mixed(with: .white, by: 0.85)
+        set.valueFont = UIFont.systemFont(ofSize: 10, weight: .medium)
+        set.valueFormatter = DrinksFormatter()
+        set.mode = .cubicBezier
+            
+        let data = LineChartData.init(dataSets: [set])
+        graphView.data = data
+        
+        graphView.animate(xAxisDuration: 0.5)
+    }
+    
+    class DrinksFormatter: IValueFormatter
+    {
+        public func stringForValue(_ value: Double, entry: Charts.ChartDataEntry, dataSetIndex: Int, viewPortHandler: Charts.ViewPortHandler?) -> String
+        {
+            if value == 0
+            {
+                return ""
+            }
+            else
+            {
+                return Format.format(drinks: value)
+            }
+        }
     }
     
     class AxisDateFormatter: IAxisValueFormatter

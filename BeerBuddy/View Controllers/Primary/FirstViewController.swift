@@ -152,7 +152,7 @@ class FirstViewController: UIViewController
         
         self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
         { [unowned `self`] _ in
-            appDebug("requesting change with token \(self.cache?.token ?? DataLayer.NullToken)...")
+            appDebug("requesting database changes with token \(self.cache?.token ?? DataLayer.NullToken)...")
             self.reloadData(animated: true, fromScratch: false)
         }
         self.notificationObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: OperationQueue.main)

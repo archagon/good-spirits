@@ -182,19 +182,13 @@
                                 </view>
                                 <blurEffect style="extraLight"/>
                             </visualEffectView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="98x-93-XvJ">
-                                <rect key="frame" x="169" y="258.5" width="37" height="37"/>
-                                <color key="color" white="0.78231292519999995" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Akp-LM-fkK" firstAttribute="top" secondItem="hQj-wH-gbh" secondAttribute="top" id="1XB-3u-i0g"/>
-                            <constraint firstItem="98x-93-XvJ" firstAttribute="centerY" secondItem="82h-dL-H5I" secondAttribute="centerY" id="1jg-Pb-NOZ"/>
                             <constraint firstItem="Akp-LM-fkK" firstAttribute="leading" secondItem="82h-dL-H5I" secondAttribute="leading" id="7uk-qg-fzy"/>
                             <constraint firstAttribute="bottom" secondItem="5Vn-dH-29p" secondAttribute="bottom" constant="49" id="CLB-DN-Ouy"/>
                             <constraint firstItem="82h-dL-H5I" firstAttribute="trailing" secondItem="5Vn-dH-29p" secondAttribute="trailing" id="Ceg-wH-JYa"/>
-                            <constraint firstItem="98x-93-XvJ" firstAttribute="centerX" secondItem="82h-dL-H5I" secondAttribute="centerX" id="K9J-Yc-eYn"/>
                             <constraint firstItem="82h-dL-H5I" firstAttribute="top" secondItem="Akp-LM-fkK" secondAttribute="bottom" id="PXT-zB-bL8"/>
                             <constraint firstItem="5Vn-dH-29p" firstAttribute="leading" secondItem="82h-dL-H5I" secondAttribute="leading" id="Rdq-Kt-hu7"/>
                             <constraint firstItem="5Vn-dH-29p" firstAttribute="top" secondItem="hQj-wH-gbh" secondAttribute="top" id="SaW-OO-v8Z"/>
@@ -212,7 +206,6 @@
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="progressSpinner" destination="98x-93-XvJ" id="99q-RV-bpw"/>
                         <outlet property="tableView" destination="5Vn-dH-29p" id="BJm-Wa-DCV"/>
                     </connections>
                 </viewController>
@@ -284,6 +277,6 @@
         <image name="list" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qTZ-a0-XAT"/>
+        <segue reference="SXH-ke-j1X"/>
     </inferredMetricsTieBreakers>
 </document>
