@@ -127,8 +127,8 @@ public class YearStatsCell: UITableViewCell
             limitLine.drawLabelEnabled = false
             limitLine.lineWidth = 1.5
             limitLine.lineDashLengths = [5, 3]
-            limitLine.valueFont = UIFont.systemFont(ofSize: 12, weight: .bold)
-            limitLine.valueTextColor = UIColor.green.mixed(with: .white, by: 0.5)
+            //limitLine.valueFont = UIFont.systemFont(ofSize: 12, weight: .bold)
+            //limitLine.valueTextColor = UIColor.green.mixed(with: .white, by: 0.5)
             limitLine.label = goalLabel ?? ""
             
             yAxis.drawLimitLinesBehindDataEnabled = true
@@ -159,15 +159,16 @@ public class YearStatsCell: UITableViewCell
         set.setCircleColor(.white)
         set.highlightColor = .white
         set.drawValuesEnabled = true
-        set.valueTextColor = Appearance.themeColor.mixed(with: .white, by: 0.85)
-        set.valueFont = UIFont.systemFont(ofSize: 10, weight: .medium)
+        set.valueTextColor = Appearance.themeColor.mixed(with: .white, by: 0.75)
+        set.valueFont = UIFont.systemFont(ofSize: 12, weight: .bold)
         set.valueFormatter = DrinksFormatter()
-        set.mode = .cubicBezier
+        set.mode = .horizontalBezier
             
         let data = LineChartData.init(dataSets: [set])
         graphView.data = data
         
-        graphView.animate(xAxisDuration: 0.5)
+        //graphView.animate(xAxisDuration: 0.5)
+        graphView.animate(yAxisDuration: 0.5, easingOption: .easeOutCubic)
     }
     
     class DrinksFormatter: IValueFormatter
