@@ -240,7 +240,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="OXR-e0-iZR"/>
                     </view>
-                    <tabBarItem key="tabBarItem" tag="1" title="Check In" image="checkin" id="eG5-QO-wsY">
+                    <tabBarItem key="tabBarItem" tag="1" title="Check In" id="eG5-QO-wsY">
                         <inset key="imageInsets" minX="0.0" minY="-22" maxX="0.0" maxY="0.0"/>
                     </tabBarItem>
                 </viewController>
@@ -270,7 +270,6 @@
     </scenes>
     <resources>
         <image name="bar_chart" width="30" height="30"/>
-        <image name="checkin" width="50" height="50"/>
         <image name="clear" width="1" height="1"/>
         <image name="first" width="30" height="30"/>
         <image name="gear" width="22" height="22"/>

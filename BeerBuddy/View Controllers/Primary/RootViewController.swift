@@ -77,6 +77,25 @@ class RootViewController: UITabBarController, DrawerCoordinating
     {
         super.viewDidLoad()
         
+        addCheckInButton: do
+        {
+            let button = UIButton()
+            button.setBackgroundImage(UIImage.init(named: "check-in"), for: .normal)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.tintColor = Appearance.themeColor.darkened(by: 0.1)
+            
+            tabBar.addSubview(button)
+            tabBar.centerXAnchor.constraint(equalTo: button.centerXAnchor).isActive = true
+            tabBar.topAnchor.constraint(equalTo: button.centerYAnchor, constant: -15).isActive = true
+            button.heightAnchor.constraint(equalToConstant: 55).isActive = true
+            button.widthAnchor.constraint(equalToConstant: 55).isActive = true
+            
+            tabBar.tintColor = Appearance.themeColor.mixed(with: .white, by: 0.0)
+            
+            button.addTarget(self, action: #selector(showCheckInDrawer), for: .touchUpInside)
+        }
+        
+        
         syncUntappd(withCallback: { _ in })
         syncHealthKit()
         
@@ -398,6 +417,11 @@ class RootViewController: UITabBarController, DrawerCoordinating
         popup.addButtons([doneButton])
         
         self.present(popup, animated: true, completion: nil)
+    }
+    
+    @objc func showCheckInDrawer()
+    {
+        showCheckInDrawer(withModel: nil, orDate: nil)
     }
     
     func showCheckInDrawer(withModel model: Model? = nil, orDate date: Date? = nil)
