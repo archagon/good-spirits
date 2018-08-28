@@ -344,6 +344,7 @@ extension Database: DataWriteProtocolImmediate
                 
                 if let previousData = v
                 {
+                    // TODO: why are we merging twice?
                     var newData = datum
                     newData.merge(with: previousData)
                     

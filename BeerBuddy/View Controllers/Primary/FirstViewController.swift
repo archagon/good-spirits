@@ -668,7 +668,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         //    print("Incrementing...")
         //    handler(true)
         //}
-        let deleteAction = UIContextualAction.init(style: .destructive, title: "Delete")
+        let deleteAction = UIContextualAction.init(style: .destructive, title: (section == 0 ? "Dismiss" : "Delete"))
         { (action, view, handler) in
             appDebug("attempting delete")
             model.delete()

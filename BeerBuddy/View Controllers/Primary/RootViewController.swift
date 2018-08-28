@@ -274,6 +274,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
         {
             self.modelForCheckIn = model
             
+            controller.name = model.checkIn.drink.name
             controller.checkInDate = model.checkIn.time
             controller.defaultData = model.checkIn.drink
             

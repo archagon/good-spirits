@@ -13,7 +13,26 @@ extension Model
     // Checks for differences and only updates the lamport timestamp when differences are found.
     public func toData(withLamport t: DataLayer.Time, existingData: DataModel? = nil) -> DataModel
     {
+        var comparisonData: DataModel? = existingData
+        
+        // AB: Untappd approval is a special merge case. These checkins are saved to the database on receipt, and we
+        // don't want a device that receives an Untappd checkin to overwrite an already approved checkin on another
+        // device with the default data, just because the Lamport timestamp is higher. Ergo, the approved flag trumps all.
+        // TODO: This is a quick and dirty solution. Ideally, we need to update the Lamport timestamps as well. This
+        // only works because we're updating models atomically, not streaming individual LWW changes.
         if let existingData = existingData
+        {
+            if self.checkIn.untappdApproved && !existingData.checkIn.untappdApproved.v
+            {
+                comparisonData = nil
+            }
+            else if !checkIn.untappdApproved && existingData.checkIn.untappdApproved.v
+            {
+                return existingData
+            }
+        }
+        
+        if let existingData = comparisonData
         {
             func comp<T>(_ curr: T, _ prev: LamportValue<T>) -> LamportValue<T>
             {

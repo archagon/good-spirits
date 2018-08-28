@@ -121,8 +121,25 @@ public struct DataModel: Hashable, Equatable, Encodable, LamportQueriable, Merge
     {
         assert(self.metadata.id == with.metadata.id)
         
-        self.metadata.merge(with: with.metadata)
-        self.checkIn.merge(with: with.checkIn)
+        // AB: Untappd approval is a special merge case. These checkins are saved to the database on receipt, and we
+        // don't want a device that receives an Untappd checkin to overwrite an already approved checkin on another
+        // device with the default data, just because the Lamport timestamp is higher. Ergo, the approved flag trumps all.
+        // TODO: This is a quick and dirty solution. Ideally, we need to update the Lamport timestamps as well. This
+        // only works because we're updating models atomically, not streaming individual LWW changes.
+        if self.checkIn.untappdApproved.v && !with.checkIn.untappdApproved.v
+        {
+            return
+        }
+        else if !self.checkIn.untappdApproved.v && with.checkIn.untappdApproved.v
+        {
+            self.metadata = with.metadata
+            self.checkIn = with.checkIn
+        }
+        else
+        {
+            self.metadata.merge(with: with.metadata)
+            self.checkIn.merge(with: with.checkIn)
+        }
     }
 }
 
