@@ -254,7 +254,8 @@ class FirstViewController: UIViewController
         let calendar = DataLayer.calendar
         //let range = Time.currentWeek()
         
-        let from = self.calendar.currentPage
+        let from = DataLayer.calendar.date(bySettingHour: 0, minute: 0, second: 0, of: self.calendar.currentPage)!
+        assert(from == self.calendar.currentPage)
         let to = calendar.date(byAdding: .day, value: 7, to: from)!
         
         //self.cache?.token != nil && !fromScratch ? self.cache!.token : DataLayer.NullToken
@@ -279,25 +280,44 @@ class FirstViewController: UIViewController
                     appDebug("changes received with new token \(v.1)!")
                 }
                 
-                // NEXT: QQQ: move this
+                // TODO: KLUDGE: this doesn't exactly belong here
                 if self.cache == nil
                 {
                     self.calendar.isHidden = false
                 }
                 
                 // PERF: could be sorted, but need to double-check inequalities
-                let sortedOps = SortedArray<Model>.init(unsorted: v.0) { return $0.checkIn.time < $1.checkIn.time }
-                let sortedRegularOps = sortedOps.filter { $0.checkIn.untappdId == nil || $0.checkIn.untappdApproved }
-                let sortedUntappdOps = sortedOps.filter { $0.checkIn.untappdId != nil && !$0.checkIn.untappdApproved }
+                let ops = v.0
+                let sortedRegularOps = ops.filter { $0.checkIn.untappdId == nil || $0.checkIn.untappdApproved }
+                let sortedUntappdOps = ops.filter { $0.checkIn.untappdId != nil && !$0.checkIn.untappdApproved }
                 var outOps: [Int:[Model]] = [:]
                 
                 var startDay = from
                 var nextDay = calendar.date(byAdding: .day, value: 1, to: startDay)!
                 var i = 0
+                var mi = 0
+                
+                assert(sortedRegularOps.sorted(by: { $0.checkIn.time < $1.checkIn.time }) == sortedRegularOps)
                 
                 // TODO: check inequalities
+                // PERF: this is very slow at O(n)^2, need to iterate as in Stats
                 while nextDay <= to
                 {
+                    //var models: [Model] = []
+                    //while mi < sortedRegularOps.count
+                    //{
+                    //    let model = sortedRegularOps[i]
+                    //    if startDay <= model.checkIn.time && model.checkIn.time < nextDay
+                    //    {
+                    //        models.append(model)
+                    //        mi += 1
+                    //    }
+                    //    else
+                    //    {
+                    //        break
+                    //    }
+                    //}
+                    
                     let models: [Model] = sortedRegularOps.filter { startDay <= $0.checkIn.time && $0.checkIn.time < nextDay }
                     
                     if models.count > 0
@@ -390,6 +410,8 @@ class FirstViewController: UIViewController
                 }
                 
                 self.tabBarItem.badgeValue = sortedUntappdOps.count > 0 ? "\(sortedUntappdOps.count)" : nil
+                
+                self.updateTitle()
                 
                 progressAdjustment: do
                 {
@@ -807,14 +829,7 @@ extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalen
     
     func calendarCurrentPageDidChange(_ calendar: FSCalendar)
     {
-        let components = DataLayer.calendar.dateComponents([.month, .year], from: calendar.currentPage)
-        
-        let monthFormat = DateFormatter()
-        monthFormat.dateFormat = "MM"
-        let month = monthFormat.monthSymbols[components.month! - 1]
-        
-        self.navigationItem.title = "\(month) \(components.year!)"
-        
+        updateTitle()
         reloadData(animated: false, fromScratch: true)
     }
     
@@ -836,5 +851,16 @@ extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalen
     @IBAction func todayTapped(_ sender: UIBarButtonItem)
     {
         self.calendar.setCurrentPage(Date(), animated: true)
+    }
+    
+    func updateTitle()
+    {
+        let components = DataLayer.calendar.dateComponents([.month, .year], from: calendar.currentPage)
+        
+        let monthFormat = DateFormatter()
+        monthFormat.dateFormat = "MM"
+        let month = monthFormat.monthSymbols[components.month! - 1]
+        
+        self.navigationItem.title = "\(month) \(components.year!)"
     }
 }
