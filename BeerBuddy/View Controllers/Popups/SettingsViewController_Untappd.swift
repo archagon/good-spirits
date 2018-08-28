@@ -18,35 +18,34 @@ extension SettingsViewController
             let genericCell = aCell ?? self.tableView.cellForRow(at: IndexPath.init(row: 0, section: section)),
             let cell = genericCell as? SubtitleToggleCell
         {
-            tableView.beginUpdates()
-            if self.untappdLoginPending
+            switch Untappd.shared.loginStatus
             {
-                tableView.beginUpdates()
-                cell.disable()
-                cell.toggle.isEnabled = false
-                tableView.endUpdates()
-            }
-            else
-            {
-                switch Untappd.shared.loginStatus
+            case .unreachable:
+                cell.enable()
+                cell.toggle.isOn = false
+                cell.toggle.isEnabled = true
+                cell.detailTextLabel?.text = "Untappd unreachable, please check your internet connection"
+                cell.detailTextLabel?.textColor = UIColor.red
+            case .disabled:
+                cell.enable()
+                cell.toggle.isOn = false
+                cell.toggle.isEnabled = true
+                cell.detailTextLabel?.text = nil
+                cell.detailTextLabel?.textColor = UIColor.black
+            case .enabledAndAuthorized:
+                cell.enable()
+                cell.toggle.isOn = true
+                cell.toggle.isEnabled = true
+                if let name = Defaults.untappdDisplayName
                 {
-                case .unreachable:
-                    cell.enable()
-                    cell.toggle.isOn = false
-                    cell.toggle.isEnabled = true
-                    cell.detailTextLabel?.text = "Untappd unreachable, please check your internet connection"
-                case .disabled:
-                    cell.enable()
-                    cell.toggle.isOn = false
-                    cell.toggle.isEnabled = true
-                case .enabledAndAuthorized:
-                    cell.enable()
-                    cell.toggle.isOn = true
-                    cell.toggle.isEnabled = true
-                    cell.detailTextLabel?.text = "Logged in as Blah"
+                    cell.detailTextLabel?.text = "Logged in as \(name)"
                 }
+                else
+                {
+                    cell.detailTextLabel?.text = "Logged in"
+                }
+                cell.detailTextLabel?.textColor = UIColor.black
             }
-            tableView.endUpdates()
         }
     }
 }

@@ -26,11 +26,11 @@ public struct Defaults
     
     // Having this set means HK was authorized at some point.
     private static let healthKitEnabledKey: String = "HealthKitEnabled"
-    private static let healthKitBaselineKey: String = "HealthKitBaseline"
+    private static let healthKitBaselineKey: String = "HealthKitBaseline" //TODO: ONLY to be used from RootViewController!
     
     // Having this set means Untappd was authorized.
     private static let untappdTokenKey: String = "UntappdToken"
-    private static let untappdBaselineKey: String = "UntappdBaseline"
+    private static let untappdBaselineKey: String = "UntappdBaseline" //TODO: ONLY to be used from RootViewController!
     private static let untappdDisplayNameKey: String = "UntappdDisplayName"
     private static let untappdRateLimitKey: String = "UntappdRateLimit"
     private static let untappdRateLimitRemainingKey: String = "UntappdRateLimitRemaining"

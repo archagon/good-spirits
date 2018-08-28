@@ -132,7 +132,7 @@ class StartupViewController: UITableViewController
         self.tableView.sectionFooterHeight = UITableViewAutomaticDimension
         self.tableView.estimatedSectionFooterHeight = 50
         
-        self.notificationObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil)
+        self.notificationObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: OperationQueue.main)
         { [unowned `self`] n in
             self.quickReloadSection(3)
         }

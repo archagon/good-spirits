@@ -203,6 +203,7 @@ class FirstViewController: UIViewController
                 widget.addTarget(self, action: #selector(refreshUntappd), for: .valueChanged)
                 
                 self.tableView.refreshControl = widget
+                widget.layer.zPosition = -1
             }
         }
         else
@@ -213,9 +214,24 @@ class FirstViewController: UIViewController
     
     @objc func refreshUntappd(_ sender: UIRefreshControl)
     {
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: false)
-        { _ in
-            Untappd.shared.refreshCheckIns(withData: self.data!) //QQQ:
+        if let controller = (self.tabBarController as? RootViewController)
+        {
+            controller.syncUntappd
+            { err in
+                sender.endRefreshing()
+                if let error = err
+                {
+                    // KLUDGE: without this, the refresh control does not stop
+                    let when = DispatchTime.now() + 0.2
+                    DispatchQueue.main.asyncAfter(deadline: when)
+                    {
+                        appAlert("Could not sync with Untappd: \(error.localizedDescription).")
+                    }
+                }
+            }
+        }
+        else
+        {
             sender.endRefreshing()
         }
     }

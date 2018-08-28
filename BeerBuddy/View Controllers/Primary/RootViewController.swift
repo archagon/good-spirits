@@ -32,6 +32,9 @@ class RootViewController: UITabBarController, DrawerCoordinating
             data = DataLayer.init(withStore: dataImpl)
         }
         
+        syncUntappd(withCallback: { _ in })
+        syncHealthKit()
+        
         return data
     }()
     
@@ -77,6 +80,14 @@ class RootViewController: UITabBarController, DrawerCoordinating
     {
         super.viewDidLoad()
         
+        untappdTimer: do
+        {
+            Timer.scheduledTimer(withTimeInterval: 60, repeats: true)
+            { [weak `self`] _ in
+                self?.syncUntappd(withCallback: { _ in })
+            }
+        }
+        
         popupSetup: do
         {
             let appearance = PopupDialogOverlayView.appearance()
@@ -95,24 +106,36 @@ class RootViewController: UITabBarController, DrawerCoordinating
         }
         self.defaultsObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: OperationQueue.main)
         { [weak `self`] _ in
-            if Defaults.healthKitEnabled && Defaults.healthKitBaseline == nil
+            healthKit: do
             {
-                appDebug("refreshing HK baseline...")
-                self?.data.getModels(fromIncludingDate: Date.distantFuture, toExcludingDate: Date.distantFuture)
+                if Defaults.healthKitEnabled && Defaults.healthKitBaseline == nil
                 {
-                    switch $0
+                    appDebug("refreshing HK baseline...")
+                    self?.data.getModels(fromIncludingDate: Date.distantFuture, toExcludingDate: Date.distantFuture)
                     {
-                    case .error(let e):
-                        appError("error fetching token -- \(e.localizedDescription)")
-                    case .value(let v):
-                        Defaults.healthKitBaseline = v.1
+                        switch $0
+                        {
+                        case .error(let e):
+                            appError("error fetching token -- \(e.localizedDescription)")
+                        case .value(let v):
+                            Defaults.healthKitBaseline = v.1
+                        }
                     }
                 }
+                else if !Defaults.healthKitEnabled && Defaults.healthKitBaseline != nil
+                {
+                    appDebug("clearing HK baseline...")
+                    Defaults.healthKitBaseline = nil
+                }
             }
-            else if !Defaults.healthKitEnabled && Defaults.healthKitBaseline != nil
+            
+            untappd: do
             {
-                appDebug("clearing HK baseline...")
-                Defaults.healthKitBaseline = nil
+                if Defaults.untappdToken == nil && Defaults.untappdBaseline != nil
+                {
+                    Defaults.untappdBaseline = nil
+                    Untappd.shared.clearCaches()
+                }
             }
         }
     }
@@ -124,6 +147,119 @@ class RootViewController: UITabBarController, DrawerCoordinating
         if !Defaults.configured
         {
             showLimitPopup()
+        }
+    }
+    
+    public func syncUntappd(withCallback block: @escaping (Error?)->Void)
+    {
+        switch Untappd.shared.loginStatus
+        {
+        case .unreachable:
+            block(Untappd.UntappdError.notReachable)
+            return
+        case .disabled:
+            block(Untappd.UntappdError.notEnabled)
+            return
+        case .enabledAndAuthorized:
+            break
+        }
+        
+        if Defaults.untappdBaseline == nil
+        {
+            appWarning("Untappd token not found, new user?")
+        }
+        else
+        {
+            appDebug("syncing with Untappd using baseline \(Defaults.untappdBaseline!)")
+        }
+        
+        Untappd.shared.userCheckIns(withBaseline: Defaults.untappdBaseline)
+        { [weak `self`] in
+            switch $0
+            {
+            case .error(let e):
+                appWarning("Untappd refresh error -- \(e.localizedDescription)")
+                block(e)
+            case .value(let checkIns):
+                updateBaseline: do
+                {
+                    let highestCheckIn = checkIns.max { $0.checkin_id < $1.checkin_id }
+                    if let highestBaseline = highestCheckIn?.checkin_id
+                    {
+                        appDebug("set baseline to \(highestBaseline)")
+                        Defaults.untappdBaseline = highestBaseline
+                    }
+                }
+                
+                for checkin in checkIns
+                {
+                    let time: Date
+                    if let stringTime = checkin.created_at
+                    {
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = Untappd.dateFormat
+                        if let date = formatter.date(from: stringTime)
+                        {
+                            time = date
+                        }
+                        else
+                        {
+                            appWarning("could not parse date from \(stringTime)")
+                            time = Date()
+                        }
+                    }
+                    else
+                    {
+                        time = Date()
+                    }
+                    let untappdId = checkin.checkin_id
+                    let id = GlobalID.init(siteID: Untappd.untappdOwner, operationIndex: DataLayer.Index(untappdId))
+                    let style: DrinkStyle
+                    if let stringStyle = checkin.beer.beer_style
+                    {
+                        if stringStyle.hasPrefix("Mead")
+                        {
+                            style = .mead
+                        }
+                        else if stringStyle.hasPrefix("Cider")
+                        {
+                            style = .cider
+                        }
+                        else
+                        {
+                            style = .beer
+                        }
+                    }
+                    else
+                    {
+                        style = .beer
+                    }
+                    let abv = checkin.beer.beer_abv != nil ? checkin.beer.beer_abv! / 100 : style.defaultABV
+                    
+                    let drink = Model.Drink.init(name: checkin.beer.beer_name, style: style, abv: abv, price: nil, volume: style.defaultVolume)
+                    let checkIn = Model.CheckIn.init(untappdId: Model.ID(untappdId), untappdApproved: false, time: time, drink: drink)
+                    let meta = Model.Metadata.init(id: id, creationTime: time) //TODO: this should be the current time, but w/o overwriting existing data
+                    let model = Model.init(metadata: meta, checkIn: checkIn)
+                    
+                    // AB: we "sync" here because of our fake Untappd UUID scheme
+                    self?.data.save(model: model, syncing: true)
+                    {
+                        switch $0
+                        {
+                        case .error(let e):
+                            appError("Untappd commit error -- \(e.localizedDescription)")
+                        case .value(_):
+                            appDebug("saved \(untappdId)!")
+                        }
+                    }
+                }
+                
+                onMain
+                {
+                    // TODO: technically, does not take database calls into consideration
+                    block(nil)
+                }
+            }
         }
     }
     

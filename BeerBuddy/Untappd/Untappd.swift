@@ -22,8 +22,8 @@ class Untappd
     private static let apiURL: URL = URL.init(string: "https://api.untappd.com")!
     private static let rateLimitHeader = "X-Ratelimit-Limit"
     private static let rateLimitRemainingHeader = "X-Ratelimit-Remaining"
-    private static let dateFormat = "E, d MMM yyyy HH:mm:ss Z"
-    private static let untappdOwner: DataLayer.SiteID = UUID.init(uuidString: "a7419258-9b21-4eca-a719-5ce2963f42e0")!
+    public static let dateFormat = "E, d MMM yyyy HH:mm:ss Z"
+    public static let untappdOwner: DataLayer.SiteID = UUID.init(uuidString: "a7419258-9b21-4eca-a719-5ce2963f42e0")!
     //https://api.untappd.com/v4/method_name?access_token=ACESSTOKENHERE
     
     public static let shared = Untappd()
@@ -32,21 +32,24 @@ class Untappd
     {
         case notReachable
         case notEnabled
-        case notReady
         case webError(type: String?, message: String?)
+        case rateLimitExceeded
+        case unknown
         
         public var errorDescription: String?
         {
             switch self
             {
             case .notReachable:
-                return "not reachable"
+                return "no connection to Untappd servers"
             case .notEnabled:
                 return "not enabled"
-            case .notReady:
-                return "not ready"
             case .webError(let type, let message):
                 return "web error\(type != nil ? " \(type!)" : "")\(message != nil ? ": \(message!)" : "")"
+            case .unknown:
+                return "unknown"
+            case .rateLimitExceeded:
+                return "too many Untappd calls in an hour, please try again a bit later"
             }
         }
     }
@@ -102,7 +105,7 @@ class Untappd
         Defaults.untappdToken = token
         
         // populates the caches
-        userCheckIns(withBaseline: false, limit: 1)
+        userCheckIns(withBaseline: nil, limit: 1)
         {
             switch $0
             {
@@ -114,96 +117,7 @@ class Untappd
         }
     }
     
-    // QQQ:
-    public func refreshCheckIns(withData data: DataLayer) -> UntappdError?
-    {
-        switch self.loginStatus
-        {
-        case .unreachable:
-            return UntappdError.notReachable
-        case .disabled:
-            return UntappdError.notEnabled
-        case .enabledAndAuthorized:
-            break
-        }
-        
-        // QQQ:
-        userCheckIns
-        {
-            switch $0
-            {
-            case .error(let e):
-                appError("Untappd refresh error -- \(e.localizedDescription)")
-            case .value(let checkIns):
-                for checkin in checkIns
-                {
-                    let time: Date
-                    if let stringTime = checkin.created_at
-                    {
-                        let formatter = DateFormatter()
-                        formatter.dateFormat = Untappd.dateFormat
-                        if let date = formatter.date(from: stringTime)
-                        {
-                            time = date
-                        }
-                        else
-                        {
-                            appWarning("could not parse date from \(stringTime)")
-                            time = Date()
-                        }
-                    }
-                    else
-                    {
-                        time = Date()
-                    }
-                    let untappdId = checkin.checkin_id
-                    let id = GlobalID.init(siteID: Untappd.untappdOwner, operationIndex: DataLayer.Index(untappdId))
-                    let style: DrinkStyle
-                    if let stringStyle = checkin.beer.beer_style
-                    {
-                        if stringStyle.hasPrefix("Mead")
-                        {
-                            style = .mead
-                        }
-                        else if stringStyle.hasPrefix("Cider")
-                        {
-                            style = .cider
-                        }
-                        else
-                        {
-                            style = .beer
-                        }
-                    }
-                    else
-                    {
-                        style = .beer
-                    }
-                    let abv = checkin.beer.beer_abv != nil ? checkin.beer.beer_abv! / 100 : style.defaultABV
-                    
-                    let drink = Model.Drink.init(name: checkin.beer.beer_name, style: style, abv: abv, price: nil, volume: style.defaultVolume)
-                    let checkIn = Model.CheckIn.init(untappdId: Model.ID(untappdId), untappdApproved: false, time: time, drink: drink)
-                    let meta = Model.Metadata.init(id: id, creationTime: time) //TODO: this should be the current time, but w/o overwriting existing data
-                    let model = Model.init(metadata: meta, checkIn: checkIn)
-                    
-                    // AB: we "sync" here because of our fake Untappd UUID scheme
-                    data.save(model: model, syncing: true)
-                    {
-                        switch $0
-                        {
-                        case .error(let e):
-                            appError("Untappd commit error -- \(e.localizedDescription)")
-                        case .value(_):
-                            appDebug("saved \(untappdId)!")
-                        }
-                    }
-                }
-            }
-        }
-        
-        return nil
-    }
-    
-    func userCheckIns(withBaseline: Bool = true, limit: Int = 50, block: @escaping (MaybeError<[CheckIn]>)->())
+    func userCheckIns(withBaseline: Int? = nil, limit: Int = 50, block: @escaping (MaybeError<[CheckIn]>)->())
     {
         switch self.loginStatus
         {
@@ -217,7 +131,11 @@ class Untappd
             break
         }
         
-        let token = Defaults.untappdToken!
+        guard let token = Defaults.untappdToken else
+        {
+            block(.error(e: UntappdError.unknown))
+            return
+        }
         
         //let minId = (baseline != nil ? "&min_id=\(baseline!)" : "")
         let minId = "" //AB: min_id has age requirements that make it unsuitable for our use case
@@ -234,7 +152,10 @@ class Untappd
             
             if let error = error
             {
-                block(.error(e: error))
+                onMain
+                {
+                    block(.error(e: error))
+                }
                 return
             }
             
@@ -250,15 +171,17 @@ class Untappd
                     
                     // PERF: these probably arrive in order, so we can binary search
                     var checkIns = newData.response?.checkins?.items ?? []
-                    if withBaseline, let baseline = Defaults.untappdBaseline
+                    if let baseline = withBaseline
                     {
                         checkIns = checkIns.filter { $0.checkin_id > baseline }
                     }
                     
                     self?.updateDisplayName(newData)
-                    self?.updateBaseline(newData)
                     
-                    block(.value(v: checkIns))
+                    onMain
+                    {
+                        block(.value(v: checkIns))
+                    }
                 }
                 catch
                 {
@@ -269,7 +192,10 @@ class Untappd
                     }
                     catch
                     {
-                        block(.error(e: error))
+                        onMain
+                        {
+                            block(.error(e: error))
+                        }
                     }
                 }
             }
@@ -310,22 +236,14 @@ class Untappd
         }
     }
     
-    func updateBaseline(_ response: Response<CheckInsResponse>)
-    {
-        let highestCheckIn = (response.response?.checkins?.items ?? []).max { $0.checkin_id < $1.checkin_id }
-        if let highestBaseline = highestCheckIn?.checkin_id
-        {
-            appDebug("set baseline to \(highestBaseline)")
-            Defaults.untappdBaseline = highestBaseline
-        }
-    }
-    
     func clearCaches()
     {
-        Defaults.untappdToken = nil
-        Defaults.untappdBaseline = nil
-        Defaults.untappdDisplayName = nil
-        Defaults.untappdRateLimit = nil
-        Defaults.untappdRateLimitRemaining = nil
+        appDebug("clearing Untappd caches")
+        
+        // TODO: should be part of Defaults
+        if Defaults.untappdToken != nil { Defaults.untappdToken = nil }
+        if Defaults.untappdDisplayName != nil { Defaults.untappdDisplayName = nil }
+        if Defaults.untappdRateLimit != nil { Defaults.untappdRateLimit = nil }
+        if Defaults.untappdRateLimitRemaining != nil { Defaults.untappdRateLimitRemaining = nil }
     }
 }

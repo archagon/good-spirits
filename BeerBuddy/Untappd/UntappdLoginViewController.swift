@@ -73,15 +73,16 @@ public class UntappdLoginViewController: UIViewController
                         })
                     }
                 }
+                
+                onMain
+                {
+                    let url = Untappd.requestURL
+                    let request = URLRequest.init(url: URL.init(string: url)!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 15)
+                    self.tokenBlock = block
+                    self.webView.load(request)
+                }
             }
         }
-        
-        Untappd.shared.clearCaches()
-        
-        let url = Untappd.requestURL
-        let request = URLRequest.init(url: URL.init(string: url)!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 15)
-        self.tokenBlock = block
-        self.webView.load(request)
     }
 }
 

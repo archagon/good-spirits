@@ -15,13 +15,18 @@ class HealthKit
 {
     static let shared = HealthKit()
     
-    public enum HealthKitError: Error
+    public enum HealthKitError: StringLiteralType, Error, LocalizedError
     {
         case notAvailable
         case notAuthorized
         case notEnabled
         case notReady
         case unknown
+        
+        public var errorDescription: String?
+        {
+            return self.rawValue
+        }
     }
     
     // TOOD: should have enabledAndUnauthorized so that we can still disable HK even when unauthorized

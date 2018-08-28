@@ -31,7 +31,7 @@ public class CheckInCell: UITableViewCell
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        self.backgroundColor = nil
+        //self.backgroundColor = nil
         self.prose.backgroundColor = .clear
         self.stats.backgroundColor = .clear
         self.name.backgroundColor = .clear

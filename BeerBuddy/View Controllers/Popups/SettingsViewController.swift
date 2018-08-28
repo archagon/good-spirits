@@ -36,7 +36,8 @@ class SettingsViewController: UITableViewController
         case enabledAndAuthorized
     }
     
-    var untappdLoginPending: Bool = false
+    // TODO: we should use this so that a user can't go to the Untappd controller more than once
+    //var untappdLoginPending: Bool = false
     
     // IAP stuff
     var products: [SKProduct]? = nil
@@ -67,16 +68,28 @@ class SettingsViewController: UITableViewController
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "PriceCell")
         self.tableView.register(SubtitleToggleCell.self, forCellReuseIdentifier: "ToggleCell")
+        self.tableView.register(SubtitleToggleCell.self, forCellReuseIdentifier: "HealthKitCell")
+        self.tableView.register(SubtitleToggleCell.self, forCellReuseIdentifier: "UntappdCell")
         
         self.tableView.sectionFooterHeight = UITableViewAutomaticDimension
         self.tableView.estimatedSectionFooterHeight = 50
         
-        let activeNotification = NotificationCenter.default.addObserver(forName: Notification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil)
+        let activeNotification = NotificationCenter.default.addObserver(forName: Notification.Name.UIApplicationDidBecomeActive, object: nil, queue: OperationQueue.main)
         { [weak `self`] _ in
             self?.updateHealthKitToggleAppearance()
             self?.updateUntappdToggleAppearance()
         }
         notificationObservers.append(activeNotification)
+
+        let defaultsNotification = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: OperationQueue.main)
+        { [weak `self`] _ in
+            onMain
+            {
+                self?.updateHealthKitToggleAppearance()
+                self?.updateUntappdToggleAppearance()
+            }
+        }
+        notificationObservers.append(defaultsNotification)
         
         SKPaymentQueue.default().add(self)
         
@@ -217,9 +230,9 @@ extension SettingsViewController
                 cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
             }
         case .untappd:
-            cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
+            cell = tableView.dequeueReusableCell(withIdentifier: "UntappdCell")!
         case .healthKit:
-            cell = tableView.dequeueReusableCell(withIdentifier: "ToggleCell")!
+            cell = tableView.dequeueReusableCell(withIdentifier: "HealthKitCell")!
         case .export:
             cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
         case .info:
@@ -546,22 +559,17 @@ extension SettingsViewController
             updateHealthKitToggleAppearance()
         }
         
-        if self.untappdLoginPending
-        {
-            return
-        }
+        sender.isOn = false
         
         // AB: we can't localize Untappd authorization to the Untappd singleton because it requires visiting a webpage
         switch Untappd.shared.loginStatus
         {
         case .unreachable:
-            print("ERROR: unreachable!")
             return
         case .disabled:
             if let token = Defaults.untappdToken
             {
                 Defaults.untappdToken = (sender.isOn ? token : nil)
-                appDebug("UNTAPPD available!")
             }
             else
             {
@@ -570,8 +578,6 @@ extension SettingsViewController
                 
                 if self.navigationController?.topViewController == self
                 {
-                    self.untappdLoginPending = true
-                    
                     self.navigationController?.pushViewController(controller, animated: true)
                     
                     controller.load
@@ -587,9 +593,6 @@ extension SettingsViewController
                         }
                         
                         self?.navigationController?.popToRootViewController(animated: true)
-                        
-                        self?.untappdLoginPending = false
-                        self?.updateUntappdToggleAppearance()
                     }
                 }
             }

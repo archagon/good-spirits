@@ -23,7 +23,7 @@ public class AddItemCell: UITableViewCell
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        self.backgroundColor = nil
+        //self.backgroundColor = nil
         self.caption.backgroundColor = .clear
         
         self.caption.isEditable = false
