@@ -145,16 +145,15 @@ class FirstViewController: UIViewController
             self.tableView.allowsMultipleSelectionDuringEditing = false
 
             self.tableView.rowHeight = UITableViewAutomaticDimension
-            self.tableView.estimatedRowHeight = 30 //TODO: actual estimate
+            self.tableView.estimatedRowHeight = 30
         }
-        
-        self.reloadData(animated: false, fromScratch: false)
         
         self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
         { [unowned `self`] _ in
             appDebug("requesting database changes with token \(self.cache?.token ?? DataLayer.NullToken)...")
             self.reloadData(animated: true, fromScratch: false)
         }
+        
         self.notificationObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: OperationQueue.main)
         { [unowned `self`] _ in
             // KLUDGE: ensures that currentPage is set to the correct value by the time data is reloaded
@@ -174,16 +173,17 @@ class FirstViewController: UIViewController
                 self.calendar.setCurrentPage(offset2, animated: false)
             }
             
-            if Defaults.untappdToken != nil
+            if Defaults.untappdToken != nil && self.tableView.refreshControl == nil
             {
                 self.setupUntappdPullToRefresh(true)
             }
-            else
+            else if Defaults.untappdToken == nil && self.tableView.refreshControl != nil
             {
                 self.setupUntappdPullToRefresh(false)
             }
         }
         
+        self.reloadData(animated: false, fromScratch: false)
         setupUntappdPullToRefresh(Defaults.untappdToken != nil)
     }
     
@@ -417,7 +417,6 @@ class FirstViewController: UIViewController
         if self.cache.data[0]?.count ?? 0 > 0
         {
             self.tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: true)
-            //self.tableView.setContentOffset(CGPoint.init(x: 0, y: -self.tableView.contentInset.top), animated: true)
         }
     }
 }
@@ -630,40 +629,80 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         
         let section = indexPath.section
         let sectionData = self.cache.data[section] ?? []
-        if section != 0
+        if section == 0
         {
-            return UISwipeActionsConfiguration.init(actions: [])
+            var model = sectionData[indexPath.row]
+            
+            let volumes = model.checkIn.drink.style.assortedVolumes
+            var actions: [UIContextualAction] = []
+            for i in 0..<min(volumes.count, 3)
+            {
+                let volume = volumes[i]
+                let volumeAction = UIContextualAction.init(style: .normal, title: "Approve\n\(Format.format(volume: volume))")
+                { [weak `self`] (action, view, handler) in
+                    appDebug("attempting approve")
+                    model.approve()
+                    model.checkIn.drink.volume = volume
+                    if let data = self?.data
+                    {
+                        data.save(model: model) { _ in handler(false) }
+                    }
+                    else
+                    {
+                        handler(false)
+                    }
+                }
+                volumeAction.backgroundColor = Appearance.themeColor.darkened(by: 0.07 * CGFloat(i))
+                actions.append(volumeAction)
+            }
+            
+            let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
+            actionsConfig.performsFirstActionWithFullSwipe = false
+            
+            return actionsConfig
         }
-        
-        var model = sectionData[indexPath.row]
-        
-        let volumes = model.checkIn.drink.style.assortedVolumes
-        var actions: [UIContextualAction] = []
-        for i in 0..<min(volumes.count, 3)
+        else
         {
-            let volume = volumes[i]
-            let volumeAction = UIContextualAction.init(style: .normal, title: "Approve\n\(Format.format(volume: volume))")
-            { (action, view, handler) in
-                appDebug("attempting approve")
-                model.approve()
-                model.checkIn.drink.volume = volume
-                if let data = self.data
+            if indexPath.row >= sectionData.count
+            {
+                return UISwipeActionsConfiguration.init(actions: [])
+            }
+            
+            let model = sectionData[indexPath.row]
+            
+            let section = indexPath.section
+            let sectionDay = section - 1
+            let startDay = self.cache.calendar.date(byAdding: .day, value: sectionDay, to: self.cache.range.0)!
+            let endDay = self.cache.calendar.date(byAdding: .day, value: sectionDay + 1, to: startDay)!
+            let lastDate = self.cache.data[section]?.last?.checkIn.time ?? startDay
+            
+            var actions: [UIContextualAction] = []
+            let againAction = UIContextualAction.init(style: .normal, title: "Add\nOne")
+            { [weak `self`] (action, view, handler) in
+                if let data = self?.data
                 {
-                    data.save(model: model) { _ in handler(false) }
+                    var newModel = model
+                    
+                    newModel.metadata = Model.Metadata.init(id: GlobalID.init(siteID: data.owner, operationIndex: DataLayer.wildcardIndex), creationTime: Date())
+                    newModel.checkIn.untappdId = nil
+                    newModel.checkIn.untappdApproved = false
+                    newModel.checkIn.time = self?.checkInDate(forEndDay: endDay, withLastDay: lastDate) ?? Date()
+                    
+                    data.save(model: newModel) { _ in handler(false) }
                 }
                 else
                 {
                     handler(false)
                 }
             }
-            volumeAction.backgroundColor = Appearance.themeColor.darkened(by: 0.07 * CGFloat(i))
-            actions.append(volumeAction)
+            againAction.backgroundColor = Appearance.themeColor.darkened(by: 0)
+            actions.append(againAction)
+            
+            let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
+            actionsConfig.performsFirstActionWithFullSwipe = true
+            
+            return actionsConfig
         }
-        
-        let actionsConfig = UISwipeActionsConfiguration.init(actions: actions)
-        actionsConfig.performsFirstActionWithFullSwipe = false
-        
-        return actionsConfig
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
@@ -685,10 +724,10 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         //    handler(true)
         //}
         let deleteAction = UIContextualAction.init(style: .destructive, title: (section == 0 ? "Dismiss" : "Delete"))
-        { (action, view, handler) in
+        { [weak `self`] (action, view, handler) in
             appDebug("attempting delete")
             model.delete()
-            if let data = self.data
+            if let data = self?.data
             {
                 data.save(model: model) { _ in handler(false) }
             }
@@ -718,9 +757,8 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
             let sectionDay = section - 1
             
             let startDay = self.cache.calendar.date(byAdding: .day, value: sectionDay, to: self.cache.range.0)!
-            let endDay = self.cache.calendar.date(byAdding: .day, value: sectionDay + 1, to: self.cache.range.0)!
+            let endDay = self.cache.calendar.date(byAdding: .day, value: sectionDay + 1, to: startDay)!
             let lastDate = self.cache.data[section]?.last?.checkIn.time ?? startDay
-            let nextDate = self.cache.calendar.date(byAdding: .minute, value: 1, to: lastDate)!
             
             if startDay.today(self.cache.calendar)
             {
@@ -729,17 +767,7 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
                 return
             }
             
-            let date: Date
-            
-            if nextDate >= endDay
-            {
-                // AB: exceptional case where we're down to the last minute in a day
-                date = Date.init(timeIntervalSince1970: (lastDate.timeIntervalSince1970 + endDay.timeIntervalSince1970) / 2)
-            }
-            else
-            {
-                date = nextDate
-            }
+            let date = checkInDate(forEndDay: endDay, withLastDay: lastDate)
             
             (self.tabBarController as? RootViewController)?.showCheckInDrawer(withModel: nil, orDate: date)
         }
@@ -747,6 +775,25 @@ extension FirstViewController: UITableViewDataSource, UITableViewDelegate
         {
             (self.tabBarController as? RootViewController)?.showCheckInDrawer(withModel: item)
         }
+    }
+    
+    func checkInDate(forEndDay endDay: Date, withLastDay lastDay: Date) -> Date
+    {
+        let nextDate = self.cache.calendar.date(byAdding: .minute, value: 1, to: lastDay)!
+        
+        let date: Date
+        
+        if nextDate >= endDay
+        {
+            // AB: exceptional case where we're down to the last minute in a day
+            date = Date.init(timeIntervalSince1970: (lastDay.timeIntervalSince1970 + endDay.timeIntervalSince1970) / 2)
+        }
+        else
+        {
+            date = nextDate
+        }
+        
+        return date
     }
 }
 
