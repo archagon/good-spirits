@@ -99,7 +99,6 @@ class RootViewController: UITabBarController, DrawerCoordinating
             containerAppearance.shadowOffset = CGSize(width: 0, height: 4)
         }
         
-        // TODO: this probably does not belong here, either
         self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
         { [weak `self`] _ in
             self?.syncHealthKit()
@@ -131,10 +130,14 @@ class RootViewController: UITabBarController, DrawerCoordinating
             
             untappd: do
             {
-                if Defaults.untappdToken == nil && Defaults.untappdBaseline != nil
+                if Defaults.untappdToken != nil && Defaults.untappdBaseline == nil
+                {
+                    // AB: this sets the baseline
+                    self?.syncUntappd(withCallback: { _ in })
+                }
+                else if Defaults.untappdToken == nil && Defaults.untappdBaseline != nil
                 {
                     Defaults.untappdBaseline = nil
-                    Untappd.shared.clearCaches()
                 }
             }
         }
@@ -164,11 +167,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
             break
         }
         
-        if Defaults.untappdBaseline == nil
-        {
-            appWarning("Untappd token not found, new user?")
-        }
-        else
+        if Defaults.untappdBaseline != nil
         {
             appDebug("syncing with Untappd using baseline \(Defaults.untappdBaseline!)")
         }
@@ -264,7 +263,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
                 
                 onMain
                 {
-                    // TODO: technically, does not take database calls into consideration
+                    // TODO: technically, does not take database calls into consideration; might have errors
                     block(nil)
                 }
             }
@@ -498,7 +497,6 @@ extension RootViewController: CheckInViewControllerDelegate
         return DataLayer.calendar
     }
     
-    // TODO: check in for arbitrary date
     public func committed(drink: Model.Drink, onDate: Date?, for: CheckInViewController)
     {
         let updatedModel: Model

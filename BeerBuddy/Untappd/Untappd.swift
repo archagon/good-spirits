@@ -101,6 +101,7 @@ class Untappd
             return
         }
         
+        // TODO: this might not belong here, given that it's also done in settings VC
         clearCaches()
         Defaults.untappdToken = token
         
@@ -244,6 +245,7 @@ class Untappd
         }
     }
     
+    // AKA "deauth".
     func clearCaches()
     {
         appDebug("clearing Untappd caches")

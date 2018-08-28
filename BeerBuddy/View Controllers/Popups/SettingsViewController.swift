@@ -92,7 +92,6 @@ class SettingsViewController: UITableViewController
         notificationObservers.append(defaultsNotification)
         
         SKPaymentQueue.default().add(self)
-        
         requestProducts()
     }
     
@@ -493,6 +492,7 @@ extension SettingsViewController
             tableView.deselectRow(at: indexPath, animated: true)
         case .export:
             appDebug("exporting")
+            tableView.deselectRow(at: indexPath, animated: true)
             
             let controller = UIAlertController.init(title: nil, message: nil, preferredStyle: .actionSheet)
             controller.addAction(UIAlertAction.init(title: "SQLite Database", style: .default, handler:
@@ -522,8 +522,6 @@ extension SettingsViewController
             }))
             controller.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
             self.present(controller, animated: true, completion: nil)
-            
-            tableView.deselectRow(at: indexPath, animated: true)
         case .info:
             if row == 0
             {
@@ -593,16 +591,13 @@ extension SettingsViewController
                         }
                         
                         self?.navigationController?.popToRootViewController(animated: true)
-                        
-                        // AB: this seeds the baseline
-                        (self?.presentingViewController as? RootViewController)?.syncUntappd(withCallback: { _ in })
                     }
                 }
             }
         case .enabledAndAuthorized:
             if !sender.isOn
             {
-                Defaults.untappdToken = nil
+                Untappd.shared.clearCaches()
             }
         }
     }
