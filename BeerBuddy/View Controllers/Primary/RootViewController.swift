@@ -20,7 +20,13 @@ class RootViewController: UITabBarController, DrawerCoordinating
         let data: DataLayer
         
         //let path: String? = (NSTemporaryDirectory() as NSString).appendingPathComponent("\(UUID()).db")
-        let path: String? = (NSTemporaryDirectory() as NSString).appendingPathComponent("data.db")
+        guard let dir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else
+        {
+            appError("could not open documents directory")
+            return DataLayer.init(withStore: Data_Null.init())
+        }
+        
+        let path: String? = (dir as NSString).appendingPathComponent("data.db")
         if let dataImpl = Data_GRDB.init(withDatabasePath: path)
         {
             data = DataLayer.init(withStore: dataImpl)
@@ -40,6 +46,8 @@ class RootViewController: UITabBarController, DrawerCoordinating
     
     // TODO: this is sort of a memory leak until the next controller shows up
     public var drawerDisplayController: DrawerDisplayController?
+    
+    var checkInButton: UIButton!
     
     var modelForCheckIn: Model?
     
@@ -64,12 +72,20 @@ class RootViewController: UITabBarController, DrawerCoordinating
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        if (UIApplication.shared.delegate as? AppDelegate)?.rootController == nil
+        {
+            (UIApplication.shared.delegate as? AppDelegate)?.rootController = self
+        }
         self.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
+        if (UIApplication.shared.delegate as? AppDelegate)?.rootController == nil
+        {
+            (UIApplication.shared.delegate as? AppDelegate)?.rootController = self
+        }
         self.delegate = self
     }
     
@@ -93,6 +109,8 @@ class RootViewController: UITabBarController, DrawerCoordinating
             tabBar.tintColor = Appearance.themeColor.mixed(with: .white, by: 0.0)
             
             button.addTarget(self, action: #selector(showCheckInDrawer), for: .touchUpInside)
+            
+            self.checkInButton = button
         }
         
         
@@ -553,6 +571,11 @@ extension RootViewController: CheckInViewControllerDelegate
         }
         
         self.modelForCheckIn = nil
+        
+        self.checkInButton.tintColor = Appearance.greenProgressColor
+        UIView.animate(withDuration: 1, delay: 0, options: UIViewAnimationOptions.curveEaseIn, animations: {
+            self.checkInButton.tintColor = Appearance.themeColor.darkened(by: 0.1)
+        }, completion: nil)
     }
     
     func updateDimensions(for vc: CheckInViewController)
