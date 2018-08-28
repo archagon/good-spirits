@@ -180,9 +180,14 @@ class SecondViewController: UIViewController
                                 
                                 while modelIndex >= 0, range.lowerBound <= sortedModels[modelIndex].checkIn.time
                                 {
-                                    price += sortedModels[modelIndex].checkIn.drink.price ?? 0
-                                    drinks += Stats(data).standardDrinks(sortedModels[modelIndex])
-                                    gramsAlcohol += Stats(data).gramsOfAlcohol(sortedModels[modelIndex])
+                                    let model = sortedModels[modelIndex]
+                                    
+                                    if model.checkIn.time <= now
+                                    {
+                                        price += model.checkIn.drink.price ?? 0
+                                        drinks += Stats(data).standardDrinks(model)
+                                        gramsAlcohol += Stats(data).gramsOfAlcohol(model)
+                                    }
                                     
                                     modelIndex -= 1
                                 }
@@ -208,7 +213,7 @@ class SecondViewController: UIViewController
                         var maxDrinksPerDay: Double = 0
                         var dateForMaxDrinks: Date = Date()
                         var totalPrice: Double = 0
-                        var numberOfDays = 0
+                        var numberOfDays = 1
                         
                         iterateDays: do
                         {
@@ -229,28 +234,32 @@ class SecondViewController: UIViewController
                                 while modelIndex >= 0, range.lowerBound <= sortedModels[modelIndex].checkIn.time
                                 {
                                     let model = sortedModels[modelIndex]
-                                    let checkInDrinks = Stats(data).standardDrinks(model)
-                                    drinks += checkInDrinks
                                     
-                                    facts: do
+                                    if model.checkIn.time <= now
                                     {
-                                        if volumeCounts[model.checkIn.drink.volume] == nil
+                                        let checkInDrinks = Stats(data).standardDrinks(model)
+                                        drinks += checkInDrinks
+                                        
+                                        facts: do
                                         {
-                                            volumeCounts[model.checkIn.drink.volume] = 0
+                                            if volumeCounts[model.checkIn.drink.volume] == nil
+                                            {
+                                                volumeCounts[model.checkIn.drink.volume] = 0
+                                            }
+                                            volumeCounts[model.checkIn.drink.volume]! += 1
+                                            
+                                            if drinkCounts[model.checkIn.drink.style] == nil
+                                            {
+                                                drinkCounts[model.checkIn.drink.style] = 0
+                                            }
+                                            drinkCounts[model.checkIn.drink.style]! += 1
+                                            
+                                            totalABV += model.checkIn.drink.abv
+                                            
+                                            totalDrinks += checkInDrinks
+                                            
+                                            totalPrice += model.checkIn.drink.price ?? 0
                                         }
-                                        volumeCounts[model.checkIn.drink.volume]! += 1
-                                        
-                                        if drinkCounts[model.checkIn.drink.style] == nil
-                                        {
-                                            drinkCounts[model.checkIn.drink.style] = 0
-                                        }
-                                        drinkCounts[model.checkIn.drink.style]! += 1
-                                        
-                                        totalABV += model.checkIn.drink.abv
-                                        
-                                        totalDrinks += checkInDrinks
-                                        
-                                        totalPrice += model.checkIn.drink.price ?? 0
                                     }
                                     
                                     modelIndex -= 1
@@ -310,7 +319,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
         }
         else
         {
-            return 4
+            return 3
         }
     }
     
@@ -322,7 +331,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
         }
         else if section == 1
         {
-            return 3
+            return 4
         }
         else
         {
@@ -528,34 +537,71 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
         {
             guard let facts = self.cache.facts else { return }
             
+            let regularAttributes: [NSAttributedStringKey:Any] = [
+                NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16, weight: .regular),
+                NSAttributedStringKey.foregroundColor:UIColor.white
+            ]
+            let boldAttributes: [NSAttributedStringKey:Any] = [
+                NSAttributedStringKey.font:UIFont.systemFont(ofSize: 16, weight: .bold),
+                NSAttributedStringKey.foregroundColor:UIColor.white
+            ]
+            
             if indexPath.row == 0
             {
                 if let limit = self.cache.weeklyLimit
                 {
-                    cell.label.text = "You are averaging \(Format.format(drinks: facts.averageDrinksPerDay)) drinks, compared to your target of \(Format.format(drinks: (limit / self.cache.standardDrink) / 7)) drinks per day."
+                    let text = "You are averaging $avg$ drinks per day, compared to your target of $target$ drinks per day."
+                    
+                    let attrText = NSMutableAttributedString.init(string: text, attributes: regularAttributes)
+                    attrText.replaceAnchorText("avg", value: Format.format(drinks: facts.averageDrinksPerDay), withDelimiter: "$", attributes: boldAttributes)
+                    attrText.replaceAnchorText("target", value: Format.format(drinks: (limit / self.cache.standardDrink) / 7), withDelimiter: "$", attributes: boldAttributes)
+                    
+                    cell.label.attributedText = attrText
                 }
                 else
                 {
-                    cell.label.text = "You are averaging \(Format.format(drinks: facts.averageDrinksPerDay)) drinks per day."
+                    let text = "You are averaging $avg$ drinks per day."
+                    
+                    let attrText = NSMutableAttributedString.init(string: text, attributes: regularAttributes)
+                    attrText.replaceAnchorText("avg", value: Format.format(drinks: facts.averageDrinksPerDay), withDelimiter: "$", attributes: boldAttributes)
+                    
+                    cell.label.attributedText = attrText
                 }
             }
             else if indexPath.row == 1
             {
-                cell.label.text = "Your favorite drink is \(Format.format(style: facts.favoriteDrink)) and your average ABV is \(Format.format(abv: facts.averageABV)). You tend to drink \(Format.format(volume: facts.typicalVolume)) servings."
+                let text = "Your favorite drink is $fav$ and your average ABV is $abv$. You tend to drink $vol$ servings."
+                
+                let attrText = NSMutableAttributedString.init(string: text, attributes: regularAttributes)
+                attrText.replaceAnchorText("fav", value: Format.format(style: facts.favoriteDrink), withDelimiter: "$", attributes: boldAttributes)
+                attrText.replaceAnchorText("abv", value: Format.format(abv: facts.averageABV), withDelimiter: "$", attributes: boldAttributes)
+                attrText.replaceAnchorText("vol", value: Format.format(volume: facts.typicalVolume), withDelimiter: "$", attributes: boldAttributes)
+                
+                cell.label.attributedText = attrText
             }
             else if indexPath.row == 2
             {
                 let format = DateFormatter()
                 format.dateFormat = "MMMM dd, yyyy"
                 
-                cell.label.text = "You drank on \(Format.format(abv: facts.percentDaysDrank)) of days. The most drinks you had was \(Format.format(drinks: facts.mostDrinksOnADay.1)), on \(format.string(from: facts.mostDrinksOnADay.0))."
+                let text = "You drank on $num$ of days. The most drinks you had was $most$, on $date$."
+                
+                let attrText = NSMutableAttributedString.init(string: text, attributes: regularAttributes)
+                attrText.replaceAnchorText("num", value: Format.format(abv: facts.percentDaysDrank), withDelimiter: "$", attributes: boldAttributes)
+                attrText.replaceAnchorText("most", value: Format.format(drinks: facts.mostDrinksOnADay.1), withDelimiter: "$", attributes: boldAttributes)
+                attrText.replaceAnchorText("date", value: format.string(from: facts.mostDrinksOnADay.0), withDelimiter: "$", attributes: boldAttributes)
+                
+                cell.label.attributedText = attrText
             }
             else
             {
-                cell.label.text = "You have spent a total of \(Format.format(price: facts.totalPrice))."
+                let text = "You have spent a total of $price$."
+                
+                let attrText = NSMutableAttributedString.init(string: text, attributes: regularAttributes)
+                attrText.replaceAnchorText("price", value: Format.format(price: facts.totalPrice), withDelimiter: "$", attributes: boldAttributes)
+                
+                cell.label.attributedText = attrText
             }
-            
-            cell.label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
             
             cell.bgView.backgroundColor = UIColor.purple.mixed(with: .white, by: 0.5)
         }

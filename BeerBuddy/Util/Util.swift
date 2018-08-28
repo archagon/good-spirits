@@ -168,6 +168,20 @@ extension String
     }
 }
 
+extension NSMutableAttributedString
+{
+    func replaceAnchorText<T: CustomStringConvertible>(_ anchor: String, value: T, withDelimiter delim: String = "$", attributes: [NSAttributedStringKey:Any]? = nil)
+    {
+        let aRange = (self.string as NSString).range(of: "\(delim)\(anchor)\(delim)")
+            
+        if aRange.location != NSNotFound
+        {
+            let attributedString = NSAttributedString.init(string: value.description, attributes: attributes)
+            self.replaceCharacters(in: aRange, with: attributedString)
+        }
+    }
+}
+
 public func ml(_ v: Double) -> Measurement<UnitVolume>
 {
     return Measurement<UnitVolume>.init(value: v, unit: .milliliters)
