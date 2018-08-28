@@ -32,9 +32,6 @@ class RootViewController: UITabBarController, DrawerCoordinating
             data = DataLayer.init(withStore: dataImpl)
         }
         
-        syncUntappd(withCallback: { _ in })
-        syncHealthKit()
-        
         return data
     }()
     
@@ -79,6 +76,9 @@ class RootViewController: UITabBarController, DrawerCoordinating
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        syncUntappd(withCallback: { _ in })
+        syncHealthKit()
         
         untappdTimer: do
         {
@@ -183,11 +183,19 @@ class RootViewController: UITabBarController, DrawerCoordinating
             case .value(let checkIns):
                 updateBaseline: do
                 {
+                    let hadBaseline = Defaults.untappdBaseline != nil
+                    
                     let highestCheckIn = checkIns.max { $0.checkin_id < $1.checkin_id }
                     if let highestBaseline = highestCheckIn?.checkin_id
                     {
                         appDebug("set baseline to \(highestBaseline)")
                         Defaults.untappdBaseline = highestBaseline
+                    }
+                    
+                    if !hadBaseline
+                    {
+                        block(nil)
+                        return
                     }
                 }
                 

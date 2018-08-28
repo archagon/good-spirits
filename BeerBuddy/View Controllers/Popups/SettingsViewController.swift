@@ -593,6 +593,9 @@ extension SettingsViewController
                         }
                         
                         self?.navigationController?.popToRootViewController(animated: true)
+                        
+                        // AB: this seeds the baseline
+                        (self?.presentingViewController as? RootViewController)?.syncUntappd(withCallback: { _ in })
                     }
                 }
             }
