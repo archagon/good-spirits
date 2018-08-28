@@ -214,6 +214,7 @@ class SecondViewController: UIViewController
                         var dateForMaxDrinks: Date = Date()
                         var totalPrice: Double = 0
                         var numberOfDays = 1
+                        var numberOfCheckIns: Int = 0
                         
                         iterateDays: do
                         {
@@ -259,6 +260,8 @@ class SecondViewController: UIViewController
                                             totalDrinks += checkInDrinks
                                             
                                             totalPrice += model.checkIn.drink.price ?? 0
+                                            
+                                            numberOfCheckIns += 1
                                         }
                                     }
                                     
@@ -298,7 +301,7 @@ class SecondViewController: UIViewController
                         let favoriteDrink = drinkCounts.max(by: { (first, second) -> Bool in first.value < second.value })!.key
                         let favoriteVolume = volumeCounts.max(by: { (first, second) -> Bool in first.value < second.value })!.key
                         
-                        let facts = Facts.init(averageDrinksPerDay: totalDrinks/Double(numberOfDays), averageABV: totalABV/Double(drinkingDays), favoriteDrink: favoriteDrink, typicalVolume: favoriteVolume, percentDaysDrank: Double(drinkingDays)/Double(numberOfDays), totalPrice: totalPrice, mostDrinksOnADay: (dateForMaxDrinks, maxDrinksPerDay), range: numberOfDays)
+                        let facts = Facts.init(averageDrinksPerDay: totalDrinks/Double(numberOfDays), averageABV: totalABV/Double(numberOfCheckIns), favoriteDrink: favoriteDrink, typicalVolume: favoriteVolume, percentDaysDrank: Double(drinkingDays)/Double(numberOfDays), totalPrice: totalPrice, mostDrinksOnADay: (dateForMaxDrinks, maxDrinksPerDay), range: numberOfDays)
 
                         self?.cache = (stats, weekStats, monthStats, yearStats, weeklyLimit, standardDrink, weekStartsOnMonday, v.1, facts)
                     }

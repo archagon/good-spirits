@@ -25,7 +25,7 @@ class FirstViewController: UIViewController
     var defaultsNotificationObserver: Any?
     
     // guaranteed to always be valid; section 0 represents Untappd pending changes
-    var cache: (calendar: Calendar, range: (Date, Date), days: Int, data: [Int:[Model]], token: DataLayer.Token)!
+    var cache: (calendar: Calendar, range: (Date, Date), days: Int, data: [Int:[Model]], token: DataLayer.Token, prefs: (Double, Double?))!
     
     var data: DataLayer?
     {
@@ -145,7 +145,7 @@ class FirstViewController: UIViewController
             self.tableView.allowsMultipleSelectionDuringEditing = false
 
             self.tableView.rowHeight = UITableViewAutomaticDimension
-            self.tableView.estimatedRowHeight = 30
+            self.tableView.estimatedRowHeight = 50
         }
         
         self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
@@ -180,6 +180,11 @@ class FirstViewController: UIViewController
             else if Defaults.untappdToken == nil && self.tableView.refreshControl != nil
             {
                 self.setupUntappdPullToRefresh(false)
+            }
+            
+            if Defaults.standardDrinkSize != self.cache?.prefs.0 || Defaults.weeklyLimit != self.cache?.prefs.1
+            {
+                self.reloadData(animated: false, fromScratch: true)
             }
         }
         
@@ -339,7 +344,7 @@ class FirstViewController: UIViewController
                     let previousData = self.cache?.data ?? [:]
                     let previousDays = self.cache?.days ?? 0
                     let previousRange = self.cache?.range ?? (Date.distantPast, Date.distantFuture)
-                    self.cache = (calendar, (from, to), i, outOps, v.1)
+                    self.cache = (calendar, (from, to), i, outOps, v.1, (Defaults.standardDrinkSize, Defaults.weeklyLimit))
                     
                     if previousRange.0 == self.cache.range.0 && previousRange.1 == self.cache.range.1 && previousDays == self.cache.days
                     {
@@ -371,15 +376,15 @@ class FirstViewController: UIViewController
                             })
                             
                             // AB: only scroll to non-untappd rows, since untappd check-in confirmations should be rapid
-                            for change in allChanges.inserts.reversed()
-                            {
-                                let model = self.cache.data[change.section]![change.row]
-                                if model.checkIn.untappdId == nil
-                                {
-                                    self.tableView.scrollToRow(at: change, at: .middle, animated: true)
-                                    break
-                                }
-                            }
+                            //for change in allChanges.inserts.reversed()
+                            //{
+                            //    let model = self.cache.data[change.section]![change.row]
+                            //    if model.checkIn.untappdId == nil
+                            //    {
+                            //        self.tableView.scrollToRow(at: change, at: .middle, animated: true)
+                            //        break
+                            //    }
+                            //}
                             
                             self.calendar.reloadData()
                         }
@@ -415,20 +420,46 @@ class FirstViewController: UIViewController
                 
                 progressAdjustment: do
                 {
-                    let progress = Stats(self.data!).progress(forModels: Array(sortedRegularOps), inRange: from..<to)
-                    
-                    (self.progressBar as? UIProgressView)?.setProgress(progress.previous + progress.current, animated: true)
-                    (self.overflowProgressBar as? UIProgressView)?.setProgress(progress.previous, animated: true)
-                    
-                    let drinksDrank = Stats(self.data!).percentToDrinks(progress.current + progress.previous, inRange: from..<to)
-                    let drinksPrevious = Stats(self.data!).percentToDrinks(progress.previous, inRange: from..<to)
-                    let drinksTotal = Stats(self.data!).percentToDrinks(1, inRange: from..<to)
-                    
-                    // TODO: monthly
-                    let previousText = String.init(format: "including %.1f drink overflow", drinksPrevious)
-                    let text = String.init(format: "%.1f of %.1f weekly drinks\(progress.previous > 0 ? ", \(previousText)" : "")", drinksDrank, drinksTotal)
-                    
-                    self.progressLabel.text = text
+                    if let data = self.data
+                    {
+                        let progress = Stats(self.data!).progress(forModels: Array(sortedRegularOps), inRange: from..<to)
+                        
+                        // KLUDGE: BUGFIX: ensures that table view animations don't interfere with animation
+                        let when = DispatchTime.now() + 0.1
+                        DispatchQueue.main.asyncAfter(deadline: when)
+                        {
+                            (self.progressBar as? UIProgressView)?.setProgress(progress.previous + progress.current, animated: true)
+                            (self.overflowProgressBar as? UIProgressView)?.setProgress(progress.previous, animated: true)
+                            
+                            let totalProgress = progress.previous + progress.current
+                            if totalProgress <= 0.3
+                            {
+                                (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.greenProgressColor
+                            }
+                            else if totalProgress <= 0.85
+                            {
+                                (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.blueProgressColor
+                            }
+                            else if totalProgress <= 1
+                            {
+                                (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.orangeProgressColor
+                            }
+                            else
+                            {
+                                (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.redProgressColor
+                            }
+                        }
+                        
+                        let drinksDrank = Stats(data).percentToDrinks(progress.current + progress.previous, inRange: from..<to)
+                        let drinksPrevious = Stats(data).percentToDrinks(progress.previous, inRange: from..<to)
+                        let drinksTotal = Stats(data).percentToDrinks(1, inRange: from..<to)
+                        
+                        // TODO: monthly
+                        let previousText = String.init(format: "including %.1f drink overflow", drinksPrevious)
+                        let text = String.init(format: "%.1f of %.1f weekly drinks\(progress.previous > 0 ? ", \(previousText)" : "")", drinksDrank, drinksTotal)
+                        
+                        self.progressLabel.text = text
+                    }
                 }
             }
         }
