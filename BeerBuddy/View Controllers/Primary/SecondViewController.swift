@@ -23,7 +23,7 @@ class SecondViewController: UIViewController
         case month
         case year
     }
-    var mode: Mode = .month
+    var mode: Mode = .week
     
     var data: DataLayer?
     {
@@ -43,7 +43,7 @@ class SecondViewController: UIViewController
         let grams: Double
     }
     
-    var cache: (weekStats: [Stat], weekPoints: [Point], monthPoints: [Point], yearPoints: [Point], endDate: Date, weeklyLimit: Double?, standardDrink: Double, startsOnMonday: Bool, token: DataLayer.Token) = ([], [], [], [], Date(), Defaults.weeklyLimit, Defaults.standardDrinkSize, Defaults.weekStartsOnMonday, DataLayer.NullToken)
+    var cache: (weekStats: [Stat], weekPoints: [Point], monthPoints: [Point], yearPoints: [Point], weeklyLimit: Double?, standardDrink: Double, startsOnMonday: Bool, token: DataLayer.Token) = ([], [], [], [], Defaults.weeklyLimit, Defaults.standardDrinkSize, Defaults.weekStartsOnMonday, DataLayer.NullToken)
     {
         didSet
         {
@@ -85,6 +85,7 @@ class SecondViewController: UIViewController
         { [weak `self`] _ in
             self?.reloadData()
         }
+        
         self.notificationObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: OperationQueue.main)
         { [weak `self`] _ in
             if Defaults.weeklyLimit != self?.cache.weeklyLimit
@@ -110,9 +111,6 @@ class SecondViewController: UIViewController
         
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.setBackgroundImage(UIColor.clear.pixel, for: .default)
-        
-        // AB: can rely on notifications or viewDidLoad
-        //reloadData()
     }
     
     func reloadData()
@@ -145,87 +143,55 @@ class SecondViewController: UIViewController
                     
                     if sortedModels.count == 0
                     {
-                        self?.tableView.reloadData()
+                        self?.cache = ([], [], [], [], weeklyLimit, standardDrink, weekStartsOnMonday, v.1)
                     }
                     else
                     {
+                        let now = Date()
+                     
                         var stats: [Stat] = []
                         
-                        let earliestDate = sortedModels.first!.checkIn.time
-                        let latestDate = min(sortedModels.last!.checkIn.time, Date())
-                        var currentWeek = Time.week(forDate: earliestDate)
-                        var currentIndex = 0
-                        
                         // PERF: could probably use some of those sorting methods
-                        while currentWeek.0 <= latestDate
+                        iterateWeeks: do
                         {
-                            var nextIndex = currentIndex
-                            for i in currentIndex..<sortedModels.count
+                            let earliestDate = sortedModels.first!.checkIn.time
+                            let latestDate = min(sortedModels.last!.checkIn.time, now)
+                            var currentWeek = Time.week(forDate: latestDate)
+                            
+                            var range = currentWeek.0..<currentWeek.1
+                            var modelIndex = sortedModels.count - 1
+                            while modelIndex >= 0
                             {
-                                if sortedModels[i].checkIn.time < currentWeek.1
-                                {
-                                    nextIndex = i + 1
-                                }
-                            }
+                                var price: Double = 0
+                                var drinks: Double = 0
+                                var gramsAlcohol: Double = 0
                                 
-                            let range = currentIndex..<nextIndex
-                            
-                            let totalPrice = sortedModels[range].reduce(0) { $0 + ($1.checkIn.drink.price ?? 0) }
-                            let totalDrinks = sortedModels[range].reduce(0) { $0 + Stats(data).standardDrinks($1) }
-                            let totalGramsAlcohol = sortedModels[range].reduce(0) { $0 + Stats(data).gramsOfAlcohol($1) }
-                            
-                            let stat = Stat.init(range: currentWeek.0..<currentWeek.1, price: totalPrice, calories: totalGramsAlcohol * Constants.calorieMultiplier, drinks: totalDrinks)
-                            
-                            stats.append(stat)
-                            
-                            currentIndex = nextIndex
-                            currentWeek = Time.week(forDate: currentWeek.1)
+                                while modelIndex >= 0, range.lowerBound <= sortedModels[modelIndex].checkIn.time
+                                {
+                                    price += sortedModels[modelIndex].checkIn.drink.price ?? 0
+                                    drinks += Stats(data).standardDrinks(sortedModels[modelIndex])
+                                    gramsAlcohol += Stats(data).gramsOfAlcohol(sortedModels[modelIndex])
+                                    
+                                    modelIndex -= 1
+                                }
+                                
+                                let stat = Stat.init(range: range, price: price, calories: gramsAlcohol * 7 * Constants.calorieMultiplier, drinks: drinks)
+                                
+                                stats.append(stat)
+                                
+                                let newLowerBound = DataLayer.calendar.date(byAdding: .day, value: -7, to: range.lowerBound)!
+                                range = newLowerBound..<range.lowerBound
+                            }
                         }
-                        
-                        var currentDate = Date()
+
                         var weekStats: [Point] = []
                         var monthStats: [Point] = []
                         var yearStats: [Point] = []
                         
-                        populatePoints: do
-                        {
-                            let earliestWeekDate = DataLayer.calendar.date(byAdding: .day, value: -7, to: currentDate)!
-                            let earliestMonthDate = DataLayer.calendar.date(byAdding: .day, value: -30, to: currentDate)!
-                            let earliestYearDate = DataLayer.calendar.date(byAdding: .day, value: -365, to: currentDate)!
-                            
-                            for model in sortedModels.reversed()
-                            {
-                                let point = Point.init(date: model.checkIn.time, grams: Stats(data).gramsOfAlcohol(model))
-                                
-                                if model.checkIn.time >= earliestWeekDate
-                                {
-                                    weekStats.append(point)
-                                }
-                                if model.checkIn.time >= earliestMonthDate
-                                {
-                                    monthStats.append(point)
-                                }
-                                if model.checkIn.time >= earliestYearDate
-                                {
-                                    yearStats.append(point)
-                                }
-                                else
-                                {
-                                    break
-                                }
-                            }
-                        }
-                        
-                        
-                        
-                        // NEXT:
                         iterateDays: do
                         {
-                            var today = Date()
-                            today = DataLayer.calendar.date(bySettingHour: 0, minute: 0, second: 0, of: today)!
+                            let today = DataLayer.calendar.date(bySettingHour: 0, minute: 0, second: 0, of: now)!
                             let tomorrow = DataLayer.calendar.date(byAdding: .day, value: 1, to: today)!
-                            
-                            currentDate = tomorrow
                             
                             var yearPoints: [Point] = []
                             
@@ -251,21 +217,10 @@ class SecondViewController: UIViewController
                             
                             weekStats = Array(yearPoints[0..<7].reversed())
                             monthStats = Array(yearPoints[0..<30].reversed())
-                            
-//                            var yearWeekPoints: [Point] = []
-//                            var i = 0
-//                            while i < (7 * weeks)
-//                            {
-//                                let sumDate = yearPoints[i..<(i+7)].reduce(0) { $0 + $1.date.timeIntervalSince1970 }
-//                                let sumGrams = yearPoints[i..<(i+7)].reduce(0) { $0 + $1.grams }
-//                                yearWeekPoints.append(Point.init(date: Date.init(timeIntervalSince1970: sumDate / Double(7)), grams: sumGrams))
-//                                i += 7
-//                            }
-//                            yearStats = yearWeekPoints.reversed()
                             yearStats = yearPoints.reversed()
                         }
 
-                        self?.cache = (stats.reversed(), weekStats, monthStats, yearStats, currentDate, weeklyLimit, standardDrink, weekStartsOnMonday, v.1)
+                        self?.cache = (stats, weekStats, monthStats, yearStats, weeklyLimit, standardDrink, weekStartsOnMonday, v.1)
                     }
                 }
             }
@@ -399,7 +354,20 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
     {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        // NEXT: show week in stats view
+        if indexPath.section == 2
+        {
+            let dates = self.cache.weekStats[indexPath.row].range
+            
+            if
+                let tabController = self.tabBarController,
+                let navController = tabController.viewControllers?.first as? UINavigationController,
+                let viewController = navController.viewControllers.first as? FirstViewController
+            {
+                let date = Date.init(timeIntervalSince1970: (dates.lowerBound.timeIntervalSince1970 + dates.upperBound.timeIntervalSince1970) / 2)
+                viewController.calendar?.setCurrentPage(date, animated: false)
+                tabController.selectedIndex = 0
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -437,17 +405,6 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
         
         if indexPath.section == 0, let cell = cell as? YearStatsCell
         {
-            let count: Int
-            switch self.mode
-            {
-            case .week:
-                count = 7
-            case .month:
-                count = 30
-            case .year:
-                count = 350
-            }
-            
             let granularity: Int
             switch self.mode
             {

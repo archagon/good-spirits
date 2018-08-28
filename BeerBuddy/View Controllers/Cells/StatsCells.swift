@@ -191,7 +191,7 @@ public class YearStatsCell: UITableViewCell
         lazy var dateFormatter: DateFormatter =
         {
             let aFormatter = DateFormatter()
-            aFormatter.dateFormat = "MMM dd"
+            aFormatter.dateFormat = "M/dd"
             return aFormatter
         }()
         
