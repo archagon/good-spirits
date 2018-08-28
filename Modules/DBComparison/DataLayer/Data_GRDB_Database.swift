@@ -278,7 +278,7 @@ extension Database: DataProtocolImmediate
     public func pendingUntappd() throws -> ([DataModel],VectorClock)
     {
         let globalTimestamp = try vectorTimestamp()
-        let data = try DataModel.filter(DataModel.Columns.checkin_untappd_id_value != nil && DataModel.Columns.metadata_deleted_value == false && DataModel.Columns.checkin_untappd_approved_value == false).fetchAll(self)
+        let data = try DataModel.filter(DataModel.Columns.checkin_untappd_id_value != nil && DataModel.Columns.metadata_deleted_value == false && DataModel.Columns.checkin_untappd_approved_value == false).order(DataModel.Columns.checkin_time_value).fetchAll(self)
         return (data, globalTimestamp)
     }
     
