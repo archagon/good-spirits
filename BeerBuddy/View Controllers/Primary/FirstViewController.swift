@@ -422,43 +422,62 @@ class FirstViewController: UIViewController
                 {
                     if let data = self.data
                     {
-                        let progress = Stats(self.data!).progress(forModels: Array(sortedRegularOps), inRange: from..<to)
+                        let aProgress = Stats(data).progress(forModels: Array(sortedRegularOps), inRange: from..<to)
                         
                         // KLUDGE: BUGFIX: ensures that table view animations don't interfere with animation
                         let when = DispatchTime.now() + 0.1
                         DispatchQueue.main.asyncAfter(deadline: when)
                         {
-                            (self.progressBar as? UIProgressView)?.setProgress(progress.previous + progress.current, animated: true)
-                            (self.overflowProgressBar as? UIProgressView)?.setProgress(progress.previous, animated: true)
-                            
-                            let totalProgress = progress.previous + progress.current
-                            if totalProgress <= 0.3
+                            if let progress = aProgress
                             {
-                                (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.greenProgressColor
-                            }
-                            else if totalProgress <= 0.85
-                            {
-                                (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.blueProgressColor
-                            }
-                            else if totalProgress <= 1
-                            {
-                                (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.orangeProgressColor
+                                (self.progressBar as? UIProgressView)?.setProgress(progress.previous + progress.current, animated: true)
+                                (self.overflowProgressBar as? UIProgressView)?.setProgress(progress.previous, animated: true)
+                                
+                                let totalProgress = progress.previous + progress.current
+                                if totalProgress <= 0.3
+                                {
+                                    (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.greenProgressColor
+                                }
+                                else if totalProgress <= 0.85
+                                {
+                                    (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.blueProgressColor
+                                }
+                                else if totalProgress <= 1
+                                {
+                                    (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.orangeProgressColor
+                                }
+                                else
+                                {
+                                    (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.redProgressColor
+                                }
                             }
                             else
                             {
-                                (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.redProgressColor
+                                (self.progressBar as? UIProgressView)?.setProgress(1, animated: false)
+                                (self.overflowProgressBar as? UIProgressView)?.setProgress(0, animated: false)
+                                (self.progressBar as? UIProgressView)?.progressTintColor = Appearance.blueProgressColor
                             }
                         }
                         
-                        let drinksDrank = Stats(data).percentToDrinks(progress.current + progress.previous, inRange: from..<to)
-                        let drinksPrevious = Stats(data).percentToDrinks(progress.previous, inRange: from..<to)
-                        let drinksTotal = Stats(data).percentToDrinks(1, inRange: from..<to)
-                        
-                        // TODO: monthly
-                        let previousText = String.init(format: "including %.1f drink overflow", drinksPrevious)
-                        let text = String.init(format: "%.1f of %.1f weekly drinks\(progress.previous > 0 ? ", \(previousText)" : "")", drinksDrank, drinksTotal)
-                        
-                        self.progressLabel.text = text
+                        if
+                            let progress = aProgress,
+                            let drinksDrank = Stats(data).percentToDrinks(progress.current + progress.previous, inRange: from..<to),
+                            let drinksPrevious = Stats(data).percentToDrinks(progress.previous, inRange: from..<to),
+                            let drinksTotal = Stats(data).percentToDrinks(1, inRange: from..<to)
+                        {
+                            let previousText = String.init(format: "including %.1f drink overflow", drinksPrevious)
+                            let text = String.init(format: "%.1f of %.1f weekly drinks\(progress.previous > 0 ? ", \(previousText)" : "")", drinksDrank, drinksTotal)
+                            
+                            self.progressLabel.text = text
+                        }
+                        else
+                        {
+                            let totalDrinks = (try? Stats(data).drinks(inRange: from..<to)) ?? 0
+                            
+                            let text = String.init(format: "%.1f weekly drinks", totalDrinks)
+                            
+                            self.progressLabel.text = text
+                        }
                     }
                 }
             }

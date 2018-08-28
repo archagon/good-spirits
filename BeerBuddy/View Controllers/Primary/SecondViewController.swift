@@ -616,7 +616,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
             
             if let data = self.data, self.cache.weeklyLimit != nil
             {
-                let percent = Stats(data).drinksToPercent(Float(stats.drinks), inRange: stats.range)
+                let percent = Stats(data).drinksToPercent(Float(stats.drinks), inRange: stats.range) ?? 1
                 cell.setProgress(Double(percent))
                 percentOverLimit = (percent > 1 ? Double(percent - 1) : nil)
             }
