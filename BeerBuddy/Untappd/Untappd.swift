@@ -49,7 +49,7 @@ class Untappd
             case .unknown:
                 return "unknown"
             case .rateLimitExceeded:
-                return "too many Untappd calls in an hour, please try again a bit later"
+                return "too many requests made in an hour, please try again a bit later"
             }
         }
     }
@@ -188,7 +188,15 @@ class Untappd
                     do
                     {
                         let errorData = try parser.decode(Response<NullStruct>.self, from: data)
-                        throw UntappdError.webError(type: errorData.meta.error_type, message: errorData.meta.error_detail)
+                        
+                        if errorData.meta.error_type == "invalid_limit"
+                        {
+                            throw UntappdError.rateLimitExceeded
+                        }
+                        else
+                        {
+                            throw UntappdError.webError(type: errorData.meta.error_type, message: errorData.meta.error_detail)
+                        }
                     }
                     catch
                     {

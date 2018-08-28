@@ -31,7 +31,7 @@ extension Untappd
         
         public let error_detail: String?
         public let error_type: String?
-        public let developer_friendly: String?
+        //public let developer_friendly: Bool?
         
         public let response_time: ResponseTime?
     }
