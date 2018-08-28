@@ -84,6 +84,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
         {
             Timer.scheduledTimer(withTimeInterval: 60, repeats: true)
             { [weak `self`] _ in
+                appDebug("firing sync with Untappd")
                 self?.syncUntappd(withCallback: { _ in })
             }
         }
@@ -133,7 +134,8 @@ class RootViewController: UITabBarController, DrawerCoordinating
                 if Defaults.untappdToken != nil && Defaults.untappdBaseline == nil
                 {
                     // AB: this sets the baseline
-                    self?.syncUntappd(withCallback: { _ in })
+                    // TODO: this creates a ton of duplicate calls and eats up our rate limit, figure out why
+                    //self?.syncUntappd(withCallback: { _ in })
                 }
                 else if Defaults.untappdToken == nil && Defaults.untappdBaseline != nil
                 {

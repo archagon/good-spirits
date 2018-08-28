@@ -591,6 +591,8 @@ extension SettingsViewController
                         }
                         
                         self?.navigationController?.popToRootViewController(animated: true)
+                        
+                        (self?.presentingViewController as? RootViewController)!.syncUntappd(withCallback: { _ in })
                     }
                 }
             }
