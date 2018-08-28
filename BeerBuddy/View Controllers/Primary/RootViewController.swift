@@ -571,11 +571,6 @@ extension RootViewController: CheckInViewControllerDelegate
         }
         
         self.modelForCheckIn = nil
-        
-        self.checkInButton.tintColor = Appearance.greenProgressColor
-        UIView.animate(withDuration: 1, delay: 0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-            self.checkInButton.tintColor = Appearance.themeColor.darkened(by: 0.1)
-        }, completion: nil)
     }
     
     func updateDimensions(for vc: CheckInViewController)
