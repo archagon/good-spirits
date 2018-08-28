@@ -17,6 +17,7 @@ class StartupViewController: UITableViewController
         let allCountries = Limit.allAvailableCountries
         var allLimits = allCountries.map { Limit.init(withCountryCode: $0) }
         allLimits.sort { $0.countryName < $1.countryName }
+        allLimits.insert(Limit.standardLimit, at: 0)
         
         self.allLimits = allLimits
     }
@@ -216,13 +217,13 @@ class StartupViewController: UITableViewController
     {
         if section == 0
         {
-            var copy = "Welcome to $name$! In order to use this drink tracker, we need to set your daily and weekly drinking limits.\n\nRecent studies tend to agree that there is no safe level of alcohol consumption. However, many countries have published recommendations for \"low-risk\" drinking. This concept isn't very well-defined, but in general, the less you drink, the less susceptible you are to alcohol-related cancers and other diseases.\n\nBased on my own research, I would suggest starting with the common European weekly limit of $default-men$ standard US drinks for men or $default-women$ standard US drinks for women, then working your way down from there. A standard drink tends to be smaller than you might be used to, e.g. 12 ounces of 5% beer or 4 ounces of 15% wine."
+            var copy = "Welcome to $name$! In order to use this drink tracker, you need to set your weekly drinking limits.\n\nRecent studies tend to agree that there is no completely safe level of alcohol consumption. However, many countries have published recommendations for a \"low-risk\" level of drinking. This concept isn't very strictly defined, but it's certainly the case that the less you drink, the less susceptible you are to alcohol-related cancers and other diseases. If you're already drinking, it's a healthy idea to stick to these limits as much as possible.\n\nBased on my own research, I would recommend aiming for a weekly limit of $default-men$ standard US drinks for men or $default-women$ standard US drinks for women. This is the limit adopted by the largest number of countries, including around ten European countries, Peru, Singapore, Vietnam, and Hong Kong. A standard drink tends to be smaller than you might be used to, e.g. 12 ounces of 5% beer or 4 ounces of 15% wine in the US."
             
             let appName = Constants.appName
             
             let usDrink = Limit.init(withCountryCode: "US").standardDrink
-            let mLimit = Limit.init(withCountryCode: "DK").weeklyLimit(forMale: true).value / usDrink.value
-            let wLimit = Limit.init(withCountryCode: "DK").weeklyLimit(forMale: false).value / usDrink.value
+            let mLimit = Limit.standardLimit.weeklyLimit(forMale: true).value / usDrink.value
+            let wLimit = Limit.standardLimit.weeklyLimit(forMale: false).value / usDrink.value
             
             copy.replaceAnchorText("name", value: appName)
             copy.replaceAnchorText("default-men", value: String.init(format: "%.0f", mLimit))
@@ -350,7 +351,7 @@ class StartupViewController: UITableViewController
                 let weeklyLimit = limit.weeklyLimit(forMale: self.male)
                 let drinks = weeklyLimit.value / Limit.init(withCountryCode: "US").standardDrink.value
                 
-                cell.textLabel?.text = limit.countryName
+                cell.textLabel?.text = (limit.countryCode == "XX" ? "Standard" : limit.countryName)
                 cell.detailTextLabel?.text = "\(fmt(drinks)) US drinks"
                 
                 if row == self.country

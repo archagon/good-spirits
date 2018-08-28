@@ -106,6 +106,18 @@ public struct Limit
         return data.map { $0.country }
     }
     
+    public init(withGrams grams: Double, weeklyMen: Double, weeklyWomen: Double)
+    {
+        self.countryCode = "XX"
+        self.grams = grams
+        self.weeklyMen = weeklyMen
+        self.weeklyWomen = weeklyWomen
+        self.dailyMen = nil
+        self.dailyWomen = nil
+        self.peakMen = nil
+        self.peakWomen = nil
+    }
+    
     public init(withCountryCode code: String)
     {
         for item in Limit.data
@@ -145,6 +157,12 @@ public struct Limit
     {
         let locale = Locale.current.localizedString(forRegionCode: self.countryCode)
         return locale ?? "unknown"
+    }
+    
+    public static var standardLimit: Limit
+    {
+        let limit = Limit.init(withGrams: 10, weeklyMen: 20 * 7, weeklyWomen: 10 * 7)
+        return limit
     }
     
     public var standardDrink: Measurement<UnitVolume>

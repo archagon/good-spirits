@@ -13,6 +13,13 @@
  "daily_limit_women": 16
  },
  {
+ "country": "BG",
+ "_country": "bulgaria",
+ "grams": 8,
+ "daily_limit_men": 16,
+ "daily_limit_women": 8
+ },
+ {
  "country": "CA",
  "_country": "canada",
  "grams": 13.6,
@@ -22,13 +29,6 @@
  "daily_limit_women": 27.2,
  "weekly_limit_women": 136,
  "peak_daily_limit_women": 40.8
- },
- {
- "country": "DK",
- "_country": "denmark",
- "grams": 12,
- "weekly_limit_men": 168,
- "weekly_limit_women": 84
  },
  {
  "country": "US",
@@ -49,8 +49,10 @@
  "#todo":"",
  "_country": "france",
  "grams": 10,
- "weekly_limit_men": 210,
- "weekly_limit_women": 140
+ "daily_limit_men": 20,
+ "weekly_limit_men": 100,
+ "daily_limit_women": 20,
+ "weekly_limit_women": 100
  },
  {
  "country": "DE",
@@ -60,42 +62,21 @@
  "daily_limit_women": 12
  },
  {
- "country": "HK",
- "_country": "hong kong",
- "grams": 10,
- "daily_limit_men": 20,
- "daily_limit_women": 10
- },
- {
- "country": "HU",
- "_country": "hungary",
- "grams": 17
- },
- {
- "country": "IS",
- "_country": "iceland",
- "grams": 8
- },
- {
  "country": "IE",
  "_country": "ireland",
  "grams": 10,
- "weekly_limit_men": 210,
- "weekly_limit_women": 140
+ "weekly_limit_men": 170,
+ "weekly_limit_women": 110
  },
  {
  "country": "IT",
  "_country": "italy",
  "grams": 10,
- "daily_limit_men": 40,
- "daily_limit_women": 30,
+ "daily_limit_men": 24,
+ "daily_limit_women": 12,
+ "peak_daily_limit_men": 72,
+ "peak_daily_limit_women": 72,
  "extra_info": "less for the elderly"
- },
- {
- "country": "JP",
- "#todo":"",
- "_country": "japan",
- "grams": 19.75
  },
  {
  "country": "NL",
@@ -118,39 +99,40 @@
  "extra_info": "2 alcohol-free days a week"
  },
  {
- "country": "PL",
- "#todo":"",
- "_country": "poland",
- "grams": 10,
- "weekly_limit_men": 280,
- "weekly_limit_women": 140
- },
- {
- "country": "PT",
- "_country": "portugal",
- "grams": 14,
- "daily_limit_men": 37,
- "daily_limit_women": 18.5
- },
- {
- "country": "ES",
- "_country": "spain",
- "grams": 10,
- "daily_limit_men": 30,
- "daily_limit_women": 20
- },
- {
- "country": "CH",
- "_country": "switzerland",
- "grams": 12,
- "daily_limit_men": 30,
- "daily_limit_women": 20
- },
- {
  "country": "UK",
  "_country": "united kingdom",
  "grams": 8,
  "weekly_limit_men": 112
+ },
+ {
+     "country": "IN",
+     "_country": "india",
+     "grams": 8,
+     "daily_limit_men": 16,
+     "daily_limit_women": 8
+ },
+ {
+     "country": "CL",
+     "_country": "chile",
+     "grams": 14,
+     "daily_limit_men": 14,
+     "daily_limit_women": 14
+ },
+ {
+     "country": "DK",
+     "_country": "denmark",
+     "grams": 12,
+     "weekly_limit_men": 168,
+     "weekly_limit_women": 84,
+     "peak_daily_limit_men": 60,
+     "peak_daily_limit_women": 60
+ },
+ {
+     "country": "PH",
+     "_country": "philippines",
+     "grams": 12,
+     "daily_limit_men": 24,
+     "daily_limit_women": 12
  }
  ]
 
