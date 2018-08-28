@@ -387,7 +387,7 @@ class FirstViewController: UIViewController
                     else
                     {
                         // TODO: pretty animation
-                        if false && !UIAccessibility.isReduceMotionEnabled && previousDays == self.cache?.days
+                        if false && /*!UIAccessibility.isReduceMotionEnabled &&*/ previousDays == self.cache?.days
                         {
                             if previousRange.1 <= self.cache.range.0
                             {

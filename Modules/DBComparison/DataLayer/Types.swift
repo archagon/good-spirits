@@ -125,6 +125,19 @@ public struct LamportValue<T: Hashable & Encodable>: Hashable, LamportQueriable,
     }
 }
 
+// NEXT: remove in Swift 4.2
+extension Optional: Hashable where Wrapped: Hashable
+{
+    public var hashValue: Int
+    {
+        switch self
+        {
+        case .none: return 0.hashValue
+        case .some(let object): return object.hashValue
+        }
+    }
+}
+
 public protocol LamportQueriable
 {
     var lamport: DataLayer.Time { get }

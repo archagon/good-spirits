@@ -12,7 +12,7 @@ extension SettingsViewController
 {
     func updateUntappdToggleAppearance(withCell aCell: UITableViewCell? = nil)
     {
-        let section: Int = self.sectionCounts.firstIndex { $0.0 == .untappd }!
+        let section: Int = self.sectionCounts.index { $0.0 == .untappd }!
         
         if
             let genericCell = aCell ?? self.tableView.cellForRow(at: IndexPath.init(row: 0, section: section)),

@@ -31,7 +31,7 @@ public class StylePickerViewController: CheckInDrawerViewController
     {
         super.viewDidLoad()
         
-        let styleIndex = StylePickerViewController.validStyles.firstIndex(of: self.delegate.startingStyle(for: self))!
+        let styleIndex = StylePickerViewController.validStyles.index(of: self.delegate.startingStyle(for: self))!
         
         self.stylePicker.selectRow(styleIndex, inComponent: 0, animated: false)
         self.name.text = self.delegate.startingName(for: self)

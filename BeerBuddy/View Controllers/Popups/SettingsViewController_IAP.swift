@@ -50,8 +50,8 @@ extension SettingsViewController: SKProductsRequestDelegate, SKPaymentTransactio
     func reloadIAPCells()
     {
         self.tableView.beginUpdates()
-        let iap = sectionCounts.firstIndex { $0.0 == .iap }!
-        let meta = sectionCounts.firstIndex { $0.0 == .meta }!
+        let iap = sectionCounts.index { $0.0 == .iap }!
+        let meta = sectionCounts.index { $0.0 == .meta }!
         updateCell(nil, forRowAt: IndexPath.init(row: 2, section: meta))
         updateFooter(tableView.footerView(forSection: iap), forSection: iap)
         self.tableView.endUpdates()

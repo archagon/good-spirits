@@ -74,7 +74,7 @@ public class VolumePickerViewController: CheckInDrawerViewController
     {
         let measure = self.currentMeasurement!
         
-        guard let row = VolumePickerViewController.validUnits.firstIndex(of: measure.unit) else
+        guard let row = VolumePickerViewController.validUnits.index(of: measure.unit) else
         {
             appError("invalid unit \"\(measure.unit)\"")
             return
