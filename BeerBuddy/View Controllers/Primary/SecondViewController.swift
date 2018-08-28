@@ -42,8 +42,20 @@ class SecondViewController: UIViewController
         let date: Date
         let grams: Double
     }
+    struct Facts
+    {
+        let averageDrinksPerDay: Double
+        let averageABV: Double
+        let favoriteDrink: DrinkStyle
+        let typicalVolume: Measurement<UnitVolume>
+        let percentDaysDrank: Double
+        let totalPrice: Double
+        let mostDrinksOnADay: (Date, Double)
+        
+        let range: Int
+    }
     
-    var cache: (weekStats: [Stat], weekPoints: [Point], monthPoints: [Point], yearPoints: [Point], weeklyLimit: Double?, standardDrink: Double, startsOnMonday: Bool, token: DataLayer.Token) = ([], [], [], [], Defaults.weeklyLimit, Defaults.standardDrinkSize, Defaults.weekStartsOnMonday, DataLayer.NullToken)
+    var cache: (weekStats: [Stat], weekPoints: [Point], monthPoints: [Point], yearPoints: [Point], weeklyLimit: Double?, standardDrink: Double, startsOnMonday: Bool, token: DataLayer.Token, facts: Facts?) = ([], [], [], [], Defaults.weeklyLimit, Defaults.standardDrinkSize, Defaults.weekStartsOnMonday, DataLayer.NullToken, nil)
     {
         didSet
         {
@@ -143,7 +155,7 @@ class SecondViewController: UIViewController
                     
                     if sortedModels.count == 0
                     {
-                        self?.cache = ([], [], [], [], weeklyLimit, standardDrink, weekStartsOnMonday, v.1)
+                        self?.cache = ([], [], [], [], weeklyLimit, standardDrink, weekStartsOnMonday, v.1, nil)
                     }
                     else
                     {
@@ -154,9 +166,9 @@ class SecondViewController: UIViewController
                         // PERF: could probably use some of those sorting methods
                         iterateWeeks: do
                         {
-                            let earliestDate = sortedModels.first!.checkIn.time
+                            //let earliestDate = sortedModels.first!.checkIn.time
                             let latestDate = min(sortedModels.last!.checkIn.time, now)
-                            var currentWeek = Time.week(forDate: latestDate)
+                            let currentWeek = Time.week(forDate: latestDate)
                             
                             var range = currentWeek.0..<currentWeek.1
                             var modelIndex = sortedModels.count - 1
@@ -188,6 +200,16 @@ class SecondViewController: UIViewController
                         var monthStats: [Point] = []
                         var yearStats: [Point] = []
                         
+                        var totalDrinks: Double = 0
+                        var totalABV: Double = 0
+                        var drinkCounts: [DrinkStyle:Int] = [:]
+                        var volumeCounts: [Measurement<UnitVolume>:Int] = [:]
+                        var drinkingDays = 0
+                        var maxDrinksPerDay: Double = 0
+                        var dateForMaxDrinks: Date = Date()
+                        var totalPrice: Double = 0
+                        var numberOfDays = 0
+                        
                         iterateDays: do
                         {
                             let today = DataLayer.calendar.date(bySettingHour: 0, minute: 0, second: 0, of: now)!
@@ -196,20 +218,64 @@ class SecondViewController: UIViewController
                             var yearPoints: [Point] = []
                             
                             let weeks = 50
+                            let total = 7 * weeks
                             
                             var range = today..<tomorrow
                             var modelIndex = sortedModels.count - 1
-                            for _ in 0..<(7 * weeks)
+                            for _ in 0..<total
                             {
                                 var drinks: Double = 0
                                 
                                 while modelIndex >= 0, range.lowerBound <= sortedModels[modelIndex].checkIn.time
                                 {
-                                    drinks += Stats(data).standardDrinks(sortedModels[modelIndex])
+                                    let model = sortedModels[modelIndex]
+                                    let checkInDrinks = Stats(data).standardDrinks(model)
+                                    drinks += checkInDrinks
+                                    
+                                    facts: do
+                                    {
+                                        if volumeCounts[model.checkIn.drink.volume] == nil
+                                        {
+                                            volumeCounts[model.checkIn.drink.volume] = 0
+                                        }
+                                        volumeCounts[model.checkIn.drink.volume]! += 1
+                                        
+                                        if drinkCounts[model.checkIn.drink.style] == nil
+                                        {
+                                            drinkCounts[model.checkIn.drink.style] = 0
+                                        }
+                                        drinkCounts[model.checkIn.drink.style]! += 1
+                                        
+                                        totalABV += model.checkIn.drink.abv
+                                        
+                                        totalDrinks += checkInDrinks
+                                        
+                                        totalPrice += model.checkIn.drink.price ?? 0
+                                    }
+                                    
                                     modelIndex -= 1
                                 }
                                 
                                 yearPoints.append(Point.init(date: range.lowerBound, grams: drinks))
+                                
+                                facts: do
+                                {
+                                    if modelIndex >= 0
+                                    {
+                                        numberOfDays += 1
+                                    }
+                                    
+                                    if drinks > maxDrinksPerDay
+                                    {
+                                        maxDrinksPerDay = drinks
+                                        dateForMaxDrinks = range.lowerBound
+                                    }
+                                    
+                                    if drinks > 0
+                                    {
+                                        drinkingDays += 1
+                                    }
+                                }
                                 
                                 let newLowerBound = DataLayer.calendar.date(byAdding: .day, value: -1, to: range.lowerBound)!
                                 range = newLowerBound..<range.lowerBound
@@ -219,8 +285,13 @@ class SecondViewController: UIViewController
                             monthStats = Array(yearPoints[0..<30].reversed())
                             yearStats = yearPoints.reversed()
                         }
+                        
+                        let favoriteDrink = drinkCounts.max(by: { (first, second) -> Bool in first.value < second.value })!.key
+                        let favoriteVolume = volumeCounts.max(by: { (first, second) -> Bool in first.value < second.value })!.key
+                        
+                        let facts = Facts.init(averageDrinksPerDay: totalDrinks/Double(numberOfDays), averageABV: totalABV/Double(drinkingDays), favoriteDrink: favoriteDrink, typicalVolume: favoriteVolume, percentDaysDrank: Double(drinkingDays)/Double(numberOfDays), totalPrice: totalPrice, mostDrinksOnADay: (dateForMaxDrinks, maxDrinksPerDay), range: numberOfDays)
 
-                        self?.cache = (stats, weekStats, monthStats, yearStats, weeklyLimit, standardDrink, weekStartsOnMonday, v.1)
+                        self?.cache = (stats, weekStats, monthStats, yearStats, weeklyLimit, standardDrink, weekStartsOnMonday, v.1, facts)
                     }
                 }
             }
@@ -232,7 +303,15 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
 {
     public func numberOfSections(in tableView: UITableView) -> Int
     {
-        return 3
+        // TODO: need more explicit logic here
+        if self.cache.facts == nil
+        {
+            return 1
+        }
+        else
+        {
+            return 4
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -243,7 +322,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
         }
         else if section == 1
         {
-            return 5
+            return 3
         }
         else
         {
@@ -323,7 +402,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
                 return
             }
             
-            headerView.textLabel?.text = "General Trends"
+            headerView.textLabel?.text = "Running Tally Over \(self.cache.facts?.range ?? 0) Days"
             headerView.textLabel?.textColor = UIColor.black
         }
         else if section == 2
@@ -418,9 +497,9 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
             
             let goal: Double?
             let goalLabel: String?
-            if let limit = Defaults.weeklyLimit
+            if let limit = self.cache.weeklyLimit
             {
-                goal = ((limit / 7) / Defaults.standardDrinkSize) * Double(granularity)
+                goal = ((limit / 7) / self.cache.standardDrink) * Double(granularity)
                 goalLabel = "\(goal!) drinks"
             }
             else
@@ -447,17 +526,33 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
         }
         else if indexPath.section == 1, let cell = cell as? TrendStatsCell
         {
+            guard let facts = self.cache.facts else { return }
+            
             if indexPath.row == 0
             {
-                cell.label.text = "Your running average over the last year is \("1.2 drinks per day"), which is \("within your target range"). Good job!"
+                if let limit = self.cache.weeklyLimit
+                {
+                    cell.label.text = "You are averaging \(Format.format(drinks: facts.averageDrinksPerDay)) drinks, compared to your target of \(Format.format(drinks: (limit / self.cache.standardDrink) / 7)) drinks per day."
+                }
+                else
+                {
+                    cell.label.text = "You are averaging \(Format.format(drinks: facts.averageDrinksPerDay)) drinks per day."
+                }
             }
             else if indexPath.row == 1
             {
-                cell.label.text = "Your favorite drink is \("beer") and your ABV is \("12.5%") on average. You tend to drink \("12 fl oz") servings."
+                cell.label.text = "Your favorite drink is \(Format.format(style: facts.favoriteDrink)) and your average ABV is \(Format.format(abv: facts.averageABV)). You tend to drink \(Format.format(volume: facts.typicalVolume)) servings."
+            }
+            else if indexPath.row == 2
+            {
+                let format = DateFormatter()
+                format.dateFormat = "MMMM dd, yyyy"
+                
+                cell.label.text = "You drank on \(Format.format(abv: facts.percentDaysDrank)) of days. The most drinks you had was \(Format.format(drinks: facts.mostDrinksOnADay.1)), on \(format.string(from: facts.mostDrinksOnADay.0))."
             }
             else
             {
-                cell.label.text = "You did blah-de-di-blah today!"
+                cell.label.text = "You have spent a total of \(Format.format(price: facts.totalPrice))."
             }
             
             cell.label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
@@ -470,7 +565,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource
             
             let percentOverLimit: Double?
             
-            if let data = self.data, Defaults.weeklyLimit != nil
+            if let data = self.data, self.cache.weeklyLimit != nil
             {
                 let percent = Stats(data).drinksToPercent(Float(stats.drinks), inRange: stats.range)
                 cell.setProgress(Double(percent))
