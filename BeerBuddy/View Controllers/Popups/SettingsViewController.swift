@@ -541,11 +541,17 @@ extension SettingsViewController
     
     @objc func untappdToggled(_ sender: UISwitch)
     {
+        defer
+        {
+            updateHealthKitToggleAppearance()
+        }
+        
         if self.untappdLoginPending
         {
             return
         }
         
+        // AB: we can't localize Untappd authorization to the Untappd singleton because it requires visiting a webpage
         switch Untappd.shared.loginStatus
         {
         case .unreachable:
@@ -588,10 +594,11 @@ extension SettingsViewController
                 }
             }
         case .enabledAndAuthorized:
-            Defaults.untappdToken = (sender.isOn ? Defaults.untappdToken : nil)
+            if !sender.isOn
+            {
+                Defaults.untappdToken = nil
+            }
         }
-        
-        updateUntappdToggleAppearance()
     }
     
     @objc func healthKitToggled(_ sender: UISwitch)

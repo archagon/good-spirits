@@ -124,7 +124,7 @@ extension UntappdLoginViewController: WKNavigationDelegate
                         case .error(let e):
                             self.tokenBlock?("", e)
                             self.tokenBlock = nil
-                        case .value(let v):
+                        case .value(_):
                             self.tokenBlock?(String(split[1]), nil)
                             self.tokenBlock = nil
                         }
