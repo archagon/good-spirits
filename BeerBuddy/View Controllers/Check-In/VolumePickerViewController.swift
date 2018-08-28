@@ -60,7 +60,7 @@ public class VolumePickerViewController: CheckInDrawerViewController
         
         if let layout = self.glasses.collectionViewLayout as? UICollectionViewFlowLayout
         {
-            layout.estimatedItemSize = CGSize.init(width: 44, height: 60)
+            layout.estimatedItemSize = CGSize.init(width: 50, height: 60)
             layout.minimumInteritemSpacing = 8
         }
         

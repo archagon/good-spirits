@@ -24,7 +24,7 @@ public struct Stats
 
 extension Stats
 {
-    public func allowedGramsAlcohol(inRange range: Range<Date>) -> Float
+    public func allowedGramsAlcohol(inRange range: Range<Date>) -> Float?
     {
         if let weeklyLimit = self.defaults.weeklyLimit
         {
@@ -35,52 +35,64 @@ extension Stats
         }
         else
         {
-            return 0
+            return nil
         }
     }
     
-    public func percentToDrinks(_ percent: Float, inRange range: Range<Date>) -> Float
+    public func percentToDrinks(_ percent: Float, inRange range: Range<Date>) -> Float?
     {
-        let standardDrinkSize = Float(self.defaults.standardDrinkSize)
-        let aga = allowedGramsAlcohol(inRange: range)
-        
-        let gramsAlcohol = aga * percent
-        let drinks = gramsAlcohol / standardDrinkSize
-        
-        return drinks
+        if let aga = allowedGramsAlcohol(inRange: range)
+        {
+            let standardDrinkSize = Float(self.defaults.standardDrinkSize)
+            
+            let gramsAlcohol = aga * percent
+            let drinks = gramsAlcohol / standardDrinkSize
+            
+            return drinks
+        }
+        else
+        {
+            return nil
+        }
     }
     
-    public func drinksToPercent(_ drinks: Float, inRange range: Range<Date>) -> Float
+    public func drinksToPercent(_ drinks: Float, inRange range: Range<Date>) -> Float?
     {
-        let standardDrinkSize = Float(self.defaults.standardDrinkSize)
-        let aga = allowedGramsAlcohol(inRange: range)
-        
-        let gramsAlcohol = drinks * standardDrinkSize
-        let percent = gramsAlcohol / aga
-        
-        return percent
+        if let aga = allowedGramsAlcohol(inRange: range)
+        {
+            let standardDrinkSize = Float(self.defaults.standardDrinkSize)
+            
+            let gramsAlcohol = drinks * standardDrinkSize
+            let percent = gramsAlcohol / aga
+            
+            return percent
+        }
+        else
+        {
+            return nil
+        }
     }
     
     // current + previous is the percentage alcohol consumption for the given date range.
-    public func progress(forModels models: [Model], inRange range: Range<Date>) -> (current: Float, previous: Float)
+    public func progress(forModels models: [Model], inRange range: Range<Date>) -> (current: Float, previous: Float)?
     {
-        if models.count == 0
+        if let aga = allowedGramsAlcohol(inRange: range)
         {
-            return (0, 0)
+            let totalGramsAlcohol = models.reduce(Float(0))
+            { total, model in
+                let gramsAlcohol = gramsOfAlcohol(model)
+                return total + Float(gramsAlcohol)
+            }
+            
+            return (totalGramsAlcohol / aga, 0)
         }
-        
-        let aga = allowedGramsAlcohol(inRange: range)
-        
-        let totalGramsAlcohol = models.reduce(Float(0))
-        { total, model in
-            let gramsAlcohol = gramsOfAlcohol(model)
-            return total + Float(gramsAlcohol)
+        else
+        {
+            return nil
         }
-        
-        return (totalGramsAlcohol / aga, 0)
     }
     
-    public func progress(inRange range: Range<Date>) throws -> (current: Float, previous: Float)
+    public func progress(inRange range: Range<Date>) throws -> (current: Float, previous: Float)?
     {
         do
         {
@@ -90,7 +102,22 @@ extension Stats
         catch
         {
             appError("could not load models for stats -- \(error)")
-            return (0, 0)
+            return nil
+        }
+    }
+    
+    public func drinks(inRange range: Range<Date>) throws -> Double
+    {
+        do
+        {
+            let models = try self.data.getModels(fromIncludingDate: range.lowerBound, toExcludingDate: range.upperBound, includingDeleted: false)
+            let allDrinks = models.0.reduce(0) { $0 + standardDrinks($1) }
+            return allDrinks
+        }
+        catch
+        {
+            appError("could not load models for stats -- \(error)")
+            return 0
         }
     }
     
