@@ -350,22 +350,22 @@ public class WeekStatsCell: UITableViewCell
         
         if v <= 0.3
         {
-            bgViewLeft.backgroundColor = UIColor.init(hex: "1CE577").mixed(with: .black, by: 0.15)
+            bgViewLeft.backgroundColor = Appearance.greenProgressColor
             bgView.backgroundColor = bgViewLeft.backgroundColor?.mixed(with: .white, by: 0.3)
         }
         else if v <= 0.85
         {
-            bgViewLeft.backgroundColor = Appearance.darkenedThemeColor
+            bgViewLeft.backgroundColor = Appearance.blueProgressColor
             bgView.backgroundColor = bgViewLeft.backgroundColor?.mixed(with: .white, by: 0.3)
         }
         else if v <= 1.0
         {
-            bgViewLeft.backgroundColor = UIColor.orange.mixed(with: .white, by: 0.1)
+            bgViewLeft.backgroundColor = Appearance.orangeProgressColor
             bgView.backgroundColor = bgViewLeft.backgroundColor?.mixed(with: .white, by: 0.3)
         }
         else
         {
-            bgViewLeft.backgroundColor = UIColor.red.mixed(with: .white, by: 0.3)
+            bgViewLeft.backgroundColor = Appearance.redProgressColor
             bgView.backgroundColor = bgViewLeft.backgroundColor?.mixed(with: .white, by: 0.3)
         }
         

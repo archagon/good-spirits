@@ -833,6 +833,11 @@ extension FirstViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalen
         reloadData(animated: false, fromScratch: true)
     }
     
+    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, eventOffsetFor date: Date) -> CGPoint
+    {
+        return CGPoint.init(x: 0, y: 2)
+    }
+    
     func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int
     {
         let nextDay = DataLayer.calendar.date(byAdding: .day, value: 1, to: date)!

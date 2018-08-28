@@ -13,6 +13,11 @@ class Appearance
     static var themeColor: UIColor = UIColor.init(red: 107/255.0, green: 158/255.0, blue: 255/255.0, alpha: 1)
     static var darkenedThemeColor = themeColor.mixed(with: .black, by: 0.15)
     
+    static var greenProgressColor = UIColor.init(hex: "1CE577").mixed(with: .black, by: 0.15)
+    static var blueProgressColor = Appearance.darkenedThemeColor
+    static var orangeProgressColor = UIColor.orange.mixed(with: .white, by: 0.1)
+    static var redProgressColor = UIColor.red.mixed(with: .white, by: 0.3)
+    
     public static let shared = Appearance()
     
     private struct DrinkIconCacheKey: Hashable
