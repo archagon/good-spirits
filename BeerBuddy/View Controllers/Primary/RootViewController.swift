@@ -541,7 +541,7 @@ extension RootViewController: CheckInViewControllerDelegate
         return DataLayer.calendar
     }
     
-    public func committed(drink: Model.Drink, onDate: Date?, for: CheckInViewController)
+    public func committed(drink: Model.Drink, onDate: Date?, for vc: CheckInViewController)
     {
         let updatedModel: Model
         

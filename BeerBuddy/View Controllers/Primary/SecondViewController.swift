@@ -298,10 +298,18 @@ class SecondViewController: UIViewController
                             yearStats = yearPoints.reversed()
                         }
                         
-                        let favoriteDrink = drinkCounts.max(by: { (first, second) -> Bool in first.value < second.value })!.key
-                        let favoriteVolume = volumeCounts.max(by: { (first, second) -> Bool in first.value < second.value })!.key
+                        let facts: Facts?
                         
-                        let facts = Facts.init(averageDrinksPerDay: totalDrinks/Double(numberOfDays), averageABV: totalABV/Double(numberOfCheckIns), favoriteDrink: favoriteDrink, typicalVolume: favoriteVolume, percentDaysDrank: Double(drinkingDays)/Double(numberOfDays), totalPrice: totalPrice, mostDrinksOnADay: (dateForMaxDrinks, maxDrinksPerDay), range: numberOfDays)
+                        if
+                            let favoriteDrink = drinkCounts.max(by: { (first, second) -> Bool in first.value < second.value })?.key,
+                            let favoriteVolume = volumeCounts.max(by: { (first, second) -> Bool in first.value < second.value })?.key
+                        {
+                            facts = Facts.init(averageDrinksPerDay: totalDrinks/Double(numberOfDays), averageABV: totalABV/Double(numberOfCheckIns), favoriteDrink: favoriteDrink, typicalVolume: favoriteVolume, percentDaysDrank: Double(drinkingDays)/Double(numberOfDays), totalPrice: totalPrice, mostDrinksOnADay: (dateForMaxDrinks, maxDrinksPerDay), range: numberOfDays)
+                        }
+                        else
+                        {
+                            facts = nil
+                        }
 
                         self?.cache = (stats, weekStats, monthStats, yearStats, weeklyLimit, standardDrink, weekStartsOnMonday, v.1, facts)
                     }
