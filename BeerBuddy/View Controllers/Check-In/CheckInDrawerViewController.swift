@@ -11,7 +11,9 @@ import DrawerKit
 
 public class CheckInDrawerViewController: UIViewController, DrawerPresentable, DrawerCoordinating
 {
+    @IBOutlet var buttonStack: UIStackView!
     @IBOutlet var confirmButton: UIButton?
+    @IBOutlet var deleteButton: UIButton?
     @IBOutlet var closeButton: UIButton?
     @IBOutlet var stackView: UIView!
     @IBOutlet var titleLabel: UILabel!
@@ -78,10 +80,30 @@ public class CheckInDrawerViewController: UIViewController, DrawerPresentable, D
         //self.confirmButton?.layer.shadowRadius = 2
         //self.confirmButton?.layer.shadowOffset = CGSize.init(width: 0, height: 1.5)
         
-        self.titleLabel?.textColor = Appearance.themeColor.withAlphaComponent(1)
-        
         self.confirmButton?.addTarget(self, action: #selector(confirmTapped), for: .touchUpInside)
+        
+        if let deleteButton = self.deleteButton
+        {
+            let redColor = Appearance.redProgressColor.darkened(by: 0.0)
+            let darkenedRedColor = redColor.darkened(by: 0.2)
+            deleteButton.setBackgroundImage(redColor.resizableImage(withCornerRadius: 8), for: .normal)
+            deleteButton.setBackgroundImage(darkenedRedColor.resizableImage(withCornerRadius: 8), for: .highlighted)
+            deleteButton.setBackgroundImage(darkenedRedColor.resizableImage(withCornerRadius: 8), for: .selected)
+            deleteButton.setBackgroundImage(darkenedRedColor.resizableImage(withCornerRadius: 8), for: [.highlighted, .selected])
+            deleteButton.setTitleColor(.white, for: .normal)
+            deleteButton.setTitleColor(darkenedTextColor, for: .highlighted)
+            deleteButton.setTitleColor(darkenedTextColor, for: .selected)
+            deleteButton.setTitleColor(darkenedTextColor, for: [.highlighted, .selected])
+            deleteButton.layer.cornerRadius = 8
+            deleteButton.adjustsImageWhenHighlighted = false
+            deleteButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
+            deleteButton.contentEdgeInsets = .init(top: 8, left: 0, bottom: 8, right: 0)
+            
+            deleteButton.addTarget(self, action: #selector(deleteTapped), for: .touchUpInside)
+        }
+        
         self.closeButton?.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
+        self.titleLabel?.textColor = Appearance.themeColor.withAlphaComponent(1)
     }
     
     @IBAction func confirmTapped(_ button: UIControl)
@@ -91,12 +113,19 @@ public class CheckInDrawerViewController: UIViewController, DrawerPresentable, D
         dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func deleteTapped(_ button: UIControl)
+    {
+        confirmCallback(true)
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
     @IBAction func closeTapped(_ button: UIControl)
     {
         dismiss(animated: true, completion: nil)
     }
     
-    open func confirmCallback() {}
+    open func confirmCallback(_ deleted: Bool = false) {}
     
     public var heightOfPartiallyExpandedDrawer: CGFloat
     {

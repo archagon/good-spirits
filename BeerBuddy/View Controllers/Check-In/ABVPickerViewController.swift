@@ -46,7 +46,7 @@ public class ABVPickerViewController: CheckInDrawerViewController
         return (units + decimals / 10) / 100
     }
     
-    public override func confirmCallback()
+    public override func confirmCallback(_ deleted: Bool = false)
     {
         self.delegate.didSetABV(self, to: self.selectedABV)
     }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14306.4" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14278.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -106,11 +106,15 @@
                                         </attributedString>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v2G-X3-zM0">
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="v2G-X3-zM0">
                                         <rect key="frame" x="0.0" y="107.5" width="343" height="34"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4d1-Lg-tLM">
-                                                <rect key="frame" x="0.0" y="0.0" width="343" height="34"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="169.5" height="34"/>
+                                                <state key="normal" title="Button"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XA1-HU-TsL" userLabel="Delete Button">
+                                                <rect key="frame" x="173.5" y="0.0" width="169.5" height="34"/>
                                                 <state key="normal" title="Button"/>
                                             </button>
                                         </subviews>
@@ -127,7 +131,9 @@
                         <viewLayoutGuide key="safeArea" id="7tE-r5-pLE"/>
                     </view>
                     <connections>
+                        <outlet property="buttonStack" destination="v2G-X3-zM0" id="q5B-fR-WqR"/>
                         <outlet property="confirmButton" destination="4d1-Lg-tLM" id="D8u-Rm-VeU"/>
+                        <outlet property="deleteButton" destination="XA1-HU-TsL" id="CyT-Hd-JCM"/>
                         <outlet property="stackView" destination="FUh-6y-f3V" id="Ie0-0k-7Iz"/>
                         <outlet property="text" destination="e9n-wR-8aF" id="gCH-rB-hYg"/>
                     </connections>
@@ -187,14 +193,14 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gHo-cm-HIT">
-                                                <rect key="frame" x="164.5" y="0.0" width="157" height="216"/>
+                                                <rect key="frame" x="164.5" y="0.0" width="156.5" height="216"/>
                                                 <connections>
                                                     <outlet property="dataSource" destination="1zC-jX-uEy" id="YGO-Du-ZB0"/>
                                                     <outlet property="delegate" destination="1zC-jX-uEy" id="BIj-Ch-NBY"/>
                                                 </connections>
                                             </pickerView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="800" text="%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OS3-ZB-vwf">
-                                                <rect key="frame" x="321.5" y="0.0" width="21.5" height="216"/>
+                                                <rect key="frame" x="321" y="0.0" width="22" height="216"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
@@ -204,7 +210,7 @@
                                             <constraint firstItem="gHo-cm-HIT" firstAttribute="width" secondItem="bUk-Ld-qp7" secondAttribute="width" id="UyN-6E-BXj"/>
                                         </constraints>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="duJ-5b-NHi">
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="duJ-5b-NHi">
                                         <rect key="frame" x="0.0" y="282" width="343" height="34"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X7R-Vl-yV1">
@@ -225,6 +231,7 @@
                         <viewLayoutGuide key="safeArea" id="B2o-MF-er2"/>
                     </view>
                     <connections>
+                        <outlet property="buttonStack" destination="duJ-5b-NHi" id="Gpb-Kx-aX7"/>
                         <outlet property="closeButton" destination="yC1-D7-0Vl" id="yrA-Mb-8FQ"/>
                         <outlet property="confirmButton" destination="X7R-Vl-yV1" id="MRt-nO-XDO"/>
                         <outlet property="decimalPicker" destination="gHo-cm-HIT" id="PWJ-O3-3hV"/>
@@ -305,7 +312,7 @@
                                             <constraint firstItem="96b-4W-NLh" firstAttribute="width" secondItem="Ydb-G7-2cP" secondAttribute="width" id="9rv-gQ-FG8"/>
                                         </constraints>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mWT-1V-qli">
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="mWT-1V-qli">
                                         <rect key="frame" x="0.0" y="282" width="343" height="34"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SLd-RY-shJ">
@@ -326,6 +333,7 @@
                         <viewLayoutGuide key="safeArea" id="4h0-Bf-40a"/>
                     </view>
                     <connections>
+                        <outlet property="buttonStack" destination="mWT-1V-qli" id="QsW-vn-K6n"/>
                         <outlet property="closeButton" destination="ev2-dD-Ijv" id="IGp-cB-7YC"/>
                         <outlet property="confirmButton" destination="SLd-RY-shJ" id="WUu-DM-tJQ"/>
                         <outlet property="decimalPicker" destination="96b-4W-NLh" id="xDN-iI-7BG"/>
@@ -434,7 +442,7 @@
                                             <outlet property="delegate" destination="G0s-gJ-O2h" id="HDR-IP-Y61"/>
                                         </connections>
                                     </collectionView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F1z-MH-TpP">
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="F1z-MH-TpP">
                                         <rect key="frame" x="0.0" y="471" width="343" height="34"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zsa-M1-CCE">
@@ -455,6 +463,7 @@
                         <viewLayoutGuide key="safeArea" id="htA-Kl-oZ3"/>
                     </view>
                     <connections>
+                        <outlet property="buttonStack" destination="F1z-MH-TpP" id="dZL-Wr-6yA"/>
                         <outlet property="closeButton" destination="cS1-ZH-90m" id="Aij-Pa-GMB"/>
                         <outlet property="confirmButton" destination="zsa-M1-CCE" id="eKe-Wl-HVY"/>
                         <outlet property="decimalPicker" destination="a8p-1e-EkQ" id="ue7-ge-FW7"/>
@@ -551,7 +560,7 @@
                                             </pickerView>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MoE-pM-jdc">
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="MoE-pM-jdc">
                                         <rect key="frame" x="0.0" y="422" width="343" height="34"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AgW-wz-3EI">
@@ -572,6 +581,7 @@
                         <viewLayoutGuide key="safeArea" id="ZK4-Z8-geZ"/>
                     </view>
                     <connections>
+                        <outlet property="buttonStack" destination="MoE-pM-jdc" id="VsF-pb-mF7"/>
                         <outlet property="closeButton" destination="x7e-BE-G0K" id="JMK-rU-adX"/>
                         <outlet property="confirmButton" destination="AgW-wz-3EI" id="m74-qr-p2T"/>
                         <outlet property="name" destination="Cne-T0-Iyf" id="VfG-BO-H8m"/>

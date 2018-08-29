@@ -54,7 +54,7 @@ public class StylePickerViewController: CheckInDrawerViewController
         }
     }
     
-    public override func confirmCallback()
+    public override func confirmCallback(_ deleted: Bool = false)
     {
         self.delegate.didSetStyle(self, to: self.selectedStyle, withName: self.selectedName)
     }

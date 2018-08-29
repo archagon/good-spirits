@@ -107,7 +107,7 @@ public class VolumePickerViewController: CheckInDrawerViewController
         return self.currentMeasurement
     }
     
-    public override func confirmCallback()
+    public override func confirmCallback(_ deleted: Bool = false)
     {
         self.delegate.didSetVolume(self, to: self.selectedVolume)
     }

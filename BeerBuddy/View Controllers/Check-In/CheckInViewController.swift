@@ -14,6 +14,7 @@ public protocol CheckInViewControllerDelegate: class
 {
     func calendar(for: CheckInViewController) -> Calendar
     func committed(drink: Model.Drink, onDate: Date?, for: CheckInViewController)
+    func deleted(for: CheckInViewController)
     func updateDimensions(for: CheckInViewController)
 }
 
@@ -208,18 +209,44 @@ public class CheckInViewController: CheckInDrawerViewController
         {
         case .normal:
             self.confirmButton?.setTitle("Check In", for: .normal)
+            self.deleteButton?.setTitle(nil, for: .normal)
+            if let aButton = self.deleteButton
+            {
+                self.buttonStack.removeArrangedSubview(aButton)
+                aButton.isHidden = true
+            }
         case .update:
             self.confirmButton?.setTitle("Update", for: .normal)
+            self.deleteButton?.setTitle("Delete", for: .normal)
+            if let aButton = self.deleteButton
+            {
+                self.buttonStack.addArrangedSubview(aButton)
+                aButton.isHidden = false
+            }
         case .untappd:
             self.confirmButton?.setTitle("Approve", for: .normal)
+            self.deleteButton?.setTitle("Dismiss", for: .normal)
+            if let aButton = self.deleteButton
+            {
+                self.buttonStack.addArrangedSubview(aButton)
+                aButton.isHidden = false
+            }
         }
     }
     
-    public override func confirmCallback()
+    public override func confirmCallback(_ deleted: Bool = false)
     {
-        let display = self.display
-        let model = Model.Drink.init(name: display.name, style: display.style, abv: display.abv, price: display.cost, volume: display.volume)
-        self.delegate.committed(drink: model, onDate: self.checkInDate, for: self)
+        if deleted
+        {
+            self.delegate.deleted(for: self)
+        }
+        else
+        {
+            let display = self.display
+            let model = Model.Drink.init(name: display.name, style: display.style, abv: display.abv, price: display.cost, volume: display.volume)
+            
+            self.delegate.committed(drink: model, onDate: self.checkInDate, for: self)
+        }
     }
 }
 

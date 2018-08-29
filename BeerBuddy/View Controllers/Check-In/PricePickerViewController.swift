@@ -46,7 +46,7 @@ public class PricePickerViewController: CheckInDrawerViewController
         return units + decimals / 100
     }
     
-    public override func confirmCallback()
+    public override func confirmCallback(_ deleted: Bool = false)
     {
         self.delegate.didSetPrice(self, to: self.selectedPrice)
     }

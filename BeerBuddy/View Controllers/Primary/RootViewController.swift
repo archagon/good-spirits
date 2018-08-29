@@ -573,6 +573,27 @@ extension RootViewController: CheckInViewControllerDelegate
         self.modelForCheckIn = nil
     }
     
+    func deleted(for: CheckInViewController)
+    {
+        if var existingModel = self.modelForCheckIn
+        {
+            existingModel.delete()
+            
+            self.data.save(model: existingModel)
+            {
+                switch $0
+                {
+                case .error(let e):
+                    appError("could not delete check-in -- \(e.localizedDescription)")
+                case .value(_):
+                    break
+                }
+            }
+        }
+        
+        self.modelForCheckIn = nil
+    }
+    
     func updateDimensions(for vc: CheckInViewController)
     {
         if vc != self.presentedViewController
