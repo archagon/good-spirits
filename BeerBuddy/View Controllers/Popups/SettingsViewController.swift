@@ -146,7 +146,7 @@ extension SettingsViewController
             
             if !Defaults.donated
             {
-                iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time and effort. If you're able to visit my website and buy something through my Amazon affiliate link, or donate $donation$through an in-app purchase, I would be incredibly grateful!"
+                iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time and effort. If you're able to visit my website and buy something through my Amazon affiliate link, or tip $donation$through an in-app purchase, I would be incredibly grateful!"
                 
                 iapPrompt.replaceAnchorText("name", value: Constants.appName)
                 if let price = localizedPrice()
@@ -172,7 +172,14 @@ extension SettingsViewController
         }
         else if sectionCounts[section].0 == .healthKit
         {
-            footer.textLabel?.text = "New check-ins will be added as nutrition to your Health app, with an estimate for calories based on the volume and alcohol content of your drinks. Deleted check-ins will also be removed from Health. Does not sync past check-ins, except when updated."
+            if HealthKit.shared.loginStatus == .unavailable
+            {
+                footer.textLabel?.text = nil
+            }
+            else
+            {
+                footer.textLabel?.text = "New check-ins will be added as nutrition to your Health app, with an estimate for calories based on the volume and alcohol content of your drinks. Deleted check-ins will also be removed from Health. Does not sync past check-ins, except when updated."
+            }
         }
         else if sectionCounts[section].0 == .export
         {
@@ -196,7 +203,21 @@ extension SettingsViewController
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return sectionCounts[section].1
+        if sectionCounts[section].0 == .healthKit
+        {
+            if HealthKit.shared.loginStatus == .unavailable
+            {
+                return 0
+            }
+            else
+            {
+                return sectionCounts[section].1
+            }
+        }
+        else
+        {
+            return sectionCounts[section].1
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -257,7 +278,14 @@ extension SettingsViewController
         case .untappd:
             return "Untappd"
         case .healthKit:
-            return "Health Kit"
+            if HealthKit.shared.loginStatus == .unavailable
+            {
+                return nil
+            }
+            else
+            {
+                return "Health Kit"
+            }
         case .export:
             return nil
         case .info:
@@ -342,7 +370,7 @@ extension SettingsViewController
             {
                 if let price = localizedPrice()
                 {
-                    cell.textLabel?.text = "Donate \(price)"
+                    cell.textLabel?.text = "Tip \(price)"
                     
                     if self.paymentInProgress
                     {
@@ -365,7 +393,7 @@ extension SettingsViewController
                     let indicator = UIActivityIndicatorView.init(activityIndicatorStyle: .gray)
                     cell.accessoryView = indicator
                     indicator.startAnimating()
-                    cell.textLabel?.text = "Donate"
+                    cell.textLabel?.text = "Tip"
                     cell.textLabel?.textColor = UIColor.gray
                 }
             }

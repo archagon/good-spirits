@@ -10,7 +10,7 @@ import Foundation
 
 class Constants
 {
-    static let url = URL.init(string: "http://goodspirits.app")!
+    static let url = URL.init(string: "https://goodspirits.app")!
     
     static var appName: String
     {
