@@ -24,7 +24,7 @@ class SettingsViewController: UITableViewController
         case export
         case info
     }
-    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, 3), (.settings, 2), (.untappd, 1), (.healthKit, 1), (.export, 1), (.info, 1)]
+    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, 3), (.settings, 2), (.untappd, 1), (.export, 1), (.info, 1)]
     
     var healthKitLoginPending: Bool = false
     enum HealthKitLoginStatus

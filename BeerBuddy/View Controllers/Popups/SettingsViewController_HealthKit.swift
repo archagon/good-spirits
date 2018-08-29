@@ -14,7 +14,11 @@ extension SettingsViewController
 {
     func updateHealthKitToggleAppearance(withCell aCell: UITableViewCell? = nil)
     {
-        let section: Int = self.sectionCounts.index { $0.0 == .healthKit }!
+        let aSection = self.sectionCounts.index { $0.0 == .healthKit }
+        guard let section = aSection else
+        {
+            return
+        }
         
         if
             let genericCell = aCell ?? self.tableView.cellForRow(at: IndexPath.init(row: 0, section: section)),

@@ -311,6 +311,8 @@ class RootViewController: UITabBarController, DrawerCoordinating
     
     private func syncHealthKit()
     {
+        return
+        
         if HealthKit.shared.loginStatus != .enabledAndAuthorized
         {
             appDebug("HK not enabled, skipping sync")
