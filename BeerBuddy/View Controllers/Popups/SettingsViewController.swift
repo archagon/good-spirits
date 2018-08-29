@@ -284,7 +284,7 @@ extension SettingsViewController
             }
             else
             {
-                return "Health Kit"
+                return "Health"
             }
         case .export:
             return nil
@@ -435,7 +435,7 @@ extension SettingsViewController
             cell.toggle.removeTarget(self, action: nil, for: .valueChanged)
             cell.toggle.addTarget(self, action: #selector(healthKitToggled), for: .valueChanged)
             
-            cell.textLabel?.text = "Send Check-Ins to Health Kit"
+            cell.textLabel?.text = "Sync Check-Ins with Health"
             cell.textLabel?.numberOfLines = 10
             cell.detailTextLabel?.numberOfLines = 1000
             cell.detailTextLabel?.textColor = .red

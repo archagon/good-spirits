@@ -220,7 +220,7 @@ public class CheckInViewController: CheckInDrawerViewController
             self.deleteButton?.setTitle("Delete", for: .normal)
             if let aButton = self.deleteButton
             {
-                self.buttonStack.addArrangedSubview(aButton)
+                self.buttonStack.insertArrangedSubview(aButton, at: 0)
                 aButton.isHidden = false
             }
         case .untappd:
@@ -228,7 +228,7 @@ public class CheckInViewController: CheckInDrawerViewController
             self.deleteButton?.setTitle("Dismiss", for: .normal)
             if let aButton = self.deleteButton
             {
-                self.buttonStack.addArrangedSubview(aButton)
+                self.buttonStack.insertArrangedSubview(aButton, at: 0)
                 aButton.isHidden = false
             }
         }

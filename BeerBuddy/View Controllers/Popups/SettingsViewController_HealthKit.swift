@@ -27,12 +27,12 @@ extension SettingsViewController
                 cell.enable()
                 cell.toggle.isOn = false
                 cell.toggle.isEnabled = false
-                cell.detailTextLabel?.text = "HealthKit not available on this device"
+                cell.detailTextLabel?.text = "Health not available on this device"
             case .unauthorized:
                 cell.enable()
                 cell.toggle.isOn = false
                 cell.toggle.isEnabled = false
-                cell.detailTextLabel?.text = "Please authorize \(Constants.appName) in HealthKit settings"
+                cell.detailTextLabel?.text = "Please authorize \(Constants.appName) in Health settings"
             case .disabled:
                 cell.enable()
                 cell.toggle.isOn = false
