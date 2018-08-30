@@ -311,8 +311,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
     
     private func syncHealthKit()
     {
-        return
-        
+        #if HEALTH_KIT
         if HealthKit.shared.loginStatus != .enabledAndAuthorized
         {
             appDebug("HK not enabled, skipping sync")
@@ -369,6 +368,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
                 }
             }
         }
+        #endif
     }
     
     func configurePopup(_ controller: UIViewController)

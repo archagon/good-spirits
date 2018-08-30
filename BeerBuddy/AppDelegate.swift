@@ -20,6 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         
         //Limit.test()
         
+        #if HEALTH_KIT
+        appDebug("HealthKit enabled")
+        #else
+        appDebug("HealthKit disabled")
+        #endif
+        
         return true
     }
 
