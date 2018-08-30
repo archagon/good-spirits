@@ -24,10 +24,15 @@ class SettingsViewController: UITableViewController
         case export
         case info
     }
-    #if HEALTH_KIT
-    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, 2), (.settings, 2), (.untappd, 1), (.healthKit, 1), (.export, 1), (.info, 1)]
+    #if DONATION
+    private static let metaLength = 3
     #else
-    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, 2), (.settings, 2), (.untappd, 1), (.export, 1), (.info, 1)]
+    private static let metaLength = 2
+    #endif
+    #if HEALTH_KIT
+    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, SettingsViewController.metaLength), (.settings, 2), (.untappd, 1), (.healthKit, 1), (.export, 1), (.info, 1)]
+    #else
+    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, SettingsViewController.metaLength), (.settings, 2), (.untappd, 1), (.export, 1), (.info, 1)]
     #endif
     
     var healthKitLoginPending: Bool = false
@@ -150,7 +155,11 @@ extension SettingsViewController
             
             if !Defaults.donated
             {
+                #if DONATION
+                iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time and effort. If you're able to visit my website and buy something through my Amazon affiliate link, or tip $donation$ through an in-app purchase, I would be incredibly grateful!"
+                #else
                 iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time and effort. If you're able to visit my website and buy something through my Amazon affiliate link, I would be incredibly grateful!"
+                #endif
                 
                 iapPrompt.replaceAnchorText("name", value: Constants.appName)
                 if let price = localizedPrice()

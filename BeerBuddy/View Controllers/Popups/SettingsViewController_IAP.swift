@@ -13,8 +13,7 @@ extension SettingsViewController: SKProductsRequestDelegate, SKPaymentTransactio
 {
     func requestProducts()
     {
-        return
-        
+        #if DONATION
         if self.products != nil
         {
             return
@@ -31,6 +30,7 @@ extension SettingsViewController: SKProductsRequestDelegate, SKPaymentTransactio
             self.productsRequest = productsRequest
             productsRequest.start()
         }
+        #endif
     }
     
     public func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse)
