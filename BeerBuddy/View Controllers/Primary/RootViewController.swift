@@ -121,8 +121,11 @@ class RootViewController: UITabBarController, DrawerCoordinating
         {
             Timer.scheduledTimer(withTimeInterval: 60, repeats: true)
             { [weak `self`] _ in
-                appDebug("firing sync with Untappd")
-                self?.syncUntappd(withCallback: { _ in })
+                if UIApplication.shared.applicationState == .active
+                {
+                    appDebug("firing sync with Untappd")
+                    self?.syncUntappd(withCallback: { _ in })
+                }
             }
         }
         
