@@ -108,7 +108,7 @@ public class CheckInViewController: CheckInDrawerViewController
         let dateFormat = DateFormatter.init()
         dateFormat.dateFormat = "EEEE, MMMM\u{a0}d"
         let linkColor = UIColor.init(red: 0, green: 0.47843137254901963, blue: 1, alpha: 1) //from default attributes
-        let emphLinkColor = UIColor.red
+        let emphLinkColor = Appearance.redProgressColor
         
         let paragraph = NSMutableParagraphStyle.init()
         paragraph.lineSpacing = 5
@@ -180,7 +180,7 @@ public class CheckInViewController: CheckInDrawerViewController
             replaceText("date", value: "")
         }
         replaceLink("volume", value: Format.format(volume: display.volume), emphasized: self.type == .untappd && self.volume == nil)
-        replaceLink("abv", value: Format.format(abv: display.abv))
+        replaceLink("abv", value: Format.format(abv: display.abv), emphasized: self.type == .untappd && self.abv == nil && display.abv == 0)
         if let name = withName
         {
             replaceText("type", value: "\"$name$\" $type$")
