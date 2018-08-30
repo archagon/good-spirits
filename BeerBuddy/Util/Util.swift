@@ -58,7 +58,6 @@ public func appError(_ message: String, _ controller: UIViewController? = nil)
     let message = "Oops! \(Constants.appName) encountered an unexpected error. (\(message)) Please e-mail archagon@archagon.net with a sceenshot of this message. My apologies!"
     print("Error: \(message)")
     showMessage(message, controller)
-    //assert(false)
 }
 
 public func appAlert(_ message: String, _ controller: UIViewController? = nil)
@@ -96,17 +95,12 @@ public func showMessage(_ msg: String, _ controller: UIViewController? = nil)
         }
         else
         {
-            if let presented = (UIApplication.shared.delegate as? AppDelegate)?.rootController?.presentedViewController
+            var controller: UIViewController? = (UIApplication.shared.delegate as? AppDelegate)?.rootController
+            while controller?.presentedViewController != nil
             {
-                presented.dismiss(animated: true)
-                {
-                    (UIApplication.shared.delegate as? AppDelegate)?.rootController?.present(popup, animated: true, completion: nil)
-                }
+                controller = controller?.presentedViewController
             }
-            else
-            {
-                (UIApplication.shared.delegate as? AppDelegate)?.rootController?.present(popup, animated: true, completion: nil)
-            }
+            controller?.present(popup, animated: true, completion: nil)
         }
     }
 }
