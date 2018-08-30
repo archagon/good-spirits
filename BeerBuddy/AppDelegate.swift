@@ -28,6 +28,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         appDebug("HealthKit disabled")
         #endif
         
+        #if DONATION
+        appDebug("donations enabled")
+        #else
+        appDebug("donations disabled")
+        #endif
+        
         return true
     }
     
