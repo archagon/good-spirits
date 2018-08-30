@@ -13,6 +13,8 @@ extension SettingsViewController: SKProductsRequestDelegate, SKPaymentTransactio
 {
     func requestProducts()
     {
+        return
+        
         if self.products != nil
         {
             return
@@ -50,10 +52,14 @@ extension SettingsViewController: SKProductsRequestDelegate, SKPaymentTransactio
     func reloadIAPCells()
     {
         self.tableView.beginUpdates()
-        let iap = sectionCounts.index { $0.0 == .iap }!
-        let meta = sectionCounts.index { $0.0 == .meta }!
-        updateCell(nil, forRowAt: IndexPath.init(row: 2, section: meta))
-        updateFooter(tableView.footerView(forSection: iap), forSection: iap)
+        if let meta = sectionCounts.index(where: { $0.0 == .meta })
+        {
+            updateCell(nil, forRowAt: IndexPath.init(row: 2, section: meta))
+        }
+        if let iap = sectionCounts.index(where: { $0.0 == .iap })
+        {
+            updateFooter(tableView.footerView(forSection: iap), forSection: iap)
+        }
         self.tableView.endUpdates()
     }
     
