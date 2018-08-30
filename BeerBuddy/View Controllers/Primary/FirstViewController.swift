@@ -224,14 +224,18 @@ class FirstViewController: UIViewController
             controller.syncUntappd
             { err in
                 sender.endRefreshing()
-                if let error = err
+                
+                switch err
                 {
+                case .error(let error):
                     // KLUDGE: without this, the refresh control does not stop
                     let when = DispatchTime.now() + 0.2
                     DispatchQueue.main.asyncAfter(deadline: when)
                     {
                         appAlert("Could not sync with Untappd: \(error.localizedDescription).")
                     }
+                case .value(_):
+                    break
                 }
             }
         }

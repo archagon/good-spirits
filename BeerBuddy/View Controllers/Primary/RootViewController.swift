@@ -192,15 +192,15 @@ class RootViewController: UITabBarController, DrawerCoordinating
         }
     }
     
-    public func syncUntappd(withCallback block: @escaping (Error?)->Void)
+    public func syncUntappd(withCallback block: @escaping (MaybeError<Int>)->Void)
     {
         switch Untappd.shared.loginStatus
         {
         case .unreachable:
-            block(Untappd.UntappdError.notReachable)
+            block(.error(e: Untappd.UntappdError.notReachable))
             return
         case .disabled:
-            block(Untappd.UntappdError.notEnabled)
+            block(.error(e: Untappd.UntappdError.notEnabled))
             return
         case .enabledAndAuthorized:
             break
@@ -217,7 +217,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
             {
             case .error(let e):
                 appWarning("Untappd refresh error -- \(e.localizedDescription)")
-                block(e)
+                block(.error(e: e))
             case .value(let checkIns):
                 updateBaseline: do
                 {
@@ -232,10 +232,13 @@ class RootViewController: UITabBarController, DrawerCoordinating
                     
                     if !hadBaseline
                     {
-                        block(nil)
+                        block(.value(v: 0))
                         return
                     }
                 }
+                
+                let completionGroup = DispatchGroup()
+                var error: Error? = nil //we don't have to set this atomically since all data.save calls return on main
                 
                 for checkin in checkIns
                 {
@@ -288,23 +291,35 @@ class RootViewController: UITabBarController, DrawerCoordinating
                     let model = Model.init(metadata: meta, checkIn: checkIn)
                     
                     // AB: we "sync" here because of our fake Untappd UUID scheme
+                    completionGroup.enter()
                     self?.data.save(model: model, syncing: true)
                     {
+                        defer { completionGroup.leave() }
+                        
                         switch $0
                         {
                         case .error(let e):
-                            appError("Untappd commit error -- \(e.localizedDescription)")
+                            error = e
+                            print("Untappd commit error -- \(e.localizedDescription)")
                         case .value(_):
                             appDebug("saved \(untappdId)!")
                         }
                     }
                 }
                 
-                onMain
+                completionGroup.notify(queue: DispatchQueue.main)
                 {
-                    // TODO: technically, does not take database calls into consideration; might have errors
-                    block(nil)
+                    if let e = error
+                    {
+                        block(.error(e: e))
+                    }
+                    else
+                    {
+                        block(.value(v: checkIns.count))
+                    }
                 }
+                
+                return
             }
         }
     }

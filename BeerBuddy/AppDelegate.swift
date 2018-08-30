@@ -18,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     {
         Defaults.registerDefaults()
         
+        UIApplication.shared.setMinimumBackgroundFetchInterval(60 * 5)
+        
         //Limit.test()
         
         #if HEALTH_KIT
@@ -27,6 +29,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         #endif
         
         return true
+    }
+    
+    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void)
+    {
+        self.rootController?.syncUntappd
+        {
+            switch $0
+            {
+            case .error(let e):
+                print("background refresh error: \(e.localizedDescription)")
+                completionHandler(UIBackgroundFetchResult.failed)
+            case .value(let v):
+                if v == 0
+                {
+                    appDebug("background refresh: no new data")
+                    completionHandler(UIBackgroundFetchResult.noData)
+                }
+                else
+                {
+                    appDebug("background refresh: \(v) new check-ins")
+                    completionHandler(UIBackgroundFetchResult.newData)
+                }
+            }
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication)
