@@ -143,9 +143,11 @@ public class YearStatsCell: UITableViewCell
             while i < (drinks.count-(granularity-1))
             {
                 let drinks = drinks[i..<i+granularity]
+                let lastDate = drinks.last?.date
                 let entry = drinks.reduce(ChartDataEntry.init(x: 0, y: 0))
                 {
-                    ChartDataEntry.init(x: $0.x + (1/Double(granularity)) * $1.date.timeIntervalSince1970, y: $0.y + $1.grams)
+                    let date = lastDate?.timeIntervalSince1970 ?? $0.x + (1/Double(granularity)) * $1.date.timeIntervalSince1970
+                    return ChartDataEntry.init(x: date, y: $0.y + $1.grams)
                 }
                 samples.append(entry)
                 i += granularity
