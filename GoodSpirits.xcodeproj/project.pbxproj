@@ -850,13 +850,13 @@
 			buildRules = (
 			);
 			dependencies = (
+				4EC812012139EC9E00BDFDFF /* PBXTargetDependency */,
 				4EBE6705210FE4CE00878CA0 /* PBXTargetDependency */,
 				4E721EAD21251AF30001BBB9 /* PBXTargetDependency */,
 				4E5D8484212697AC0081B273 /* PBXTargetDependency */,
 				4E9112C021385F9C00A11383 /* PBXTargetDependency */,
 				4EFEDF7C2139DF3B00481623 /* PBXTargetDependency */,
 				4EFEDF982139E53B00481623 /* PBXTargetDependency */,
-				4EC812012139EC9E00BDFDFF /* PBXTargetDependency */,
 			);
 			name = "Good Spirits";
 			productName = BeerBuddy;
