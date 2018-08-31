@@ -1,3 +1,6 @@
 [submodule "Submodules/Charts"]
 	path = Submodules/Charts
 	url = https://github.com/danielgindi/Charts
+[submodule "Submodules/SortedArray"]
+	path = Submodules/SortedArray
+	url = https://github.com/ole/SortedArray

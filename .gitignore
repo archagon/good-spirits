@@ -1,4 +1,5 @@
 .DS_Store
+
 */*/xcuserdata
 */xcuserdata
 
@@ -8,10 +9,6 @@
 Assets/untappd@2x.png
 BeerBuddy/Assets.xcassets/untappd_logo*
 
-/External
-/Carthage
-
-Cartfile.resolved
 .ruby-version
 
 DBComparison.zip
