@@ -15,15 +15,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.1</string>
+	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>12.1</string>
+	<string>15.3</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSHealthShareUsageDescription</key>
-	<string>Previous check-ins will be read from Health only in the case where they need to be deleted, following a local check-in being removed.</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>Your check-ins will be logged as calories based on their alcohol content. Any check-in changes will be synced as well.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

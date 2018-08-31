@@ -27,7 +27,9 @@ class Constants
         return Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as! String
     }
     
+    #if HEALTH_KIT
     static let healthKitFoodNameKey = "BBMetadataKeyFoodName"
+    #endif
     static let tipIAPProductID = "net.abstractrose.goodspirits.iap.tip"
     
     static let calorieMultiplier: Double = 1.6

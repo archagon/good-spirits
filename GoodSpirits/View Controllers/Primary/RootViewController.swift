@@ -115,7 +115,9 @@ class RootViewController: UITabBarController, DrawerCoordinating
         
         
         syncUntappd(withCallback: { _ in })
+        #if HEALTH_KIT
         syncHealthKit()
+        #endif
         
         untappdTimer: do
         {
@@ -142,10 +144,13 @@ class RootViewController: UITabBarController, DrawerCoordinating
         
         self.notificationObserver = NotificationCenter.default.addObserver(forName: DataLayer.DataDidChangeNotification, object: nil, queue: OperationQueue.main)
         { [weak `self`] _ in
+            #if HEALTH_KIT
             self?.syncHealthKit()
+            #endif
         }
         self.defaultsObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: OperationQueue.main)
         { [weak `self`] _ in
+            #if HEALTH_KIT
             healthKit: do
             {
                 if Defaults.healthKitEnabled && Defaults.healthKitBaseline == nil
@@ -168,6 +173,7 @@ class RootViewController: UITabBarController, DrawerCoordinating
                     Defaults.healthKitBaseline = nil
                 }
             }
+            #endif
             
             untappd: do
             {
@@ -327,9 +333,9 @@ class RootViewController: UITabBarController, DrawerCoordinating
         }
     }
     
+    #if HEALTH_KIT
     private func syncHealthKit()
     {
-        #if HEALTH_KIT
         if HealthKit.shared.loginStatus != .enabledAndAuthorized
         {
             appDebug("HK not enabled, skipping sync")
@@ -386,8 +392,8 @@ class RootViewController: UITabBarController, DrawerCoordinating
                 }
             }
         }
-        #endif
     }
+    #endif
     
     func configurePopup(_ controller: UIViewController)
     {

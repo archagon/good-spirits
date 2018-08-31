@@ -9,7 +9,9 @@
 import Foundation
 import UIKit
 import StoreKit
+#if HEALTH_KIT
 import HealthKit
+#endif
 import DataLayer
 
 class SettingsViewController: UITableViewController
@@ -20,7 +22,9 @@ class SettingsViewController: UITableViewController
         case meta
         case settings
         case untappd
+        #if HEALTH_KIT
         case healthKit
+        #endif
         case export
         case info
     }
@@ -34,16 +38,6 @@ class SettingsViewController: UITableViewController
     #else
     let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, SettingsViewController.metaLength), (.settings, 2), (.untappd, 1), (.export, 1), (.info, 1)]
     #endif
-    
-    var healthKitLoginPending: Bool = false
-    enum HealthKitLoginStatus
-    {
-        case unavailable
-        case unauthorized
-        case disabled
-        case pendingAuthorization
-        case enabledAndAuthorized
-    }
     
     // TODO: we should use this so that a user can't go to the Untappd controller more than once
     //var untappdLoginPending: Bool = false
@@ -77,7 +71,9 @@ class SettingsViewController: UITableViewController
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "PriceCell")
         self.tableView.register(SubtitleToggleCell.self, forCellReuseIdentifier: "ToggleCell")
+        #if HEALTH_KIT
         self.tableView.register(SubtitleToggleCell.self, forCellReuseIdentifier: "HealthKitCell")
+        #endif
         self.tableView.register(SubtitleToggleCell.self, forCellReuseIdentifier: "UntappdCell")
         
         self.tableView.sectionFooterHeight = UITableViewAutomaticDimension
@@ -85,7 +81,9 @@ class SettingsViewController: UITableViewController
         
         let activeNotification = NotificationCenter.default.addObserver(forName: Notification.Name.UIApplicationDidBecomeActive, object: nil, queue: OperationQueue.main)
         { [weak `self`] _ in
+            #if HEALTH_KIT
             self?.updateHealthKitToggleAppearance()
+            #endif
             self?.updateUntappdToggleAppearance()
         }
         notificationObservers.append(activeNotification)
@@ -94,7 +92,9 @@ class SettingsViewController: UITableViewController
         { [weak `self`] _ in
             onMain
             {
+                #if HEALTH_KIT
                 self?.updateHealthKitToggleAppearance()
+                #endif
                 self?.updateUntappdToggleAppearance()
             }
         }
@@ -106,7 +106,9 @@ class SettingsViewController: UITableViewController
     
     func viewWillAppear()
     {
+        #if HEALTH_KIT
         updateHealthKitToggleAppearance()
+        #endif
         updateUntappdToggleAppearance()
     }
 }
@@ -183,17 +185,6 @@ extension SettingsViewController
         {
             footer.textLabel?.text = "New check-ins will automatically be pulled from your Untappd account. Untappd entries will appear at the top of your Log view and will need to be supplemented with volume and price information or dismissed. (Try swiping left on an entiry for a shortcut to do this.) You can also sync manually by pulling-to-refresh from the Log view. Does not sync past check-ins."
         }
-        else if sectionCounts[section].0 == .healthKit
-        {
-            if HealthKit.shared.loginStatus == .unavailable
-            {
-                footer.textLabel?.text = nil
-            }
-            else
-            {
-                footer.textLabel?.text = "New check-ins will be added as nutrition to your Health app, with an estimate for calories based on the volume and alcohol content of your drinks. Deleted check-ins will also be removed from Health. Does not sync past check-ins, except when updated."
-            }
-        }
         else if sectionCounts[section].0 == .export
         {
             footer.textLabel?.text = "Export your data as a SQLite database or JSON for backups or outside processing."
@@ -210,12 +201,31 @@ extension SettingsViewController
         }
         else
         {
+            #if HEALTH_KIT
+            if sectionCounts[section].0 == .healthKit
+            {
+                if HealthKit.shared.loginStatus == .unavailable
+                {
+                    footer.textLabel?.text = nil
+                }
+                else
+                {
+                    footer.textLabel?.text = "New check-ins will be added as nutrition to your Health app, with an estimate for calories based on the volume and alcohol content of your drinks. Deleted check-ins will also be removed from Health. Does not sync past check-ins, except when updated."
+                }
+            }
+            else
+            {
+                footer.textLabel?.text = nil
+            }
+            #else
             footer.textLabel?.text = nil
+            #endif
         }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
+        #if HEALTH_KIT
         if sectionCounts[section].0 == .healthKit
         {
             if HealthKit.shared.loginStatus == .unavailable
@@ -231,6 +241,9 @@ extension SettingsViewController
         {
             return sectionCounts[section].1
         }
+        #else
+        return sectionCounts[section].1
+        #endif
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -264,8 +277,10 @@ extension SettingsViewController
             }
         case .untappd:
             cell = tableView.dequeueReusableCell(withIdentifier: "UntappdCell")!
+        #if HEALTH_KIT
         case .healthKit:
             cell = tableView.dequeueReusableCell(withIdentifier: "HealthKitCell")!
+        #endif
         case .export:
             cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
         case .info:
@@ -290,6 +305,7 @@ extension SettingsViewController
             return "Settings"
         case .untappd:
             return "Untappd"
+        #if HEALTH_KIT
         case .healthKit:
             if HealthKit.shared.loginStatus == .unavailable
             {
@@ -299,6 +315,7 @@ extension SettingsViewController
             {
                 return "Health"
             }
+        #endif
         case .export:
             return nil
         case .info:
@@ -318,17 +335,6 @@ extension SettingsViewController
                 return nil
             }
         }
-        if type == .healthKit
-        {
-            if let cell = tableView.cellForRow(at: indexPath) as? SubtitleToggleCell
-            {
-                return (cell.toggle.isEnabled ? indexPath : nil)
-            }
-            else
-            {
-                return nil
-            }
-        }
         else if type == .untappd
         {
             if let cell = tableView.cellForRow(at: indexPath) as? SubtitleToggleCell
@@ -339,6 +345,22 @@ extension SettingsViewController
             {
                 return nil
             }
+        }
+        else
+        {
+            #if HEALTH_KIT
+            if type == .healthKit
+            {
+                if let cell = tableView.cellForRow(at: indexPath) as? SubtitleToggleCell
+                {
+                    return (cell.toggle.isEnabled ? indexPath : nil)
+                }
+                else
+                {
+                    return nil
+                }
+            }
+            #endif
         }
         
         return indexPath
@@ -441,6 +463,7 @@ extension SettingsViewController
             cell.textLabel?.numberOfLines = 10
             cell.detailTextLabel?.numberOfLines = 1000
             updateUntappdToggleAppearance(withCell: cell)
+        #if HEALTH_KIT
         case .healthKit:
             let cell = aCell as! ToggleCell
             cell.accessoryType = .none
@@ -453,6 +476,7 @@ extension SettingsViewController
             cell.detailTextLabel?.numberOfLines = 1000
             cell.detailTextLabel?.textColor = .red
             updateHealthKitToggleAppearance(withCell: cell)
+        #endif
         case .export:
             let cell = aCell
             cell.accessoryType = .disclosureIndicator
@@ -523,6 +547,7 @@ extension SettingsViewController
             }
             
             tableView.deselectRow(at: indexPath, animated: true)
+        #if HEALTH_KIT
         case .healthKit:
             if let cell = tableView.cellForRow(at: indexPath) as? ToggleCell
             {
@@ -531,6 +556,7 @@ extension SettingsViewController
             }
             
             tableView.deselectRow(at: indexPath, animated: true)
+        #endif
         case .export:
             appDebug("exporting")
             tableView.deselectRow(at: indexPath, animated: true)
@@ -595,7 +621,9 @@ extension SettingsViewController
     {
         defer
         {
+            #if HEALTH_KIT
             updateHealthKitToggleAppearance()
+            #endif
         }
         
         sender.isOn = false
@@ -645,6 +673,7 @@ extension SettingsViewController
         }
     }
     
+    #if HEALTH_KIT
     @objc func healthKitToggled(_ sender: UISwitch)
     {
         let newValue = sender.isOn
@@ -661,4 +690,5 @@ extension SettingsViewController
         
         updateHealthKitToggleAppearance()
     }
+    #endif
 }

@@ -21,9 +21,7 @@
 		4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */; };
 		4E7FB9EC212E3B1400052BFC /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9EB212E3B1400052BFC /* RootViewController.swift */; };
 		4E7FB9F1212E3F2A00052BFC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */; };
-		4E7FB9F3212E58BD00052BFC /* HealthKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F2212E58BD00052BFC /* HealthKit.swift */; };
 		4E7FB9F5212E58E200052BFC /* PopupCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F4212E58E200052BFC /* PopupCells.swift */; };
-		4E882C142133658E00B7587B /* SettingsViewController_HealthKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E882C132133658D00B7587B /* SettingsViewController_HealthKit.swift */; };
 		4E882C16213365A500B7587B /* SettingsViewController_Untappd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E882C15213365A500B7587B /* SettingsViewController_Untappd.swift */; };
 		4E882C18213365B200B7587B /* SettingsViewController_IAP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E882C17213365B200B7587B /* SettingsViewController_IAP.swift */; };
 		4E8F048F21114DBB00038F09 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F048E21114DBB00038F09 /* Formatting.swift */; };
@@ -32,7 +30,6 @@
 		4E8F04962112577E00038F09 /* ABVPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F04952112577E00038F09 /* ABVPickerViewController.swift */; };
 		4E8F04982112C44E00038F09 /* StylePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F04972112C44E00038F09 /* StylePickerViewController.swift */; };
 		4E900B9C20FFF8180095A71A /* StubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E900B9B20FFF8180095A71A /* StubViewController.swift */; };
-		4E9112BC2138579500A11383 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E9112BB2138579500A11383 /* HealthKit.framework */; };
 		4E9112BD21385F9C00A11383 /* DrawerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; };
 		4E9112BE21385F9C00A11383 /* DrawerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBE66DE210FD1F600878CA0 /* DrawerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E93F00721015B7800B51709 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E93F00621015B7800B51709 /* Defaults.swift */; };
@@ -379,8 +376,6 @@
 		4E8F04952112577E00038F09 /* ABVPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABVPickerViewController.swift; sourceTree = "<group>"; };
 		4E8F04972112C44E00038F09 /* StylePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylePickerViewController.swift; sourceTree = "<group>"; };
 		4E900B9B20FFF8180095A71A /* StubViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubViewController.swift; sourceTree = "<group>"; };
-		4E9112BA2138576500A11383 /* GoodSpiritsHK.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GoodSpiritsHK.entitlements; sourceTree = "<group>"; };
-		4E9112BB2138579500A11383 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		4E93F00621015B7800B51709 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		4E93F00821017A5C00B51709 /* DayHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayHeaderCell.swift; sourceTree = "<group>"; };
 		4E9C8552210D598C00DA959D /* ABPrettyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABPrettyButton.swift; sourceTree = "<group>"; };
@@ -469,7 +464,6 @@
 				4EC811FE2139EC9E00BDFDFF /* GRDB.framework in Frameworks */,
 				4E5D8485212697AC0081B273 /* FSCalendar.framework in Frameworks */,
 				4EFEDF792139DF3B00481623 /* Charts.framework in Frameworks */,
-				4E9112BC2138579500A11383 /* HealthKit.framework in Frameworks */,
 				4E9112BD21385F9C00A11383 /* DrawerKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -678,7 +672,6 @@
 			isa = PBXGroup;
 			children = (
 				4EC26CE4212E674F006E156B /* GoodSpirits.entitlements */,
-				4E9112BA2138576500A11383 /* GoodSpiritsHK.entitlements */,
 				4EA2F18020FEE7C700CE30E1 /* AppDelegate.swift */,
 				4E70D5C92113D4610089BBB1 /* Views */,
 				4E70D5CC2113D4B80089BBB1 /* View Controllers */,
@@ -761,7 +754,6 @@
 		4EC26CE5212E674F006E156B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4E9112BB2138579500A11383 /* HealthKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -884,7 +876,7 @@
 								enabled = 1;
 							};
 							com.apple.HealthKit = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -1135,7 +1127,6 @@
 			files = (
 				4E70D5C72113C0AF0089BBB1 /* PricePickerViewController.swift in Sources */,
 				4EF06EF42139E60500C95F1D /* TransitionAnimator.swift in Sources */,
-				4E882C142133658E00B7587B /* SettingsViewController_HealthKit.swift in Sources */,
 				4EB437F4212CF7D4001D5734 /* Appearance.swift in Sources */,
 				4EFEDFA12139E5C200481623 /* BlurLayer.swift in Sources */,
 				4EFEDFA42139E5C200481623 /* UIImage+Blur.swift in Sources */,
@@ -1179,7 +1170,6 @@
 				4E93F00721015B7800B51709 /* Defaults.swift in Sources */,
 				4E169190212E8647007F51D9 /* Constants.swift in Sources */,
 				4EB873272133BE59000D5C35 /* StatsCells.swift in Sources */,
-				4E7FB9F3212E58BD00052BFC /* HealthKit.swift in Sources */,
 				4EF06EF02139E60500C95F1D /* PopupDialogDefaultView.swift in Sources */,
 				4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */,
 				4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */,
@@ -1382,7 +1372,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = GoodSpirits/GoodSpiritsHK.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1396,6 +1386,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = HEALTH_KIT;
 				SWIFT_OBJC_BRIDGING_HEADER = "GoodSpirits-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
@@ -1553,7 +1544,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = GoodSpirits/GoodSpirits.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1567,6 +1558,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "GoodSpirits-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1581,7 +1573,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = GoodSpirits/GoodSpirits.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1595,6 +1587,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "GoodSpirits-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1662,7 +1655,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = GoodSpirits/GoodSpirits.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1676,6 +1669,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DONATION;
 				SWIFT_OBJC_BRIDGING_HEADER = "GoodSpirits-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
@@ -1774,7 +1768,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = GoodSpirits/GoodSpiritsHK.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1788,6 +1782,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "HEALTH_KIT DONATION";
 				SWIFT_OBJC_BRIDGING_HEADER = "GoodSpirits-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;

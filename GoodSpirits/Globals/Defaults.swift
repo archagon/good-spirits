@@ -24,9 +24,11 @@ public struct Defaults
     private static let peakLimitKey: String = "PeakLimit"
     private static let drinkFreeDaysKey: String = "DrinkFreeDays"
     
+    #if HEALTH_KIT
     // Having this set means HK was authorized at some point.
     private static let healthKitEnabledKey: String = "HealthKitEnabled"
     private static let healthKitBaselineKey: String = "HealthKitBaseline" //TODO: ONLY to be used from RootViewController!
+    #endif
     
     // Having this set means Untappd was authorized.
     private static let untappdTokenKey: String = "UntappdToken"
@@ -49,9 +51,13 @@ extension Defaults
     {
         self.defaults.register(defaults: [
             Defaults.weekStartsOnMondayKey: false,
-            Defaults.standardDrinkSizeKey: Constants.standardDrinkSizeDefault,
+            Defaults.standardDrinkSizeKey: Constants.standardDrinkSizeDefault
+            ])
+        #if HEALTH_KIT
+        self.defaults.register(defaults: [
             Defaults.healthKitEnabledKey: false
             ])
+        #endif
     }
     
     public var configured: Bool
@@ -79,7 +85,8 @@ extension Defaults
             self.defaults.set(newValue, forKey: Defaults.donatedKey)
         }
     }
-    
+
+    #if HEALTH_KIT
     public var healthKitEnabled: Bool
     {
         get
@@ -110,6 +117,7 @@ extension Defaults
             self.defaults.set(data, forKey: Defaults.healthKitBaselineKey)
         }
     }
+    #endif
     
     public var untappdToken: String?
     {
@@ -375,6 +383,7 @@ extension Defaults
         }
     }
     
+    #if HEALTH_KIT
     public static var healthKitEnabled: Bool
     {
         get
@@ -400,6 +409,7 @@ extension Defaults
             defaults.healthKitBaseline = newValue
         }
     }
+    #endif
     
     public static var untappdToken: String?
     {
