@@ -270,7 +270,7 @@
 /* Begin PBXFileReference section */
 		4E16918F212E8647007F51D9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4E16919B212E8AB7007F51D9 /* Licenses.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Licenses.txt; sourceTree = "<group>"; };
-		4E5D8476212697890081B273 /* BeerBuddy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BeerBuddy-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		4E5D8476212697890081B273 /* GoodSpirits-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GoodSpirits-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		4E5D847E212697AC0081B273 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E5D8480212697AC0081B273 /* FSCalendarPublic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FSCalendarPublic.h; sourceTree = "<group>"; };
 		4E5D8481212697AC0081B273 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -317,9 +317,8 @@
 		4E8F04952112577E00038F09 /* ABVPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABVPickerViewController.swift; sourceTree = "<group>"; };
 		4E8F04972112C44E00038F09 /* StylePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylePickerViewController.swift; sourceTree = "<group>"; };
 		4E900B9B20FFF8180095A71A /* StubViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubViewController.swift; sourceTree = "<group>"; };
-		4E9112BA2138576500A11383 /* BeerBuddyHK.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeerBuddyHK.entitlements; sourceTree = "<group>"; };
+		4E9112BA2138576500A11383 /* GoodSpiritsHK.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GoodSpiritsHK.entitlements; sourceTree = "<group>"; };
 		4E9112BB2138579500A11383 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
-		4E9112C42138635000A11383 /* SETUP */ = {isa = PBXFileReference; lastKnownFileType = text; name = SETUP; path = BeerBuddy/SETUP; sourceTree = "<group>"; };
 		4E93F00621015B7800B51709 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		4E93F00821017A5C00B51709 /* DayHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayHeaderCell.swift; sourceTree = "<group>"; };
 		4E9C8552210D598C00DA959D /* ABPrettyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABPrettyButton.swift; sourceTree = "<group>"; };
@@ -339,6 +338,7 @@
 		4EA2F19E20FF30F500CE30E1 /* DrinkIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DrinkIcons.xcassets; sourceTree = "<group>"; };
 		4EA2F1A020FF347D00CE30E1 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		4EA930D72139E67900753A32 /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SortedArray.swift; path = Submodules/SortedArray/Sources/SortedArray.swift; sourceTree = "<group>"; };
+		4EA930D92139E80200753A32 /* SETUP */ = {isa = PBXFileReference; lastKnownFileType = text; name = SETUP; path = GoodSpirits/SETUP; sourceTree = "<group>"; };
 		4EB437EF212CF6C7001D5734 /* ListPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPopupViewController.swift; sourceTree = "<group>"; };
 		4EB437F1212CF77B001D5734 /* StartupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupViewController.swift; sourceTree = "<group>"; };
 		4EB437F3212CF7D4001D5734 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
@@ -346,7 +346,7 @@
 		4EB873262133BE59000D5C35 /* StatsCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsCells.swift; sourceTree = "<group>"; };
 		4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawerKit.xcodeproj; path = "External/DrawerKit-0.6.0/DrawerKit/DrawerKit.xcodeproj"; sourceTree = "<group>"; };
 		4EC26CCD212E5E84006E156B /* TextDisplayController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayController.swift; sourceTree = "<group>"; };
-		4EC26CE4212E674F006E156B /* BeerBuddy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeerBuddy.entitlements; sourceTree = "<group>"; };
+		4EC26CE4212E674F006E156B /* GoodSpirits.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GoodSpirits.entitlements; sourceTree = "<group>"; };
 		4ED560CA212BABDE009B3413 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 		4ED7ACF62102E151002BB0F1 /* standard_drinks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = standard_drinks.json; sourceTree = "<group>"; };
 		4EDCE3CE2126980F00A90C83 /* FSCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSCalendarCell.m; path = "External/FSCalendar-2.7.9/FSCalendar/FSCalendarCell.m"; sourceTree = SOURCE_ROOT; };
@@ -588,9 +588,9 @@
 		4EA2F17420FEE7C700CE30E1 = {
 			isa = PBXGroup;
 			children = (
-				4E9112C42138635000A11383 /* SETUP */,
-				4E5D8476212697890081B273 /* BeerBuddy-Bridging-Header.h */,
-				4EA2F17F20FEE7C700CE30E1 /* BeerBuddy */,
+				4EA930D92139E80200753A32 /* SETUP */,
+				4E5D8476212697890081B273 /* GoodSpirits-Bridging-Header.h */,
+				4EA2F17F20FEE7C700CE30E1 /* GoodSpirits */,
 				4EBE66D3210FD12800878CA0 /* External */,
 				4E7E45572127F3F800ACDDB8 /* GRDB.framework */,
 				4EA2F17E20FEE7C700CE30E1 /* Products */,
@@ -611,11 +611,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4EA2F17F20FEE7C700CE30E1 /* BeerBuddy */ = {
+		4EA2F17F20FEE7C700CE30E1 /* GoodSpirits */ = {
 			isa = PBXGroup;
 			children = (
-				4EC26CE4212E674F006E156B /* BeerBuddy.entitlements */,
-				4E9112BA2138576500A11383 /* BeerBuddyHK.entitlements */,
+				4EC26CE4212E674F006E156B /* GoodSpirits.entitlements */,
+				4E9112BA2138576500A11383 /* GoodSpiritsHK.entitlements */,
 				4EA2F18020FEE7C700CE30E1 /* AppDelegate.swift */,
 				4E70D5C92113D4610089BBB1 /* Views */,
 				4E70D5CC2113D4B80089BBB1 /* View Controllers */,
@@ -634,7 +634,7 @@
 				4ED7ACF62102E151002BB0F1 /* standard_drinks.json */,
 				4EA2F19420FEE80D00CE30E1 /* stub.json */,
 			);
-			path = BeerBuddy;
+			path = GoodSpirits;
 			sourceTree = "<group>";
 		};
 		4EB437BE212CE311001D5734 /* DynamicBlurView */ = {
@@ -811,7 +811,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4EA2F17820FEE7C700CE30E1 /* Build configuration list for PBXProject "BeerBuddy" */;
+			buildConfigurationList = 4EA2F17820FEE7C700CE30E1 /* Build configuration list for PBXProject "GoodSpirits" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -1238,14 +1238,14 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = BeerBuddy/BeerBuddyHK.entitlements;
+				CODE_SIGN_ENTITLEMENTS = GoodSpirits/GoodSpiritsHK.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = BeerBuddy/Info.plist;
+				INFOPLIST_FILE = GoodSpirits/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1253,7 +1253,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = HEALTH_KIT;
-				SWIFT_OBJC_BRIDGING_HEADER = "BeerBuddy-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "GoodSpirits-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1409,14 +1409,14 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = BeerBuddy/BeerBuddy.entitlements;
+				CODE_SIGN_ENTITLEMENTS = GoodSpirits/GoodSpirits.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = BeerBuddy/Info.plist;
+				INFOPLIST_FILE = GoodSpirits/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1424,7 +1424,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OBJC_BRIDGING_HEADER = "BeerBuddy-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "GoodSpirits-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1437,21 +1437,21 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = BeerBuddy/BeerBuddy.entitlements;
+				CODE_SIGN_ENTITLEMENTS = GoodSpirits/GoodSpirits.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = BeerBuddy/Info.plist;
+				INFOPLIST_FILE = GoodSpirits/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BeerBuddy-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "GoodSpirits-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1518,14 +1518,14 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = BeerBuddy/BeerBuddy.entitlements;
+				CODE_SIGN_ENTITLEMENTS = GoodSpirits/GoodSpirits.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = BeerBuddy/Info.plist;
+				INFOPLIST_FILE = GoodSpirits/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1533,7 +1533,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DONATION;
-				SWIFT_OBJC_BRIDGING_HEADER = "BeerBuddy-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "GoodSpirits-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1630,14 +1630,14 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = BeerBuddy/BeerBuddyHK.entitlements;
+				CODE_SIGN_ENTITLEMENTS = GoodSpirits/GoodSpiritsHK.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4MX2B96J2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = BeerBuddy/Info.plist;
+				INFOPLIST_FILE = GoodSpirits/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1645,7 +1645,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.abstractrose.goodspirits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "HEALTH_KIT DONATION";
-				SWIFT_OBJC_BRIDGING_HEADER = "BeerBuddy-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "GoodSpirits-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1696,7 +1696,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4EA2F17820FEE7C700CE30E1 /* Build configuration list for PBXProject "BeerBuddy" */ = {
+		4EA2F17820FEE7C700CE30E1 /* Build configuration list for PBXProject "GoodSpirits" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4EA2F18F20FEE7CB00CE30E1 /* Debug */,

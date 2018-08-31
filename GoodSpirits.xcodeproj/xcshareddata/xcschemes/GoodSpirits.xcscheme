@@ -17,7 +17,7 @@
                BlueprintIdentifier = "4EA2F17C20FEE7C700CE30E1"
                BuildableName = "Good Spirits.app"
                BlueprintName = "Good Spirits"
-               ReferencedContainer = "container:BeerBuddy.xcodeproj">
+               ReferencedContainer = "container:GoodSpirits.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,14 +35,14 @@
             BlueprintIdentifier = "4EA2F17C20FEE7C700CE30E1"
             BuildableName = "Good Spirits.app"
             BlueprintName = "Good Spirits"
-            ReferencedContainer = "container:BeerBuddy.xcodeproj">
+            ReferencedContainer = "container:GoodSpirits.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release-Donation"
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -58,7 +58,7 @@
             BlueprintIdentifier = "4EA2F17C20FEE7C700CE30E1"
             BuildableName = "Good Spirits.app"
             BlueprintName = "Good Spirits"
-            ReferencedContainer = "container:BeerBuddy.xcodeproj">
+            ReferencedContainer = "container:GoodSpirits.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -77,7 +77,7 @@
             BlueprintIdentifier = "4EA2F17C20FEE7C700CE30E1"
             BuildableName = "Good Spirits.app"
             BlueprintName = "Good Spirits"
-            ReferencedContainer = "container:BeerBuddy.xcodeproj">
+            ReferencedContainer = "container:GoodSpirits.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
