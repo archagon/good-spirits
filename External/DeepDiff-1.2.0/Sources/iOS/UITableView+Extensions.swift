@@ -21,6 +21,17 @@ public extension UITableView {
     
     let changesWithIndexPath = IndexPathConverter().convert(changes: changes, section: section)
     
+    reload(changesWithIndexPath: changesWithIndexPath, insertionAnimation: insertionAnimation, deletionAnimation: deletionAnimation, replacementAnimation: replacementAnimation, completion: completion)
+  }
+
+  // AB: support for straight index path changesets
+  public func reload(
+    changesWithIndexPath: ChangeWithIndexPath,
+    insertionAnimation: UITableViewRowAnimation = .automatic,
+    deletionAnimation: UITableViewRowAnimation = .automatic,
+    replacementAnimation: UITableViewRowAnimation = .automatic,
+    completion: @escaping (Bool) -> Void) {
+    
     // reloadRows needs to be called outside the batch
     
     if #available(iOS 11, tvOS 11, *) {

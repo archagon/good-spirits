@@ -2,10 +2,11 @@ import Foundation
 
 public struct ChangeWithIndexPath {
   
-  public let inserts: [IndexPath]
-  public let deletes: [IndexPath]
-  public let replaces: [IndexPath]
-  public let moves: [(from: IndexPath, to: IndexPath)]
+  // AB: made mutable
+  public var inserts: [IndexPath]
+  public var deletes: [IndexPath]
+  public var replaces: [IndexPath]
+  public var moves: [(from: IndexPath, to: IndexPath)]
 
   public init(
     inserts: [IndexPath],

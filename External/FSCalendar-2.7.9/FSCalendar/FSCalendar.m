@@ -311,10 +311,22 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
                                           (self.placeholderType != FSCalendarPlaceholderTypeFillSixRows) &&
                                           !self.hasValidateVisibleLayout;
         
-        if (_scopeHandle) {
+        // AB: this performs layout, not sizing
+        if (_scopeHandle && _progressView) {
+            CGFloat progressViewHeight = _progressViewHeight;
+            CGFloat scopeHandleHeight = self.transitionCoordinator.cachedMonthSize.height*0.08;
+            _contentView.frame = CGRectMake(0, 0, self.fs_width, self.fs_height-scopeHandleHeight-progressViewHeight);
+            _scopeHandle.frame = CGRectMake(0, _contentView.fs_bottom, self.fs_width, scopeHandleHeight);
+            _progressView.frame = CGRectMake(8, _contentView.fs_bottom, self.fs_width - 16, progressViewHeight);
+        } else if (_scopeHandle) {
             CGFloat scopeHandleHeight = self.transitionCoordinator.cachedMonthSize.height*0.08;
             _contentView.frame = CGRectMake(0, 0, self.fs_width, self.fs_height-scopeHandleHeight);
             _scopeHandle.frame = CGRectMake(0, _contentView.fs_bottom, self.fs_width, scopeHandleHeight);
+        }
+        else if (_progressView) {
+            CGFloat progressViewHeight = _progressViewHeight;
+            _contentView.frame = CGRectMake(0, 0, self.fs_width, self.fs_height-progressViewHeight);
+            _progressView.frame = CGRectMake(8, _contentView.fs_bottom, self.fs_width - 16, progressViewHeight);
         } else {
             _contentView.frame = self.bounds;
         }
@@ -365,6 +377,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         _topBorder.frame = CGRectMake(0, -1, self.fs_width, 1);
         _bottomBorder.frame = CGRectMake(0, self.fs_height, self.fs_width, 1);
         _scopeHandle.fs_bottom = _bottomBorder.fs_top;
+        _progressView.fs_bottom = (_scopeHandle != nil ? _scopeHandle.fs_top : _bottomBorder.fs_top);
         
     }
     
@@ -413,11 +426,13 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
             case FSCalendarScopeMonth: {
                 CGFloat height = weekdayHeight + headerHeight + [self.calculator numberOfRowsInMonth:_currentPage]*rowHeight + paddings;
                 height += _scopeHandle.fs_height;
+                height += _progressView.fs_height;
                 return CGSizeMake(size.width, height);
             }
             case FSCalendarScopeWeek: {
                 CGFloat height = weekdayHeight + headerHeight + rowHeight + paddings;
                 height += _scopeHandle.fs_height;
+                height += _progressView.fs_height;
                 return CGSizeMake(size.width, height);
             }
         }
@@ -713,7 +728,17 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
 }
 
 #pragma mark - Properties
-
+    
+// AB:
+- (void)setProgressView:(UIView*)view
+{
+    if (_progressView != view) {
+        [_progressView removeFromSuperview];
+        _progressView = view;
+        [self invalidateLayout];
+    }
+}
+    
 - (void)setScrollDirection:(FSCalendarScrollDirection)scrollDirection
 {
     if (_scrollDirection != scrollDirection) {
@@ -958,7 +983,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         if (_preferredWeekdayHeight == FSCalendarAutomaticDimension) {
             if (!self.floatingMode) {
                 CGFloat DIYider = FSCalendarStandardMonthlyPageHeight;
-                CGFloat contentHeight = self.transitionCoordinator.cachedMonthSize.height*(1-_showsScopeHandle*0.08);
+                CGFloat contentHeight = self.transitionCoordinator.cachedMonthSize.height*(1-_showsScopeHandle*0.08)-((_progressView!=nil)*_progressViewHeight);
                 _preferredHeaderHeight = (FSCalendarStandardHeaderHeight/DIYider)*contentHeight;
                 _preferredHeaderHeight -= (_preferredHeaderHeight-FSCalendarStandardHeaderHeight)*0.5;
             } else {
@@ -976,7 +1001,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         if (_preferredWeekdayHeight == FSCalendarAutomaticDimension) {
             if (!self.floatingMode) {
                 CGFloat DIYider = FSCalendarStandardMonthlyPageHeight;
-                CGFloat contentHeight = self.transitionCoordinator.cachedMonthSize.height*(1-_showsScopeHandle*0.08);
+                CGFloat contentHeight = self.transitionCoordinator.cachedMonthSize.height*(1-_showsScopeHandle*0.08)-((_progressView!=nil)*_progressViewHeight);
                 _preferredWeekdayHeight = (FSCalendarStandardWeekdayHeight/DIYider)*contentHeight;
             } else {
                 _preferredWeekdayHeight = FSCalendarStandardWeekdayHeight*MAX(1, FSCalendarDeviceIsIPad*1.5);
@@ -992,7 +1017,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     if (_preferredRowHeight == FSCalendarAutomaticDimension) {
         CGFloat headerHeight = self.preferredHeaderHeight;
         CGFloat weekdayHeight = self.preferredWeekdayHeight;
-        CGFloat contentHeight = self.transitionCoordinator.cachedMonthSize.height-headerHeight-weekdayHeight-_scopeHandle.fs_height;
+        CGFloat contentHeight = self.transitionCoordinator.cachedMonthSize.height-headerHeight-weekdayHeight-_scopeHandle.fs_height-_progressView.fs_height;
         CGFloat padding = 5;
         if (!self.floatingMode) {
             _preferredRowHeight = (contentHeight-padding*2)/6.0;
@@ -1012,6 +1037,15 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
 {
     if (_showsScopeHandle != showsScopeHandle) {
         _showsScopeHandle = showsScopeHandle;
+        [self invalidateLayout];
+    }
+}
+
+// AB:
+- (void)setProgressViewHeight:(CGFloat)progressViewHeight
+{
+    if (_progressViewHeight != progressViewHeight) {
+        _progressViewHeight = progressViewHeight;
         [self invalidateLayout];
     }
 }
@@ -1415,6 +1449,19 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
             }
         }
 #pragma GCC diagnostic pop
+        // AB:
+        if (self.progressViewHeight > 0 && self.progressView != nil) {
+            if (self.progressView.superview != self) {
+                [self addSubview:self.progressView];
+                _needsAdjustingViewFrame = YES;
+                [self setNeedsLayout];
+            }
+        }
+        else {
+            [self.progressView removeFromSuperview];
+            _needsAdjustingViewFrame = YES;
+            [self setNeedsLayout];
+        }
         
         _collectionView.pagingEnabled = YES;
         _collectionViewLayout.scrollDirection = (UICollectionViewScrollDirection)self.scrollDirection;
@@ -1425,6 +1472,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         [self.deliver removeFromSuperview];
         [self.calendarWeekdayView removeFromSuperview];
         [self.scopeHandle removeFromSuperview];
+        [self.progressView removeFromSuperview];
         
         _collectionView.pagingEnabled = NO;
         _collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionVertical;

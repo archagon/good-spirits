@@ -536,7 +536,7 @@
                                          self.calendar.preferredHeaderHeight+
                                          self.calendar.preferredWeekdayHeight+
                                          ([self.calendar.calculator numberOfRowsInMonth:page]*self.calendar.collectionViewLayout.estimatedItemSize.height)+
-                                         self.calendar.scopeHandle.fs_height+padding);
+                                         +self.calendar.progressView.fs_height+self.calendar.scopeHandle.fs_height+padding);
             }
             break;
         }
@@ -551,8 +551,9 @@
 - (void)boundingRectWillChange:(CGRect)targetBounds animated:(BOOL)animated
 {
     self.calendar.scopeHandle.fs_bottom = CGRectGetMaxY(targetBounds);
-    self.calendar.contentView.fs_height = CGRectGetHeight(targetBounds)-self.calendar.scopeHandle.fs_height;
-    self.calendar.daysContainer.fs_height = CGRectGetHeight(targetBounds)-self.calendar.preferredHeaderHeight-self.calendar.preferredWeekdayHeight-self.calendar.scopeHandle.fs_height;
+    self.calendar.progressView.fs_bottom = self.calendar.scopeHandle.fs_top;
+    self.calendar.contentView.fs_height = CGRectGetHeight(targetBounds)-self.calendar.scopeHandle.fs_height-self.calendar.progressView.fs_height;
+    self.calendar.daysContainer.fs_height = CGRectGetHeight(targetBounds)-self.calendar.preferredHeaderHeight-self.calendar.preferredWeekdayHeight-self.calendar.scopeHandle.fs_height-self.calendar.progressView.fs_height;
     [[self.calendar valueForKey:@"delegateProxy"] calendar:self.calendar boundingRectWillChange:targetBounds animated:animated];
 }
 
@@ -720,8 +721,8 @@
 {
     CGFloat targetHeight = CGRectGetHeight(self.pendingAttributes.targetBounds);
     CGFloat sourceHeight = CGRectGetHeight(self.pendingAttributes.sourceBounds);
-    CGFloat currentHeight = sourceHeight - (sourceHeight-targetHeight)*progress - self.calendar.scopeHandle.fs_height;
-    CGRect currentBounds = CGRectMake(0, 0, CGRectGetWidth(self.pendingAttributes.targetBounds), currentHeight+self.calendar.scopeHandle.fs_height);
+    CGFloat currentHeight = sourceHeight - (sourceHeight-targetHeight)*progress - self.calendar.scopeHandle.fs_height - self.calendar.progressView.fs_height;
+    CGRect currentBounds = CGRectMake(0, 0, CGRectGetWidth(self.pendingAttributes.targetBounds), currentHeight+self.calendar.scopeHandle.fs_height+self.calendar.progressView.fs_height);
     self.collectionView.fs_top = (-self.pendingAttributes.focusedRowNumber*self.calendar.collectionViewLayout.estimatedItemSize.height)*(self.transition == FSCalendarTransitionMonthToWeek?progress:(1-progress));
     [self boundingRectWillChange:currentBounds animated:NO];
     if (self.transition == FSCalendarTransitionWeekToMonth) {
@@ -733,7 +734,7 @@
 - (void)prelayoutForWeekToMonthTransition
 {
     self.calendar.contentView.clipsToBounds = YES;
-    self.calendar.contentView.fs_height = CGRectGetHeight(self.pendingAttributes.targetBounds)-self.calendar.scopeHandle.fs_height;
+    self.calendar.contentView.fs_height = CGRectGetHeight(self.pendingAttributes.targetBounds)-self.calendar.progressView.fs_height-self.calendar.scopeHandle.fs_height;
     self.collectionViewLayout.scrollDirection = (UICollectionViewScrollDirection)self.calendar.scrollDirection;
     self.calendar.calendarHeaderView.scrollDirection = self.collectionViewLayout.scrollDirection;
     self.calendar.needsAdjustingViewFrame = YES;

@@ -373,6 +373,10 @@ IB_DESIGNABLE
  */
 @property (strong, nonatomic) FSCalendarHeaderView *calendarHeaderView;
 
+// AB:
+@property (assign, nonatomic) IBInspectable CGFloat progressViewHeight;
+@property (strong, nonatomic) UIView *progressView;
+
 /**
  A Boolean value that determines whether users can select a date.
  */

@@ -49,7 +49,8 @@ CG_EXTERN CGSize const CGSizeAutomatic;
 #define FSCalendarStandardTitleTextColor   FSColorRGBA(14,69,221 ,1.0)
 #define FSCalendarStandardEventDotColor    FSColorRGBA(31,119,219,0.75)
 
-#define FSCalendarStandardLineColor        [[UIColor lightGrayColor] colorWithAlphaComponent:0.30]
+//#define FSCalendarStandardLineColor        [[UIColor lightGrayColor] colorWithAlphaComponent:0.30]
+#define FSCalendarStandardLineColor        [[UIColor lightGrayColor] colorWithAlphaComponent:0] //AB:
 #define FSCalendarStandardSeparatorColor   [[UIColor lightGrayColor] colorWithAlphaComponent:0.60]
 #define FSCalendarStandardScopeHandleColor [[UIColor lightGrayColor] colorWithAlphaComponent:0.50]
 

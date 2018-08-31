@@ -55,6 +55,25 @@ extension PresentationController {
         targetDrawerState = currentDrawerState
         currentDrawerCornerRadius = cornerRadius(at: currentDrawerState)
     }
+    
+    // AB: allows popup to animate-resize based on updated content
+    @objc func refresh()
+    {
+        // don't interfere with existing actions
+        if drawerDragGR != nil && drawerDragGR?.state != .possible
+        {
+            print("not animating, since drag exists")
+            return
+        }
+        
+        switch currentDrawerState
+        {
+        case .transitioning(_):
+            animateTransition(to: .partiallyExpanded)
+        default:
+            break
+        }
+    }
 }
 
 extension PresentationController: UIGestureRecognizerDelegate {
