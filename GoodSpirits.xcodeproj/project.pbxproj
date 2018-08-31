@@ -18,8 +18,6 @@
 		4E721EAA21251AF30001BBB9 /* DataLayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E721EA021251ADC0001BBB9 /* DataLayer.framework */; };
 		4E721EAB21251AF30001BBB9 /* DataLayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E721EA021251ADC0001BBB9 /* DataLayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E721EB5212522770001BBB9 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E721EB4212522770001BBB9 /* SampleData.swift */; };
-		4E7E45582127F3F800ACDDB8 /* GRDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; };
-		4E7E45592127F3F800ACDDB8 /* GRDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E7E45572127F3F800ACDDB8 /* GRDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */; };
 		4E7FB9EC212E3B1400052BFC /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9EB212E3B1400052BFC /* RootViewController.swift */; };
 		4E7FB9F1212E3F2A00052BFC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */; };
@@ -59,6 +57,8 @@
 		4EB437F6212D0EB1001D5734 /* Limit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB437F5212D0EB1001D5734 /* Limit.swift */; };
 		4EB873272133BE59000D5C35 /* StatsCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB873262133BE59000D5C35 /* StatsCells.swift */; };
 		4EC26CCE212E5E84006E156B /* TextDisplayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC26CCD212E5E84006E156B /* TextDisplayController.swift */; };
+		4EC811FE2139EC9E00BDFDFF /* GRDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EC811F92139EC9300BDFDFF /* GRDB.framework */; };
+		4EC811FF2139EC9E00BDFDFF /* GRDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EC811F92139EC9300BDFDFF /* GRDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4ED560CB212BABDE009B3413 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED560CA212BABDE009B3413 /* Stats.swift */; };
 		4ED7ACF72102E151002BB0F1 /* standard_drinks.json in Resources */ = {isa = PBXBuildFile; fileRef = 4ED7ACF62102E151002BB0F1 /* standard_drinks.json */; };
 		4EDCE3D22126980F00A90C83 /* FSCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDCE3CE2126980F00A90C83 /* FSCalendarCell.m */; };
@@ -169,6 +169,69 @@
 			remoteGlobalIDString = CBBA2D561F8E815B00E0137F;
 			remoteInfo = DrawerKit;
 		};
+		4EC811EE2139EC9300BDFDFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DC3773F319C8CBB3004FCF85;
+			remoteInfo = GRDBOSX;
+		};
+		4EC811F02139EC9300BDFDFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 56E5D7F91B4D422D00430942;
+			remoteInfo = GRDBOSXTests;
+		};
+		4EC811F22139EC9300BDFDFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 560C981A1C0E22D300BF8471;
+			remoteInfo = GRDBOSXPerformanceTests;
+		};
+		4EC811F42139EC9300BDFDFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 56439B501F4CA1DC0066043F;
+			remoteInfo = GRDBOSXPerformanceComparisonTests;
+		};
+		4EC811F62139EC9300BDFDFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 56553C181C3E906C00522B5C;
+			remoteInfo = GRDBOSXCrashTests;
+		};
+		4EC811F82139EC9300BDFDFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 56E5D7CA1B4D3FED00430942;
+			remoteInfo = GRDBiOS;
+		};
+		4EC811FA2139EC9300BDFDFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 56E5D7D31B4D3FEE00430942;
+			remoteInfo = GRDBiOSTests;
+		};
+		4EC811FC2139EC9300BDFDFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 565490A01D5A4798005622CB;
+			remoteInfo = GRDBWatchOS;
+		};
+		4EC812002139EC9E00BDFDFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 56E5D7C91B4D3FED00430942;
+			remoteInfo = GRDBiOS;
+		};
 		4EFEDF752139DF2F00481623 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4EFEDF702139DF2E00481623 /* Charts.xcodeproj */;
@@ -257,8 +320,8 @@
 			files = (
 				4E721EAB21251AF30001BBB9 /* DataLayer.framework in Embed Frameworks */,
 				4EFEDF962139E53B00481623 /* DeepDiff.framework in Embed Frameworks */,
-				4E7E45592127F3F800ACDDB8 /* GRDB.framework in Embed Frameworks */,
 				4E5D8486212697AC0081B273 /* FSCalendar.framework in Embed Frameworks */,
+				4EC811FF2139EC9E00BDFDFF /* GRDB.framework in Embed Frameworks */,
 				4EFEDF7A2139DF3B00481623 /* Charts.framework in Embed Frameworks */,
 				4E9112BE21385F9C00A11383 /* DrawerKit.framework in Embed Frameworks */,
 			);
@@ -302,7 +365,6 @@
 		4E70D5C62113C0AF0089BBB1 /* PricePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricePickerViewController.swift; sourceTree = "<group>"; };
 		4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DBComparison.xcodeproj; path = Modules/DBComparison/DBComparison.xcodeproj; sourceTree = "<group>"; };
 		4E721EB4212522770001BBB9 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
-		4E7E45572127F3F800ACDDB8 /* GRDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GRDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E7FB9E1212E344200052BFC /* DynamicPopupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicPopupButton.swift; sourceTree = "<group>"; };
 		4E7FB9EB212E3B1400052BFC /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		4E7FB9F0212E3F2A00052BFC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -347,6 +409,7 @@
 		4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawerKit.xcodeproj; path = "External/DrawerKit-0.6.0/DrawerKit/DrawerKit.xcodeproj"; sourceTree = "<group>"; };
 		4EC26CCD212E5E84006E156B /* TextDisplayController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayController.swift; sourceTree = "<group>"; };
 		4EC26CE4212E674F006E156B /* GoodSpirits.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GoodSpirits.entitlements; sourceTree = "<group>"; };
+		4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GRDB.xcodeproj; path = Submodules/GRDB/GRDB.xcodeproj; sourceTree = "<group>"; };
 		4ED560CA212BABDE009B3413 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 		4ED7ACF62102E151002BB0F1 /* standard_drinks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = standard_drinks.json; sourceTree = "<group>"; };
 		4EDCE3CE2126980F00A90C83 /* FSCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSCalendarCell.m; path = "External/FSCalendar-2.7.9/FSCalendar/FSCalendarCell.m"; sourceTree = SOURCE_ROOT; };
@@ -402,8 +465,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E721EAA21251AF30001BBB9 /* DataLayer.framework in Frameworks */,
-				4E7E45582127F3F800ACDDB8 /* GRDB.framework in Frameworks */,
 				4EFEDF952139E53B00481623 /* DeepDiff.framework in Frameworks */,
+				4EC811FE2139EC9E00BDFDFF /* GRDB.framework in Frameworks */,
 				4E5D8485212697AC0081B273 /* FSCalendar.framework in Frameworks */,
 				4EFEDF792139DF3B00481623 /* Charts.framework in Frameworks */,
 				4E9112BC2138579500A11383 /* HealthKit.framework in Frameworks */,
@@ -591,14 +654,14 @@
 				4EA930D92139E80200753A32 /* SETUP */,
 				4E5D8476212697890081B273 /* GoodSpirits-Bridging-Header.h */,
 				4EA2F17F20FEE7C700CE30E1 /* GoodSpirits */,
-				4EBE66D3210FD12800878CA0 /* External */,
-				4E7E45572127F3F800ACDDB8 /* GRDB.framework */,
+				4EC26CE5212E674F006E156B /* Frameworks */,
 				4EA2F17E20FEE7C700CE30E1 /* Products */,
+				4EBE66D3210FD12800878CA0 /* External */,
+				4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */,
 				4EFEDF702139DF2E00481623 /* Charts.xcodeproj */,
 				4EFEDF7D2139E53300481623 /* DeepDiff.xcodeproj */,
 				4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */,
 				4E721E9521251ADB0001BBB9 /* DBComparison.xcodeproj */,
-				4EC26CE5212E674F006E156B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -703,6 +766,21 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4EC811E32139EC9300BDFDFF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4EC811EF2139EC9300BDFDFF /* GRDB.framework */,
+				4EC811F12139EC9300BDFDFF /* GRDBOSXTests.xctest */,
+				4EC811F32139EC9300BDFDFF /* GRDBOSXPerformanceTests.xctest */,
+				4EC811F52139EC9300BDFDFF /* GRDBOSXPerformanceComparisonTests.xctest */,
+				4EC811F72139EC9300BDFDFF /* GRDBOSXCrashTests.xctest */,
+				4EC811F92139EC9300BDFDFF /* GRDB.framework */,
+				4EC811FB2139EC9300BDFDFF /* GRDBiOSTests.xctest */,
+				4EC811FD2139EC9300BDFDFF /* GRDB.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		4EFEDF712139DF2E00481623 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -778,6 +856,7 @@
 				4E9112C021385F9C00A11383 /* PBXTargetDependency */,
 				4EFEDF7C2139DF3B00481623 /* PBXTargetDependency */,
 				4EFEDF982139E53B00481623 /* PBXTargetDependency */,
+				4EC812012139EC9E00BDFDFF /* PBXTargetDependency */,
 			);
 			name = "Good Spirits";
 			productName = BeerBuddy;
@@ -839,6 +918,10 @@
 					ProductGroup = 4EBE66DA210FD1F600878CA0 /* Products */;
 					ProjectRef = 4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */;
 				},
+				{
+					ProductGroup = 4EC811E32139EC9300BDFDFF /* Products */;
+					ProjectRef = 4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -875,6 +958,62 @@
 			fileType = wrapper.framework;
 			path = DrawerKit.framework;
 			remoteRef = 4EBE66DD210FD1F600878CA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4EC811EF2139EC9300BDFDFF /* GRDB.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GRDB.framework;
+			remoteRef = 4EC811EE2139EC9300BDFDFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4EC811F12139EC9300BDFDFF /* GRDBOSXTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GRDBOSXTests.xctest;
+			remoteRef = 4EC811F02139EC9300BDFDFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4EC811F32139EC9300BDFDFF /* GRDBOSXPerformanceTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GRDBOSXPerformanceTests.xctest;
+			remoteRef = 4EC811F22139EC9300BDFDFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4EC811F52139EC9300BDFDFF /* GRDBOSXPerformanceComparisonTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GRDBOSXPerformanceComparisonTests.xctest;
+			remoteRef = 4EC811F42139EC9300BDFDFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4EC811F72139EC9300BDFDFF /* GRDBOSXCrashTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GRDBOSXCrashTests.xctest;
+			remoteRef = 4EC811F62139EC9300BDFDFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4EC811F92139EC9300BDFDFF /* GRDB.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GRDB.framework;
+			remoteRef = 4EC811F82139EC9300BDFDFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4EC811FB2139EC9300BDFDFF /* GRDBiOSTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GRDBiOSTests.xctest;
+			remoteRef = 4EC811FA2139EC9300BDFDFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4EC811FD2139EC9300BDFDFF /* GRDB.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GRDB.framework;
+			remoteRef = 4EC811FC2139EC9300BDFDFF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		4EFEDF762139DF2F00481623 /* Charts.framework */ = {
@@ -1083,6 +1222,11 @@
 			isa = PBXTargetDependency;
 			name = DrawerKit;
 			targetProxy = 4EBE6704210FE4CE00878CA0 /* PBXContainerItemProxy */;
+		};
+		4EC812012139EC9E00BDFDFF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GRDBiOS;
+			targetProxy = 4EC812002139EC9E00BDFDFF /* PBXContainerItemProxy */;
 		};
 		4EFEDF7C2139DF3B00481623 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

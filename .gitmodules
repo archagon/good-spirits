@@ -4,3 +4,6 @@
 [submodule "Submodules/SortedArray"]
 	path = Submodules/SortedArray
 	url = https://github.com/ole/SortedArray
+[submodule "Submodules/GRDB"]
+	path = Submodules/GRDB
+	url = git@github.com:groue/GRDB.swift.git
