@@ -73,7 +73,7 @@ class FirstViewController: UIViewController
             
             let range = Time.currentWeek()
             let midpoint = Date.init(timeIntervalSince1970: (range.0.timeIntervalSince1970 + range.0.timeIntervalSince1970) / 2)
-            calendar.setCurrentPage(midpoint, animated: false)
+            fixCalendar(withDate: midpoint)
             
             let bar = UIProgressView.init()
             let bar2 = UIProgressView.init()
@@ -156,21 +156,17 @@ class FirstViewController: UIViewController
         
         self.notificationObserver = NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: OperationQueue.main)
         { [unowned `self`] _ in
-            // KLUDGE: ensures that currentPage is set to the correct value by the time data is reloaded
-            let offset = self.calendar.currentPage.addingTimeInterval(-3.5 * 24 * 60 * 60)
-            let offset2 = self.calendar.currentPage.addingTimeInterval(3.5 * 24 * 60 * 60)
-            
             if Defaults.weekStartsOnMonday && self.calendar.firstWeekday != 2
             {
+                let date = DataLayer.calendar.date(byAdding: .day, value: 3, to: self.calendar.currentPage)!
                 self.calendar.firstWeekday = 2
-                self.calendar.setCurrentPage(offset, animated: false)
-                self.calendar.setCurrentPage(offset2, animated: false)
+                self.fixCalendar(withDate: date)
             }
             else if !Defaults.weekStartsOnMonday && self.calendar.firstWeekday != 1
             {
+                let date = DataLayer.calendar.date(byAdding: .day, value: 3, to: self.calendar.currentPage)!
                 self.calendar.firstWeekday = 1
-                self.calendar.setCurrentPage(offset, animated: false)
-                self.calendar.setCurrentPage(offset2, animated: false)
+                self.fixCalendar(withDate: date)
             }
             
             if Defaults.untappdToken != nil && self.tableView.refreshControl == nil
@@ -190,6 +186,15 @@ class FirstViewController: UIViewController
         
         self.reloadData(animated: false, fromScratch: false)
         setupUntappdPullToRefresh(Defaults.untappdToken != nil)
+    }
+    
+    func fixCalendar(withDate date: Date)
+    {
+        // KLUDGE: ensures that currentPage is set to the correct value by the time data is reloaded
+        let offset = date.addingTimeInterval(-100 * 24 * 60 * 60)
+        let offset2 = date
+        self.calendar.setCurrentPage(offset, animated: false)
+        self.calendar.setCurrentPage(offset2, animated: false)
     }
     
     func setupUntappdPullToRefresh(_ enable: Bool)
