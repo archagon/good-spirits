@@ -30,7 +30,7 @@ class Constants
     #if HEALTH_KIT
     static let healthKitFoodNameKey = "BBMetadataKeyFoodName"
     #endif
-    static let tipIAPProductID = "net.abstractrose.goodspirits.iap.tip"
+    static let tipIAPProductID = "net.abstractrose.goodspirits.iap.tipjar"
     
     static let calorieMultiplier: Double = 1.6
     

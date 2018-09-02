@@ -158,7 +158,7 @@ extension SettingsViewController
             if !Defaults.donated
             {
                 #if DONATION
-                iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time and effort. If you're able to visit my website and buy something through my Amazon affiliate link, or tip $donation$ through an in-app purchase, I would be incredibly grateful!"
+                iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time and effort. If you find that this app helps you live a healthier life, please consider visiting my website and buying something through my Amazon link, or leaving me a $donation$tip through an in-app purchase. I would be incredibly grateful!"
                 #else
                 iapPrompt = "Hello, dear user! $name$ is currently free because I am unable to add any new features in the forseeable future. With that said, making the app took a good amount of time and effort. If you're able to visit my website and buy something through my Amazon affiliate link, I would be incredibly grateful!"
                 #endif
