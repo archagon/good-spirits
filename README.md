@@ -14,7 +14,7 @@ Note that there are three unique build configurations in this project, designed 
 
 # Licensing
 
-The source code is available under the GPL license with absolutely no support or maintenance commitments. Note that GPL-licensed code isn't compatible with the App Store. Please enjoy as an educational codebase or for personal use. (If you're interested in releasing a fork on the App Store, please contact me.)
+The source code is available under the GPL license with absolutely no support or maintenance commitments. Note that GPL-licensed code isn't compatible with the App Store. If you're interested in releasing a fork on the App Store, please contact me.
 
 You can find licenses for all third-party assets in the Licenses.txt file.
 
