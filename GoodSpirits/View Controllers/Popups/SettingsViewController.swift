@@ -28,16 +28,28 @@ class SettingsViewController: UITableViewController
         case export
         case info
     }
+    
     #if DONATION
     private static let metaLength = 3
     #else
     private static let metaLength = 2
     #endif
-    #if HEALTH_KIT
-    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, SettingsViewController.metaLength), (.settings, 2), (.untappd, 1), (.healthKit, 1), (.export, 1), (.info, 1)]
-    #else
-    let sectionCounts: [(Section, Int)] = [(.iap, 0), (.meta, SettingsViewController.metaLength), (.settings, 2), (.untappd, 1), (.export, 1), (.info, 1)]
-    #endif
+
+    var sectionCounts: [(Section, Int)]
+    {
+        #if HEALTH_KIT
+        if HealthKit.shared.loginStatus == .unavailable
+        {
+            return [(.iap, 0), (.meta, SettingsViewController.metaLength), (.settings, 2), (.untappd, 1), (.export, 1), (.info, 1)]
+        }
+        else
+        {
+            return [(.iap, 0), (.meta, SettingsViewController.metaLength), (.settings, 2), (.untappd, 1), (.healthKit, 1), (.export, 1), (.info, 1)]
+        }
+        #else
+        return [(.iap, 0), (.meta, SettingsViewController.metaLength), (.settings, 2), (.untappd, 1), (.export, 1), (.info, 1)]
+        #endif
+    }
     
     // TODO: we should use this so that a user can't go to the Untappd controller more than once
     //var untappdLoginPending: Bool = false
@@ -204,14 +216,7 @@ extension SettingsViewController
             #if HEALTH_KIT
             if sectionCounts[section].0 == .healthKit
             {
-                if HealthKit.shared.loginStatus == .unavailable
-                {
-                    footer.textLabel?.text = nil
-                }
-                else
-                {
-                    footer.textLabel?.text = "New check-ins will be added as nutrition to your Health app, with an estimate for calories based on the volume and alcohol content of your drinks. Deleted check-ins will also be removed from Health. Does not sync past check-ins, except when updated."
-                }
+                footer.textLabel?.text = "New check-ins will be added as nutrition to your Health app, with an estimate for calories based on the volume and alcohol content of your drinks. Deleted check-ins will also be removed from Health. Does not sync past check-ins, except when updated."
             }
             else
             {
@@ -228,14 +233,7 @@ extension SettingsViewController
         #if HEALTH_KIT
         if sectionCounts[section].0 == .healthKit
         {
-            if HealthKit.shared.loginStatus == .unavailable
-            {
-                return 0
-            }
-            else
-            {
-                return sectionCounts[section].1
-            }
+            return sectionCounts[section].1
         }
         else
         {
@@ -307,14 +305,7 @@ extension SettingsViewController
             return "Untappd"
         #if HEALTH_KIT
         case .healthKit:
-            if HealthKit.shared.loginStatus == .unavailable
-            {
-                return nil
-            }
-            else
-            {
-                return "Health"
-            }
+            return "Health"
         #endif
         case .export:
             return nil
