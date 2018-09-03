@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		4E169190212E8647007F51D9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E16918F212E8647007F51D9 /* Constants.swift */; };
 		4E16919C212E8AB7007F51D9 /* Licenses.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4E16919B212E8AB7007F51D9 /* Licenses.txt */; };
+		4E25C11A213DFA3F00386855 /* CGImage+Accelerate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E25C111213DFA3F00386855 /* CGImage+Accelerate.swift */; };
+		4E25C11B213DFA3F00386855 /* CGContext+CGImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E25C112213DFA3F00386855 /* CGContext+CGImage.swift */; };
+		4E25C11C213DFA3F00386855 /* CaptureQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E25C113213DFA3F00386855 /* CaptureQuality.swift */; };
+		4E25C11D213DFA3F00386855 /* TrackingMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E25C115213DFA3F00386855 /* TrackingMode.swift */; };
+		4E25C11E213DFA3F00386855 /* UIImage+Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E25C116213DFA3F00386855 /* UIImage+Blur.swift */; };
+		4E25C11F213DFA3F00386855 /* BlurLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E25C117213DFA3F00386855 /* BlurLayer.swift */; };
+		4E25C121213DFA3F00386855 /* DynamicBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E25C119213DFA3F00386855 /* DynamicBlurView.swift */; };
 		4E5D8482212697AC0081B273 /* FSCalendarPublic.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5D8480212697AC0081B273 /* FSCalendarPublic.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4E5D8485212697AC0081B273 /* FSCalendar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E5D847E212697AC0081B273 /* FSCalendar.framework */; };
 		4E5D8486212697AC0081B273 /* FSCalendar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E5D847E212697AC0081B273 /* FSCalendar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -103,13 +110,6 @@
 		4EFEDF7A2139DF3B00481623 /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EFEDF762139DF2F00481623 /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4EFEDF952139E53B00481623 /* DeepDiff.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EFEDF882139E53400481623 /* DeepDiff.framework */; };
 		4EFEDF962139E53B00481623 /* DeepDiff.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EFEDF882139E53400481623 /* DeepDiff.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4EFEDFA02139E5C200481623 /* DynamicBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFEDF992139E5C200481623 /* DynamicBlurView.swift */; };
-		4EFEDFA12139E5C200481623 /* BlurLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFEDF9A2139E5C200481623 /* BlurLayer.swift */; };
-		4EFEDFA22139E5C200481623 /* CaptureQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFEDF9B2139E5C200481623 /* CaptureQuality.swift */; };
-		4EFEDFA32139E5C200481623 /* CGContext+CGImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFEDF9C2139E5C200481623 /* CGContext+CGImage.swift */; };
-		4EFEDFA42139E5C200481623 /* UIImage+Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFEDF9D2139E5C200481623 /* UIImage+Blur.swift */; };
-		4EFEDFA52139E5C200481623 /* TrackingMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFEDF9E2139E5C200481623 /* TrackingMode.swift */; };
-		4EFEDFA62139E5C200481623 /* CGImage+Accelerate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFEDF9F2139E5C200481623 /* CGImage+Accelerate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -333,6 +333,13 @@
 /* Begin PBXFileReference section */
 		4E16918F212E8647007F51D9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4E16919B212E8AB7007F51D9 /* Licenses.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Licenses.txt; sourceTree = "<group>"; };
+		4E25C111213DFA3F00386855 /* CGImage+Accelerate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGImage+Accelerate.swift"; sourceTree = "<group>"; };
+		4E25C112213DFA3F00386855 /* CGContext+CGImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGContext+CGImage.swift"; sourceTree = "<group>"; };
+		4E25C113213DFA3F00386855 /* CaptureQuality.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureQuality.swift; sourceTree = "<group>"; };
+		4E25C115213DFA3F00386855 /* TrackingMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackingMode.swift; sourceTree = "<group>"; };
+		4E25C116213DFA3F00386855 /* UIImage+Blur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Blur.swift"; sourceTree = "<group>"; };
+		4E25C117213DFA3F00386855 /* BlurLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurLayer.swift; sourceTree = "<group>"; };
+		4E25C119213DFA3F00386855 /* DynamicBlurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicBlurView.swift; sourceTree = "<group>"; };
 		4E5D8476212697890081B273 /* GoodSpirits-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GoodSpirits-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		4E5D847E212697AC0081B273 /* FSCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FSCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E5D8480212697AC0081B273 /* FSCalendarPublic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FSCalendarPublic.h; sourceTree = "<group>"; };
@@ -443,13 +450,6 @@
 		4EFE12EB2101AB190086BAC7 /* AddItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemCell.swift; sourceTree = "<group>"; };
 		4EFEDF702139DF2E00481623 /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = Submodules/Charts/Charts.xcodeproj; sourceTree = "<group>"; };
 		4EFEDF7D2139E53300481623 /* DeepDiff.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DeepDiff.xcodeproj; path = "External/DeepDiff-1.2.0/DeepDiff.xcodeproj"; sourceTree = "<group>"; };
-		4EFEDF992139E5C200481623 /* DynamicBlurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DynamicBlurView.swift; path = "External/DynamicBlurView-2.0.0/DynamicBlurView/DynamicBlurView.swift"; sourceTree = SOURCE_ROOT; };
-		4EFEDF9A2139E5C200481623 /* BlurLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlurLayer.swift; path = "External/DynamicBlurView-2.0.0/DynamicBlurView/BlurLayer.swift"; sourceTree = SOURCE_ROOT; };
-		4EFEDF9B2139E5C200481623 /* CaptureQuality.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CaptureQuality.swift; path = "External/DynamicBlurView-2.0.0/DynamicBlurView/CaptureQuality.swift"; sourceTree = SOURCE_ROOT; };
-		4EFEDF9C2139E5C200481623 /* CGContext+CGImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CGContext+CGImage.swift"; path = "External/DynamicBlurView-2.0.0/DynamicBlurView/CGContext+CGImage.swift"; sourceTree = SOURCE_ROOT; };
-		4EFEDF9D2139E5C200481623 /* UIImage+Blur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImage+Blur.swift"; path = "External/DynamicBlurView-2.0.0/DynamicBlurView/UIImage+Blur.swift"; sourceTree = SOURCE_ROOT; };
-		4EFEDF9E2139E5C200481623 /* TrackingMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrackingMode.swift; path = "External/DynamicBlurView-2.0.0/DynamicBlurView/TrackingMode.swift"; sourceTree = SOURCE_ROOT; };
-		4EFEDF9F2139E5C200481623 /* CGImage+Accelerate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CGImage+Accelerate.swift"; path = "External/DynamicBlurView-2.0.0/DynamicBlurView/CGImage+Accelerate.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -477,6 +477,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E25C110213DFA3F00386855 /* DynamicBlurView */ = {
+			isa = PBXGroup;
+			children = (
+				4E25C111213DFA3F00386855 /* CGImage+Accelerate.swift */,
+				4E25C112213DFA3F00386855 /* CGContext+CGImage.swift */,
+				4E25C113213DFA3F00386855 /* CaptureQuality.swift */,
+				4E25C115213DFA3F00386855 /* TrackingMode.swift */,
+				4E25C116213DFA3F00386855 /* UIImage+Blur.swift */,
+				4E25C117213DFA3F00386855 /* BlurLayer.swift */,
+				4E25C119213DFA3F00386855 /* DynamicBlurView.swift */,
+			);
+			name = DynamicBlurView;
+			path = "External/DynamicBlurView-2.0.0/DynamicBlurView";
+			sourceTree = "<group>";
+		};
 		4E5D847F212697AC0081B273 /* FSCalendar */ = {
 			isa = PBXGroup;
 			children = (
@@ -700,21 +715,6 @@
 			path = GoodSpirits;
 			sourceTree = "<group>";
 		};
-		4EB437BE212CE311001D5734 /* DynamicBlurView */ = {
-			isa = PBXGroup;
-			children = (
-				4EFEDF9A2139E5C200481623 /* BlurLayer.swift */,
-				4EFEDF9B2139E5C200481623 /* CaptureQuality.swift */,
-				4EFEDF9C2139E5C200481623 /* CGContext+CGImage.swift */,
-				4EFEDF9F2139E5C200481623 /* CGImage+Accelerate.swift */,
-				4EFEDF992139E5C200481623 /* DynamicBlurView.swift */,
-				4EFEDF9E2139E5C200481623 /* TrackingMode.swift */,
-				4EFEDF9D2139E5C200481623 /* UIImage+Blur.swift */,
-			);
-			name = DynamicBlurView;
-			path = "External/PopupDialog-0.8.1/DynamicBlurView";
-			sourceTree = "<group>";
-		};
 		4EB437C7212CE311001D5734 /* PopupDialog */ = {
 			isa = PBXGroup;
 			children = (
@@ -743,7 +743,7 @@
 			isa = PBXGroup;
 			children = (
 				4EA930D72139E67900753A32 /* SortedArray.swift */,
-				4EB437BE212CE311001D5734 /* DynamicBlurView */,
+				4E25C110213DFA3F00386855 /* DynamicBlurView */,
 				4EB437C7212CE311001D5734 /* PopupDialog */,
 				4E5D847F212697AC0081B273 /* FSCalendar */,
 			);
@@ -1133,29 +1133,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E25C121213DFA3F00386855 /* DynamicBlurView.swift in Sources */,
 				4E70D5C72113C0AF0089BBB1 /* PricePickerViewController.swift in Sources */,
+				4E25C11E213DFA3F00386855 /* UIImage+Blur.swift in Sources */,
 				4EF06EF42139E60500C95F1D /* TransitionAnimator.swift in Sources */,
 				4E882C142133658E00B7587B /* SettingsViewController_HealthKit.swift in Sources */,
 				4EB437F4212CF7D4001D5734 /* Appearance.swift in Sources */,
-				4EFEDFA12139E5C200481623 /* BlurLayer.swift in Sources */,
-				4EFEDFA42139E5C200481623 /* UIImage+Blur.swift in Sources */,
 				4EFE12EC2101AB190086BAC7 /* AddItemCell.swift in Sources */,
 				4EB437F6212D0EB1001D5734 /* Limit.swift in Sources */,
 				4E7FB9F1212E3F2A00052BFC /* SettingsViewController.swift in Sources */,
 				4EF06EF92139E60500C95F1D /* TransitionAnimations.swift in Sources */,
+				4E25C11C213DFA3F00386855 /* CaptureQuality.swift in Sources */,
 				4EF06EFB2139E60500C95F1D /* PresentationManager.swift in Sources */,
 				4EF06EF52139E60500C95F1D /* PopupDialog+Keyboard.swift in Sources */,
 				4EA2F18520FEE7C700CE30E1 /* SecondViewController.swift in Sources */,
 				4E882C16213365A500B7587B /* SettingsViewController_Untappd.swift in Sources */,
+				4E25C11F213DFA3F00386855 /* BlurLayer.swift in Sources */,
 				4EF06EEE2139E60500C95F1D /* UIImageView+Calculations.swift in Sources */,
 				4E9C8553210D598C00DA959D /* ABPrettyButton.swift in Sources */,
-				4EFEDFA02139E5C200481623 /* DynamicBlurView.swift in Sources */,
 				4E9C8555210D68F900DA959D /* ColorUtil.swift in Sources */,
 				4E6B75792106BF1A009B6C0D /* UntappdLoginViewController.swift in Sources */,
 				4EA2F18120FEE7C700CE30E1 /* AppDelegate.swift in Sources */,
 				4E721EB5212522770001BBB9 /* SampleData.swift in Sources */,
 				4ED560CB212BABDE009B3413 /* Stats.swift in Sources */,
-				4EFEDFA52139E5C200481623 /* TrackingMode.swift in Sources */,
 				4E8F04962112577E00038F09 /* ABVPickerViewController.swift in Sources */,
 				4E8F04982112C44E00038F09 /* StylePickerViewController.swift in Sources */,
 				4EE3369B2108043E00D72B7D /* CheckInViewController.swift in Sources */,
@@ -1183,15 +1183,15 @@
 				4EF06EF02139E60500C95F1D /* PopupDialogDefaultView.swift in Sources */,
 				4EE336972107D6F700D72B7D /* Untappd_Schema.swift in Sources */,
 				4E7FB9E2212E344200052BFC /* DynamicPopupButton.swift in Sources */,
+				4E25C11A213DFA3F00386855 /* CGImage+Accelerate.swift in Sources */,
 				4E93F00921017A5C00B51709 /* DayHeaderCell.swift in Sources */,
 				4EB437F2212CF77B001D5734 /* StartupViewController.swift in Sources */,
-				4EFEDFA62139E5C200481623 /* CGImage+Accelerate.swift in Sources */,
 				4EA2F18320FEE7C700CE30E1 /* FirstViewController.swift in Sources */,
 				4E882C18213365B200B7587B /* SettingsViewController_IAP.swift in Sources */,
 				4EF06EF32139E60500C95F1D /* PopupDialogButton.swift in Sources */,
-				4EFEDFA32139E5C200481623 /* CGContext+CGImage.swift in Sources */,
+				4E25C11B213DFA3F00386855 /* CGContext+CGImage.swift in Sources */,
 				4EF06EF12139E60500C95F1D /* PopupDialog.swift in Sources */,
-				4EFEDFA22139E5C200481623 /* CaptureQuality.swift in Sources */,
+				4E25C11D213DFA3F00386855 /* TrackingMode.swift in Sources */,
 				4EF06EF22139E60500C95F1D /* PopupDialogDefaultButtons.swift in Sources */,
 				4E7FB9F5212E58E200052BFC /* PopupCells.swift in Sources */,
 				4EA2F19720FEF8B900CE30E1 /* Time.swift in Sources */,
