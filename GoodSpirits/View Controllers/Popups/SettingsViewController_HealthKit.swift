@@ -24,6 +24,7 @@
 import Foundation
 import HealthKit
 
+#if HEALTH_KIT
 // Quick and dirty HealthKit state machine.
 extension SettingsViewController
 {
@@ -72,3 +73,4 @@ extension SettingsViewController
         }
     }
 }
+#endif

@@ -26,6 +26,7 @@ import UIKit
 import HealthKit
 import DataLayer
 
+#if HEALTH_KIT
 class HealthKit
 {
     static let shared = HealthKit()
@@ -291,3 +292,4 @@ extension HealthKit
         return nil
     }
 }
+#endif
