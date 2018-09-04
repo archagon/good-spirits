@@ -1,5 +1,3 @@
-<img src="icon.png" width=150>
-
 Good Spirits is a drink tracking iOS app that helps you stay under the government limits for "low-risk" drinking. Includes charts and stats, the ability to pull your check-ins from Untappd, and the ability to sync your drinks as calories to HealthKit.
 
 You can find the App Store version [here][app]. Unfortunately, HealthKit is not available in this release. You can always compile the app yourself to get this functionality.
