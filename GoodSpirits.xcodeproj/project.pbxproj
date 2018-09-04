@@ -416,6 +416,7 @@
 		4EBE66D9210FD1F600878CA0 /* DrawerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DrawerKit.xcodeproj; path = "External/DrawerKit-0.6.0/DrawerKit/DrawerKit.xcodeproj"; sourceTree = "<group>"; };
 		4EC26CCD212E5E84006E156B /* TextDisplayController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayController.swift; sourceTree = "<group>"; };
 		4EC26CE4212E674F006E156B /* GoodSpirits.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GoodSpirits.entitlements; sourceTree = "<group>"; };
+		4EC74B7F213E0F5C008012FE /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		4EC811E22139EC9300BDFDFF /* GRDB.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GRDB.xcodeproj; path = Submodules/GRDB/GRDB.xcodeproj; sourceTree = "<group>"; };
 		4ED560CA212BABDE009B3413 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 		4ED7ACF62102E151002BB0F1 /* standard_drinks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = standard_drinks.json; sourceTree = "<group>"; };
@@ -708,6 +709,7 @@
 				4EE3369C2108058500D72B7D /* Controllers.storyboard */,
 				4EA2F18B20FEE7CB00CE30E1 /* LaunchScreen.storyboard */,
 				4E16919B212E8AB7007F51D9 /* Licenses.txt */,
+				4EC74B7F213E0F5C008012FE /* Keys.plist */,
 				4EA2F18E20FEE7CB00CE30E1 /* Info.plist */,
 				4ED7ACF62102E151002BB0F1 /* standard_drinks.json */,
 				4EA2F19420FEE80D00CE30E1 /* stub.json */,

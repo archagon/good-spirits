@@ -29,10 +29,22 @@ class Untappd
 {
     public static let themeColor: UIColor = UIColor.init(red: 254/255.0, green: 205/255.0, blue: 50/255.0, alpha: 1)
     
+    private static var clientID: String =
+    {
+        if
+            let path = Bundle.main.path(forResource: "Keys", ofType: "plist"),
+            let clientID = NSDictionary(contentsOfFile: path)?["untappd"] as? String
+        {
+            return clientID
+        }
+        else
+        {
+            return "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        }
+    }()
+    
     public static let requestURL = "https://untappd.com/oauth/authenticate/?client_id=\(clientID)&response_type=token&redirect_url=\(redirectURL)"
     public static let redirectHost: String = Untappd.redirectURL.host!
-    
-    private static let clientID: String = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     private static let redirectURL: URL = URL.init(string: "http://archagon.net")!
     private static let apiURL: URL = URL.init(string: "https://api.untappd.com")!
     private static let rateLimitHeader = "X-Ratelimit-Limit"
