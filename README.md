@@ -16,6 +16,8 @@ The directory structure is a bit messy. `External` contains modified dependencie
 
 Sometimes, the compiler will complain about a "cycle in dependencies between targets 'Good Spirits' and 'GRDBiOS'". A clean build will fix this.
 
+My Untappd Client ID, which is necessary for Untappd API calls, is not included. (I'm not sure I should be publishing it.) If you have API access, you can create a Keys.plist file in the `GoodSpirits` directory, add it to the Good Spirits target in Xcode, and add your Client ID string to the plist with an `untappd` key.
+
 # Licensing
 
 The source code is available under the GPL license with absolutely no support or maintenance commitments. Note that GPL-licensed code isn't compatible with the App Store. If you're interested in releasing a fork in the App Store, please contact me.
